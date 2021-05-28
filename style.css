@@ -1,0 +1,167 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --charcoal-theme: #264653;
+  --green-theme: #2a9d8f;
+  --yellow-theme: #e9c46a;
+  --orange-theme: #f4a261;
+  --sienna-theme: #e76f51;
+  --transparent-theme: rgba(0, 0, 255, 0);
+}
+
+button:focus {
+  outline: none;
+}
+button:hover {
+  cursor: pointer;
+}
+
+ion-icon {
+  pointer-events: none;
+}
+
+body {
+  min-height: 100vh;
+  /* background-color: green; */
+  background-image: linear-gradient(
+    to top left,
+    var(--sienna-theme),
+    var(--orange-theme),
+    var(--yellow-theme)
+  );
+  background-size: cover;
+  background-repeat: no-repeat;
+  font-family: "Montserrat", sans-serif;
+  color: white;
+}
+
+/* HELP BUTTON */
+.help-btn {
+  border: solid 2px black;
+  color: black;
+  background-color: rgba(0, 0, 0, 0);
+  text-decoration: none;
+  font-size: 2rem;
+  padding: 10px 20px;
+  border-radius: 50%;
+  position: fixed;
+  right: 10%;
+  transition: 250ms;
+}
+
+.help-btn:hover {
+  border-radius: 15px;
+}
+
+/* SCROLL BAR */
+
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(144, 143, 143, 0);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(126, 125, 125, 0.897);
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(175, 173, 173);
+}
+
+/* NAV */
+nav {
+  margin: 1.5rem auto;
+  width: 30rem;
+  height: 4rem;
+  background-color: var(--transparent-theme);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 0 2rem;
+  border-radius: 2rem;
+  box-shadow: 8px 8px 10px rgba(0, 0, 0, 0.25);
+  border: white solid 3px;
+  display: none;
+}
+
+/* CONTAINER */
+.container {
+  max-width: 80rem;
+  height: 55rem;
+  background-image: linear-gradient(
+    to bottom left,
+    rgba(255, 255, 255, 0.904),
+    rgba(255, 255, 255, 0.719)
+  );
+  /* filter: drop-shadow(0 0 0.8rem rgb(51, 50, 50)); */
+  box-shadow: 8px 8px 15px rgba(22, 22, 22, 0.493),
+    2px 2px 15px rgba(22, 22, 22, 0.493);
+  align-items: center;
+  margin: 3rem auto 1rem auto;
+  display: flex;
+  /* border-radius: 20px; */
+  overflow: hidden;
+}
+
+nav button {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 255, 0);
+  border: white solid 1px;
+}
+
+.portfolio-container {
+  width: 95%;
+  height: 95%;
+  margin: auto;
+  position: relative;
+  /* overflow-x: scroll; */
+}
+
+.invest-container {
+  width: 95%;
+  max-height: 90rem;
+  background-color: greenyellow;
+  overflow-x: hidden;
+}
+
+.invest-blocks {
+  /* margin: 1rem; */
+  width: 100%;
+  height: 100rem;
+  background-color: blue;
+}
+
+.new-invest-BTN {
+  position: absolute;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background-color: var(--transparent-theme);
+  right: 0;
+  bottom: 0;
+  border: solid 2px var(--green-theme);
+  box-shadow: 4px 4px 10px rgba(7, 7, 7, 0.404);
+  /* align-items: center; */
+  /* transform: translate(-100%, -100%); */
+}
+
+.new-invest-BTN ion-icon {
+  /* margin: auto; */
+  font-size: 4.9rem;
+  color: var(--green-theme);
+  --ionicon-stroke-width: 16px;
+}
