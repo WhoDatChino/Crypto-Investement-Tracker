@@ -5,11 +5,14 @@
 
 :root {
   --charcoal-theme: #264653;
-  --green-theme: #2a9d8f;
+  --turquoise-theme: #2a9d8f;
   --yellow-theme: #e9c46a;
   --orange-theme: #f4a261;
   --sienna-theme: #e76f51;
   --transparent-theme: rgba(0, 0, 255, 0);
+
+  --green-movement: #30f17a;
+  --red-movement: #df2525;
 
   --thin-border: solid 1px rgba(250, 249, 249, 0.1);
 }
@@ -159,14 +162,14 @@ nav button {
   background-color: var(--transparent-theme);
   right: 0;
   bottom: 0;
-  border: solid 2px var(--green-theme);
+  border: solid 2px var(--turquoise-theme);
   box-shadow: 4px 4px 10px rgba(7, 7, 7, 0.404);
   z-index: 5;
 }
 
 .new-invest-BTN ion-icon {
   font-size: 4.9rem;
-  color: var(--green-theme);
+  color: var(--turquoise-theme);
   --ionicon-stroke-width: 16px;
 }
 
@@ -175,10 +178,12 @@ nav button {
   width: 100%;
   height: 100%;
   background-color: coral;
+  display: flex;
+  flex-direction: column;
 }
 
 .market-stats {
-  height: 50%;
+  flex: 1;
   width: 100%;
   background-color: cadetblue;
   display: flex;
@@ -186,9 +191,12 @@ nav button {
 }
 .market-stats h1 {
   flex: 1;
-  background-color: crimson;
+  /* background-color: crimson; */
+  font-size: 2.2rem;
+  text-decoration: underline;
 }
 
+/* Stats grid */
 .stats-grid-container {
   flex: 5;
   background-color: black;
@@ -196,31 +204,70 @@ nav button {
 
 .stats-grid {
   margin: 0 auto;
-  width: 80%;
-  height: 80%;
+  width: 90%;
+  height: 90%;
   background-color: darkgreen;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  /* border: solid 1px var(--transparent-theme); */
 }
 .market_perf {
   grid-row: 1/3;
-  /* background-color: yellow; */
   border-right: var(--thin-border);
 }
 .big_winner {
-  /* background-color: var(--charcoal-theme); */
   border-bottom: var(--thin-border);
   border-right: var(--thin-border);
 }
 .big_loser {
-  /* background-color: var(--yellow-theme); */
   border-right: var(--thin-border);
 }
 .high_volume {
-  /* background-color: var(--green-theme); */
   border-bottom: var(--thin-border);
 }
-.low_volume {
-  /* background-color: wheat; */
+
+.stats-grid div {
+  display: flex;
+  flex-direction: column;
+}
+.stats-grid p {
+  font-size: 1.5rem;
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rebeccapurple;
+}
+.stats-grid h2 {
+  margin: 6px 0 0 10px;
+  background-color: rebeccapurple;
+}
+.market_perf p {
+  /* font-size: 2rem; */
+  color: #f3f1fb;
+  font-size: 2rem;
+}
+span.green {
+  color: var(--green-movement);
+}
+span.red {
+  color: var(--red-movement);
+}
+p span {
+  margin: 0 auto;
+}
+
+/* MARKET INFO */
+.market-info {
+  flex: 1;
+  width: 100%;
+  position: relative;
+  background-color: brown;
+  overflow: hidden;
+}
+.table-container {
+  height: 90%;
+  width: 90%;
+  background-color: aquamarine;
+  margin: 20px auto;
 }
