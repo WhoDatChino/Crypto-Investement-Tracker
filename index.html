@@ -40,8 +40,8 @@
                 </button>
             </div> -->
 
-            <div class="markets-view">
-                <section class="market-stats">
+            <!-- <div class="markets-view"> -->
+            <!-- <section class="market-stats">
                     <h1>24 hour market stats:</h1>
                     <div class="stats-grid-container">
                         <div class="stats-grid">
@@ -68,19 +68,19 @@
                             </div>
                         </div>
                     </div>
-                </section>
+                </section> -->
 
 
-                <section class="market-info">
+            <!-- <section class="market-info">
 
-                    <!-- <div class="search-container">
+                    <div class="search-container">
 
                         <input type="search" name="c" id="coin-search" placeholder="Search through coins" maxlength="20"
                             aria-label="Search through available crypto currencies">
                         <button type="submit" class="search-submit">
                             <ion-icon name="search-outline"></ion-icon>
                         </button>
-                    </div> -->
+                    </div>
 
                     <button class="expand-table">
                         <ion-icon name="expand-outline"></ion-icon>
@@ -92,7 +92,7 @@
                                 <th>
                                     <div class="table-header">
                                         <h2>Name</h2>
-                                        <div class="button-container">
+                                        <div class="sortBTN-container">
                                             <button>
                                                 <ion-icon name="triangle-outline" class="ascending"></ion-icon>
                                             </button>
@@ -106,7 +106,7 @@
                                 <th>
                                     <div class="table-header">
                                         <h2>Price</h2>
-                                        <div class="button-container">
+                                        <div class="sortBTN-container">
                                             <button>
                                                 <ion-icon name="triangle-outline" class="ascending"></ion-icon>
                                             </button>
@@ -120,7 +120,7 @@
                                 <th>
                                     <div class="table-header">
                                         <h2>Change</h2>
-                                        <div class="button-container">
+                                        <div class="sortBTN-container">
                                             <button>
                                                 <ion-icon name="triangle-outline" class="ascending"></ion-icon>
                                             </button>
@@ -134,7 +134,7 @@
                                 <th>
                                     <div class="table-header">
                                         <h2>Volume</h2>
-                                        <div class="button-container">
+                                        <div class="sortBTN-container">
                                             <button>
                                                 <ion-icon name="triangle-outline" class="ascending"></ion-icon>
                                             </button>
@@ -148,7 +148,7 @@
                                 <th>
                                     <div class="table-header">
                                         <h2>Market Cap</h2>
-                                        <div class="button-container">
+                                        <div class="sortBTN-container">
                                             <button>
                                                 <ion-icon name="triangle-outline" class="ascending"></ion-icon>
                                             </button>
@@ -262,7 +262,85 @@
                         </table>
                     </div>
 
-                </section>
+                </section> -->
+            <!-- </div> -->
+
+            <div class="investment-expansion-view">
+
+                <div class="crypto-header">
+                    <img class="coin-logo" src="./images/Bitcoin.svg.png" alt="Bitcoin logo">
+                    <h1>Bitcoin</h1>
+                </div>
+
+                <div class="investment-info">
+
+                    <section class="user-investment">
+                        <h2>Your Investment:</h2>
+                        <div class="content">
+                            <div class="investment-stats">
+                                <p>Coin amount: B 0.000001352</p>
+                                <p>Original investment(s) value: $1400</p>
+                                <p>Current investment value: $2687.50</p>
+                                <p>Investment gain/loss: <span class="green"> +91.96%</span></p>
+                                <p>Total profit/loss on sold positions: <span class="red">-$135.23</span></p>
+                            </div>
+                            <div class="investment-dates">
+                                <h3 style="margin-bottom: 5px;">Investment Dates</h3>
+                                <div class="investment-table-container">
+                                    <table class="investment-table">
+                                        <tr>
+                                            <th class="investment-table-header" style="width:40%">Amount</th>
+                                            <th class="investment-table-header" style="width:60%">Date</th>
+                                        </tr>
+
+                                        <tr>
+                                            <td><button>700</button></td>
+                                            <td><button>22 Mar 2021</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><button data-id="1111">600</button></td>
+                                            <td><button data-id="1111">05 Jan 2021</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><button>600</button></td>
+                                            <td><button>05 Jan 2021</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><button>600</button></td>
+                                            <td><button>05 Jan 2021</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><button>600</button></td>
+                                            <td><button>05 Jan 2021</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><button>600</button></td>
+                                            <td><button>05 Jan 2021</button></td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <p>Click to view/edit investment</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="crypto-info">
+                        <h2>Bitcoin stats:</h2>
+                        <div class="content">
+                            <div class="24hour-stats"></div>
+                            <div class="price-graph"></div>
+                            <div class="investment-interactions">
+                                <button>Cash Out</button>
+                                <button>Delete</button>
+                                <button>Add</button>
+                            </div>
+                        </div>
+
+                    </section>
+
+                </div>
+
             </div>
 
 
