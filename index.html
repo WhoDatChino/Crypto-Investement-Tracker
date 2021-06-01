@@ -275,8 +275,11 @@
                 <div class="investment-info">
 
                     <section class="user-investment">
+
                         <h2>Your Investment:</h2>
+
                         <div class="content">
+
                             <div class="investment-stats">
                                 <p>Coin amount: B 0.000001352</p>
                                 <p>Original investment(s) value: $1400</p>
@@ -284,6 +287,7 @@
                                 <p>Investment gain/loss: <span class="green"> +91.96%</span></p>
                                 <p>Total profit/loss on sold positions: <span class="red">-$135.23</span></p>
                             </div>
+
                             <div class="investment-dates">
                                 <h3 style="margin-bottom: 5px;">Investment Dates</h3>
                                 <div class="investment-table-container">
@@ -328,12 +332,39 @@
                     <section class="crypto-info">
                         <h2>Bitcoin stats:</h2>
                         <div class="content">
-                            <div class="24hour-stats"></div>
-                            <div class="price-graph"></div>
+
+                            <div class="coin24hour-stats">
+                                <p>Current Price: $36,300.00</p>
+                                <p>Market Cap: $679.92 billion</p>
+                                <p>24h Change: <span class="red">-1.38%</span></p>
+                                <p>24h Volume: $33.50 billion</p>
+                                <p>24h High: $37,908.96</p>
+                                <p>24h Low: $35,715.74</p>
+                            </div>
+
+                            <div style="margin: 1rem 0;" class="price-graph-container">
+                                <h3 style="margin-bottom: 5px;">Price Graph</h3>
+                            </div>
+
                             <div class="investment-interactions">
-                                <button>Cash Out</button>
-                                <button>Delete</button>
-                                <button>Add</button>
+                                <div class="button-and-label">
+                                    <button class="cashout">
+                                        <ion-icon name="cash-outline"></ion-icon>
+                                    </button>
+                                    <label style="color: black;" for="cashout">Cashout</label>
+                                </div>
+                                <div class="button-and-label">
+                                    <button class="delete">
+                                        <ion-icon name="trash-outline"></ion-icon>
+                                    </button>
+                                    <label style="color: black;" for="delete">Delete</label>
+                                </div>
+                                <div class="button-and-label">
+                                    <button class="add-investment">
+                                        <ion-icon name="add-outline"></ion-icon>
+                                    </button>
+                                    <label style="color: black;" for="add-investment">Add</label>
+                                </div>
                             </div>
                         </div>
 
