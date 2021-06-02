@@ -274,7 +274,7 @@
 
                 <div class="investment-info">
 
-                    <section class="user-investment">
+                    <section class="user-investment" style="margin-left: 2rem;">
 
                         <h2>Your Investment:</h2>
 
@@ -289,7 +289,7 @@
                             </div>
 
                             <div class="investment-dates">
-                                <h3 style="margin-bottom: 5px;">Investment Dates</h3>
+                                <h3 style="margin-bottom: 5px; font-size: 1.3rem;">Investment Dates</h3>
                                 <div class="investment-table-container">
                                     <table class="investment-table">
                                         <tr>
@@ -302,8 +302,8 @@
                                             <td><button>22 Mar 2021</button></td>
                                         </tr>
                                         <tr>
-                                            <td><button data-id="1111">600</button></td>
-                                            <td><button data-id="1111">05 Jan 2021</button></td>
+                                            <td><button data-id="1111" class="sold">600</button></td>
+                                            <td><button data-id="1111" class="sold">05 Jan 2021</button></td>
                                         </tr>
                                         <tr>
                                             <td><button>600</button></td>
@@ -313,14 +313,7 @@
                                             <td><button>600</button></td>
                                             <td><button>05 Jan 2021</button></td>
                                         </tr>
-                                        <tr>
-                                            <td><button>600</button></td>
-                                            <td><button>05 Jan 2021</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><button>600</button></td>
-                                            <td><button>05 Jan 2021</button></td>
-                                        </tr>
+
 
                                     </table>
                                 </div>
@@ -374,6 +367,86 @@
 
             </div>
 
+            <!-- <div class="overlay "></div> -->
+
+            <!-- <div class="form-container ">
+
+                <form class="new-investment-form">
+
+                    <label for="coin-name">Coin:</label>
+                    <input type="text" name="coin-name" placeholder="Please ensure correct spelling" maxlength="15"
+                        class="coin-name" required>
+
+                    <label for="fiat-amount">Amount invested ($):</label>
+                    <input type="number" name="fiat-amount" class="fiat-amount" required min="0" max="1000000">
+
+                    <label for="dueDate">Date of investment:</label>
+                    <input type="date" name="dueDate" class="due-date">
+
+                    <label for="coin-price">Price of coin at time of investment ($):</label>
+                    <input type="number" name="coin-price" class="coin-price" placeholder="(Optional)" min="0">
+
+                    <label for="radioBTN">Add to previous investment in portfolio:</label>
+                    <div class="radioBTN">
+                        <label for="yes">Yes</label>
+                        <input type="radio" name="join" class="join" id="yes">
+                        <label for="no">No</label>
+                        <input type="radio" name="join" class="join" id="no" checked>
+                    </div>
+
+                    <label for="invest-collection" class="invest-collection ">Pick previous investment:</label>
+                    <select class="invest-collection ">
+                        <option value="no_pri">Bitcoin - 02 May 2021</option>
+                        <option value="low_pri">Ethereum - 17 Jan 2021</option>
+                        <option value="medium_pri">Polkadot - 12 Dec 2020</option>
+                    </select>
+
+                    <div class="action-btns">
+                        <button type="submit" class="add-btn">Add</button>
+                        <button type="button" class="cancel-btn">Close</button>
+                    </div>
+
+                </form>
+
+            </div> -->
+
+            <!-- <div class="investment-inspection-container">
+                <button class="close-modalBTN">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+                <div class="investment-inspection-info">
+                    <p>Coin:</p>
+                    <p class="investment-data">Bitcoin</p>
+                    <p>Original investment:</p>
+                    <p class="investment-data">$100</p>
+                    <p>Current value of investment:</p>
+                    <p class="investment-data">$130</p>
+                    <p>Date of investment:</p>
+                    <p class="investment-data">12 May 2021</p>
+                    <p>Price of coin at purchase date:</p>
+                    <p class="investment-data">$30,000.00</p>
+                    <p>Current price of coin:</p>
+                    <p class="investment-data">$39,000.00</p>
+                    <p>Change:</p>
+                    <p class="investment-data"><span class="green">+30%</span></p>
+                </div>
+                <div class="investment-interactions">
+                    <div class="button-and-label">
+                        <button class="cashout">
+                            <ion-icon name="cash-outline"></ion-icon>
+                        </button>
+                        <label style="color: black;" for="cashout">Cashout</label>
+                    </div>
+                    <div class="button-and-label">
+                        <button class="delete">
+                            <ion-icon name="trash-outline"></ion-icon>
+                        </button>
+                        <label style="color: black;" for="delete">Delete</label>
+                    </div>
+
+                </div>
+
+            </div> -->
 
         </div>
     </div>
