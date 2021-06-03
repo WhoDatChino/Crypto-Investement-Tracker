@@ -15,6 +15,7 @@
 
   --green-movement: #30f17a;
   --red-movement: #df2525;
+  --grey-movement: #4b4949;
 
   --thin-border: solid 1px rgba(250, 249, 249, 0.1);
 }
@@ -43,6 +44,7 @@ body {
   background-repeat: no-repeat;
   font-family: "Montserrat", sans-serif;
   color: white;
+  position: relative;
 }
 
 /* HELP BUTTON */
@@ -56,7 +58,6 @@ body {
   border-radius: 50%;
   position: fixed;
   right: 10%;
-  transition: 250ms;
 }
 
 .help-btn:hover {
@@ -86,21 +87,51 @@ body {
   background: rgb(175, 173, 173);
 }
 
-/* NAV */
+/* NAVIGATION */
 nav {
   margin: 1.5rem auto;
   width: 30rem;
-  height: 4rem;
-  background-color: var(--transparent-theme);
+  height: 3rem;
+  background-color: white;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
   padding: 0 2rem;
   border-radius: 2rem;
-  box-shadow: 8px 8px 10px rgba(0, 0, 0, 0.25);
-  border: white solid 3px;
-  display: none;
+  /* box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.25); */
+  border: none;
+  /* display: none; */
+}
+
+nav button {
+  height: 4rem;
+  width: 4rem;
+  border-radius: 50%;
+  background-image: linear-gradient(
+    to top right,
+    var(--charcoal-theme),
+    var(--turquoise-theme),
+    var(--yellow-theme)
+  );
+  box-shadow: 8px 8px 15px rgba(22, 22, 22, 0.493);
+
+  border: white solid 1px;
+  position: relative;
+  transition: border-radius 250ms;
+}
+nav button:hover {
+  border-radius: 15px;
+}
+
+nav button.current {
+  border-radius: 15px;
+}
+
+nav button ion-icon {
+  font-size: 2.2rem;
+  color: white;
+  --ionicon-stroke-width: 23px;
 }
 
 /* CONTAINER */
@@ -120,14 +151,6 @@ nav {
   display: flex;
   /* border-radius: 20px; */
   overflow: hidden;
-}
-
-nav button {
-  height: 3rem;
-  width: 3rem;
-  border-radius: 50%;
-  background-color: rgba(0, 0, 255, 0);
-  border: white solid 1px;
 }
 
 /* VIEWS CONTAINER */
@@ -254,6 +277,9 @@ nav button {
 }
 .red {
   color: var(--red-movement);
+}
+.grey {
+  color: var(--grey-movement);
 }
 p span {
   margin: 0 auto;
@@ -526,6 +552,123 @@ table:last-child {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+/* PORTFOLIO SUMMARY VIEW */
+.portfolio-summary-view {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.port-header {
+  flex: 1;
+  width: 100%;
+  /* background-color: #3c8a32; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* text-decoration: underline; */
+}
+
+/* Portfolio summary */
+.port-summary-container {
+  flex: 2;
+  box-sizing: border-box;
+  width: 85%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 2rem;
+  text-align: center;
+  box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.424);
+}
+.port-summary-container label {
+  font-size: 1.1rem;
+  color: #8a8888;
+}
+
+/* Asset balances */
+.asset-balances-container {
+  flex: 4;
+  width: 100%;
+  /* background-color: cadetblue; */
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 1rem;
+}
+.asset-balances-container label {
+  position: absolute;
+  top: -0%;
+  left: 0%;
+  margin: 1rem;
+}
+.asset-balances {
+  flex: 3;
+  height: 70%;
+  overflow-y: scroll;
+  margin-left: 1rem;
+}
+.asset-balances-table {
+  width: 100%;
+}
+.asset-balances-table th {
+  background-color: var(--turquoise-theme);
+  height: 2.5rem;
+  font-size: 1.2rem;
+}
+.sunburst-diag {
+  flex: 3;
+  height: 100%;
+  /* background-color: #3c8a32; */
+}
+
+.port-movements-container {
+  flex: 4;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* background-color: crimson; */
+  /* position: relative; */
+}
+.port-movements {
+  width: 90%;
+  max-height: 14rem;
+
+  margin: 0 auto;
+  background-color: var(--yellow-theme);
+  overflow-y: scroll;
+}
+.port-movements-table {
+  width: 100%;
+}
+.port-movements-table th {
+  font-size: 1.3rem;
+  background-color: var(--turquoise-theme);
+  height: 2.2rem;
+}
+.port-movements-table tr.sell {
+  background-color: var(--grey-movement);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 110%;
+  background-color: rgba(0, 0, 0, 0.582);
+  background-repeat: no-repeat;
+  backdrop-filter: blur();
+}
+
+/* FORM FOR NEW INVESTMENT */
 .form-container {
   width: 60rem;
   height: 40rem;
@@ -542,16 +685,7 @@ table:last-child {
   );
   border-radius: 15px;
 }
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 110%;
-  background-color: rgba(0, 0, 0, 0.582);
-  background-repeat: no-repeat;
-  backdrop-filter: blur();
-}
+
 .new-investment-form {
   box-sizing: border-box;
   padding: 2rem 2rem;
@@ -613,6 +747,7 @@ select {
   box-shadow: 2px 2px 20px var(--delete-theme);
 }
 
+/* MICRO-INVESTMENT INSPECTION */
 .investment-inspection-container {
   width: 50rem;
   height: 30rem;
@@ -667,4 +802,43 @@ select {
 }
 .investment-inspection-container .investment-interactions {
   flex: 1;
+}
+
+/* HIDDEN CLASS */
+.investment-inspection-container.hidden,
+.overlay.hidden,
+.form-container.hidden,
+.success-message.hidden,
+.error-message.hidden {
+  display: none;
+}
+
+/* POPUP MESSAGES */
+.success-message,
+.error-message {
+  width: 20rem;
+  height: 10rem;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* z-index: 30; */
+  color: white;
+  font-size: 1.5rem;
+  background-color: var(--turquoise-theme);
+  border-radius: 15px;
+  display: flex;
+  box-sizing: border-box;
+  padding: 10px;
+  align-items: center;
+  box-shadow: 2px 2px 30px var(--turquoise-theme);
+}
+.success-message ion-icon,
+.error-message ion-icon {
+  font-size: 4rem;
+  padding: 0 2rem;
+}
+.error-message {
+  background-color: var(--charcoal-theme);
+  box-shadow: 2px 2px 30px var(--charcoal-theme);
 }
