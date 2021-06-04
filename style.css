@@ -234,7 +234,7 @@ tr:hover {
   /* text-decoration: underline; */
   text-align: center;
   background: -webkit-linear-gradient(var(--yellow-theme), var(--sienna-theme));
-  -webkit-background-clip: text;
+  /* -webkit-background-clip: text; */
   -webkit-text-fill-color: transparent;
 }
 
@@ -439,7 +439,7 @@ tr.coin {
 .investment-expansion-view h2,
 .investment-expansion-view h3 {
   background: -webkit-linear-gradient(var(--orange-theme), var(--sienna-theme));
-  -webkit-background-clip: text;
+  /* -webkit-background-clip: text; */
   -webkit-text-fill-color: transparent;
 }
 .bold {
@@ -644,7 +644,7 @@ label.description {
   justify-content: center;
   align-items: center;
   background: -webkit-linear-gradient(var(--yellow-theme), var(--sienna-theme));
-  -webkit-background-clip: text;
+  /* -webkit-background-clip: text; */
   -webkit-text-fill-color: transparent;
   font-weight: bold;
 }
