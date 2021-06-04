@@ -11,13 +11,15 @@
   --sienna-theme: #e76f51;
   --transparent-theme: rgba(0, 0, 255, 0);
   --delete-theme: #b83225;
-  --cashout-theme: #3c8a32;
+  --cashout-theme: #46a739;
 
-  --green-movement: #30f17a;
+  --green-movement: #0dcf0d;
   --red-movement: #df2525;
-  --grey-movement: #4b4949;
+  --grey-movement: #707070;
 
-  --thin-border: solid 1px rgba(250, 249, 249, 0.1);
+  --sold-position: #b1b1b1;
+
+  --thin-border: solid 1px rgba(146, 146, 146, 0.1);
 }
 
 button:focus {
@@ -36,32 +38,15 @@ body {
   /* background-color: green; */
   background-image: linear-gradient(
     to top left,
-    var(--sienna-theme),
-    var(--orange-theme),
+    var(--charcoal-theme),
+    var(--turquoise-theme),
     var(--yellow-theme)
   );
   background-size: cover;
   background-repeat: no-repeat;
   font-family: "Montserrat", sans-serif;
-  color: white;
-  position: relative;
-}
-
-/* HELP BUTTON */
-.help-btn {
-  border: solid 2px black;
   color: black;
-  background-color: rgba(0, 0, 0, 0);
-  text-decoration: none;
-  font-size: 2rem;
-  padding: 10px 20px;
-  border-radius: 50%;
-  position: fixed;
-  right: 10%;
-}
-
-.help-btn:hover {
-  border-radius: 15px;
+  position: relative;
 }
 
 /* SCROLL BAR */
@@ -110,8 +95,8 @@ nav button {
   border-radius: 50%;
   background-image: linear-gradient(
     to top right,
-    var(--charcoal-theme),
-    var(--turquoise-theme),
+    var(--sienna-theme),
+    var(--orange-theme),
     var(--yellow-theme)
   );
   box-shadow: 8px 8px 15px rgba(22, 22, 22, 0.493);
@@ -140,9 +125,10 @@ nav button ion-icon {
   height: 55rem;
   background-image: linear-gradient(
     to bottom left,
-    rgba(255, 255, 255, 0.904),
-    rgba(255, 255, 255, 0.719)
+    rgba(255, 255, 255, 0.979),
+    rgba(255, 255, 255, 0.794)
   );
+  /* background-color: white; */
   /* filter: drop-shadow(0 0 0.8rem rgb(51, 50, 50)); */
   box-shadow: 8px 8px 15px rgba(22, 22, 22, 0.493),
     2px 2px 15px rgba(22, 22, 22, 0.493);
@@ -153,6 +139,35 @@ nav button ion-icon {
   overflow: hidden;
 }
 
+table {
+  cursor: default;
+}
+
+th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  color: white;
+  background-image: linear-gradient(
+    to top,
+    var(--charcoal-theme),
+    var(--turquoise-theme)
+  );
+  /* background-color: var(--turquoise-theme); */
+  /* border-radius: 10px; */
+}
+
+/* Alternate row styling & hover */
+td {
+  border-bottom: 1px solid #ddd;
+  font-size: 1.3rem;
+  text-align: center;
+}
+tr:hover {
+  background-color: #2a9d9046;
+}
+
 /* VIEWS CONTAINER */
 .views-container {
   width: 95%;
@@ -160,26 +175,24 @@ nav button ion-icon {
   margin: auto;
   position: relative;
   /* overflow-x: scroll; */
-  background-color: burlywood;
+  /* background-color: rgb(255, 255, 255); */
 }
 
-/* PORTFOLIO VIEW */
-.invest-container {
+/* TREEMAP VIEW */
+.treemap-view {
+  width: 100%;
+  height: 100%;
+}
+
+.treemap-container {
   margin: auto;
   width: 100%;
   height: 100%;
-  background-color: greenyellow;
-  overflow-y: scroll;
+  /* background-color: rgb(27, 90, 207); */
+  /* overflow-y: scroll; */
 }
 
-.invest-blocks {
-  /* margin: 1rem; */
-  width: 100%;
-  height: 100rem;
-  background-color: blue;
-}
-
-.new-invest-BTN {
+.new-investBTN {
   position: absolute;
   width: 5rem;
   height: 5rem;
@@ -192,7 +205,7 @@ nav button ion-icon {
   z-index: 5;
 }
 
-.new-invest-BTN ion-icon {
+.new-investBTN ion-icon {
   font-size: 4.9rem;
   color: var(--turquoise-theme);
   --ionicon-stroke-width: 16px;
@@ -202,7 +215,7 @@ nav button ion-icon {
 .markets-view {
   width: 100%;
   height: 100%;
-  background-color: coral;
+  /* background-color: coral; */
   display: flex;
   flex-direction: column;
 }
@@ -210,7 +223,7 @@ nav button ion-icon {
 .market-stats {
   flex: 1;
   width: 100%;
-  background-color: cadetblue;
+  /* background-color: cadetblue; */
   display: flex;
   flex-direction: column;
 }
@@ -218,22 +231,27 @@ nav button ion-icon {
   flex: 1;
   /* background-color: crimson; */
   font-size: 2.2rem;
-  text-decoration: underline;
+  /* text-decoration: underline; */
+  text-align: center;
+  background: -webkit-linear-gradient(var(--yellow-theme), var(--sienna-theme));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* Stats grid */
 .stats-grid-container {
   flex: 5;
-  background-color: black;
+  /* background-color: black; */
 }
 
 .stats-grid {
   margin: 0 auto;
   width: 90%;
   height: 90%;
-  background-color: darkgreen;
+  /* background-color: darkgreen; */
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.424);
 }
 .market_perf {
   grid-row: 1/3;
@@ -254,6 +272,9 @@ nav button ion-icon {
   display: flex;
   flex-direction: column;
 }
+.stats-grid div:hover {
+  background-color: rgba(255, 255, 255, 0.644);
+}
 .stats-grid p {
   font-size: 1.5rem;
   margin: auto 0;
@@ -261,15 +282,23 @@ nav button ion-icon {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rebeccapurple;
+  /* color: var(--grey-movement); */
+  /* background-color: rebeccapurple; */
 }
 .stats-grid h2 {
-  margin: 6px 0 0 10px;
-  background-color: rebeccapurple;
+  margin: 1rem 0 0 1rem;
+  color: var(--grey-movement);
+  /* background-color: rebeccapurple; */
+  /* background: -webkit-linear-gradient(
+    var(--charcoal-theme),
+    var(--turquoise-theme)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; */
 }
 .market_perf p {
   /* font-size: 2rem; */
-  color: #f3f1fb;
+  /* color: #f3f1fb; */
   font-size: 2rem;
 }
 .green {
@@ -290,58 +319,69 @@ p span {
   flex: 1;
   width: 100%;
   position: relative;
-  background-color: brown;
+  /* background-color: brown; */
   overflow: hidden;
 }
 .search-container {
   width: 100%;
   height: 70px;
-  background-color: yellow;
+  /* background-color: yellow; */
   display: flex;
   align-items: center;
   justify-content: center;
 }
 #coin-search {
-  background-color: var(--charcoal-theme);
+  /* background-color: var(--charcoal-theme); */
   width: 400px;
   height: 50px;
   border-radius: 50px;
   margin: 0 1rem;
-  color: white;
+  /* color: white; */
   font-size: 1.5rem;
   text-indent: 20px;
+  border: 1px solid var(--sienna-theme);
+  background-color: var(--transparent-theme);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.424);
 }
 #coin-search:focus {
   outline: none;
 }
 .search-submit {
   background-color: var(--transparent-theme);
-  border: solid 1px white;
+  /* border: solid 1px white; */
   font-size: 2rem;
-  color: white;
+  /* color: white; */
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
+  color: var(--sienna-theme);
+  border: var(--sienna-theme) solid 1px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.424);
 }
-.expand-table {
+.expand-tableBTN {
   position: absolute;
   background-color: var(--transparent-theme);
   border: none;
   font-size: 2rem;
-  color: white;
+  color: var(--sienna-theme);
   right: 0;
   margin: 8px;
 }
+
 /* contract icon: 
 <ion-icon name="contract-outline"></ion-icon>
 */
 .table-container {
   height: 90%;
   width: 90%;
-  background-color: aquamarine;
+  /* background-color: aquamarine; */
   margin: 20px auto;
   overflow-x: scroll;
   position: relative;
+}
+tr.coin {
+  height: 2rem;
+  /* background-color: blue; */
 }
 /* Crypto Table */
 .crypto-table {
@@ -353,27 +393,9 @@ p span {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #df2525;
-}
-/* fixed column header */
-th {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
+  padding: 3px 0;
 
-/* Alternate row styling & hover */
-td {
-  border-bottom: 1px solid #ddd;
-  font-size: 1.3rem;
-  text-align: center;
-}
-tr:hover {
-  background-color: #f5f5f5;
-}
-table:last-child {
-  border: none;
+  /* background-color: #df2525; */
 }
 
 /* Sorting buttons */
@@ -396,7 +418,7 @@ table:last-child {
 .investment-expansion-view {
   width: 100%;
   height: 100%;
-  background-color: var(--charcoal-theme);
+  /* background-color: var(--charcoal-theme); */
   display: flex;
   flex-direction: column;
 }
@@ -414,6 +436,15 @@ table:last-child {
   width: 5rem;
   margin: 8px;
 }
+.investment-expansion-view h2,
+.investment-expansion-view h3 {
+  background: -webkit-linear-gradient(var(--orange-theme), var(--sienna-theme));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.bold {
+  font-weight: bold;
+}
 
 /* Left section */
 .investment-info {
@@ -421,31 +452,26 @@ table:last-child {
   display: grid;
   grid-template-columns: 4fr 3fr;
   grid-gap: 1rem;
-  /* border: 1px solid yellow; */
-  position: relative;
+  /* position: relative; */
 }
 
 .user-investment,
 .crypto-info {
   box-sizing: border-box;
   padding: 1rem 0;
-  /* border: solid 1px red; */
   position: relative;
 }
 .content {
   height: 95%;
   box-sizing: border-box;
   padding: 0 1rem;
-  /* border: solid 1px red; */
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
 }
 
 .investment-stats,
 .coin24hour-stats {
   flex: 1;
-  /* margin: 0; */
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -464,24 +490,19 @@ table:last-child {
 }
 .investment-table-container {
   height: 16rem;
-  /* min-height: 18rem; */
-  border: 1px solid white;
   width: 90%;
-  /* background-color: blue; */
-  /* padding: 0; */
   overflow-x: scroll;
   position: relative;
 }
 .investment-table {
-  /* height: 50%; */
   width: 100%;
-  /* background-color: honeydew; */
-  color: black;
 }
-.investment-table-header {
-  background-color: brown;
-  font-size: 1.2rem;
+
+.investment-table th {
+  height: 2.5rem;
+  font-size: 1.3rem;
 }
+
 .investment-table button {
   background-color: var(--transparent-theme);
   height: 3rem;
@@ -495,7 +516,7 @@ table:last-child {
 .price-graph-container {
   flex: 5;
   width: 95%;
-  background-color: yellow;
+  border: solid 1px yellow;
 }
 
 .coin24hour-stats {
@@ -508,20 +529,68 @@ table:last-child {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  background-color: rgb(255, 255, 255);
 }
 .button-and-label {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0 1rem;
 }
 .investment-interactions button {
   background-color: var(--transparent-theme);
   height: 3.9rem;
   width: 3.9rem;
   border-radius: 50%;
-  margin: 0.5rem 1.1rem;
-  /* border: 1px solid white; */
+  /* margin: 0.5rem 1.1rem; */
+}
+
+/* Custom checkbox */
+.check {
+  position: absolute;
+  z-index: 10;
+  width: 3.9rem;
+  height: 3.9rem;
+  opacity: 0;
+  cursor: pointer;
+}
+.checkmark {
+  min-width: 3.9rem;
+  height: 3.9rem;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background-color: var(--transparent-theme);
+  border: 1px solid var(--turquoise-theme);
+  position: relative;
+  transition: background-color 0.4s;
+}
+
+.check:checked ~ .checkmark {
+  background-color: var(--turquoise-theme);
+  border: none;
+}
+
+/* Checkmark sign created using ::after */
+.checkmark::after {
+  content: "";
+  position: absolute;
+  width: 0.5rem;
+  height: 1rem;
+  border-right: rgba(184, 183, 181, 0.472) 2px solid;
+  border-bottom: rgba(184, 183, 183, 0.479) 2px solid;
+  /* Positioning the checkmark */
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateZ(45deg);
+  /* opacity: 0; */
+  transition: all 0.4s;
+}
+.check:checked ~ .checkmark::after {
+  border-right: white 2px solid;
+  border-bottom: white 2px solid;
+}
+
+label.description {
+  margin-top: 0.5rem;
 }
 
 .cashout {
@@ -565,6 +634,7 @@ table:last-child {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: rgba(250, 250, 250, 0);
 }
 .port-header {
   flex: 1;
@@ -573,7 +643,10 @@ table:last-child {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* text-decoration: underline; */
+  background: -webkit-linear-gradient(var(--yellow-theme), var(--sienna-theme));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
 }
 
 /* Portfolio summary */
@@ -587,31 +660,40 @@ table:last-child {
   font-size: 2rem;
   text-align: center;
   box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.424);
+  background-image: linear-gradient(
+    to bottom,
+    rgb(255, 255, 255),
+    rgba(161, 161, 161, 0.705)
+  );
 }
 .port-summary-container label {
   font-size: 1.1rem;
-  color: #8a8888;
+  color: #666666;
 }
 
 /* Asset balances */
 .asset-balances-container {
   flex: 4;
   width: 100%;
-  /* background-color: cadetblue; */
   display: flex;
   align-items: center;
-  position: relative;
-  gap: 1rem;
+  /* position: relative; */
 }
-.asset-balances-container label {
-  position: absolute;
-  top: -0%;
-  left: 0%;
+
+.wrapper {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  height: 90%;
+}
+.wrapper label {
   margin: 1rem;
 }
+
 .asset-balances {
-  flex: 3;
-  height: 70%;
+  /* flex: 3; */
+  min-height: 12rem;
+  max-height: 12rem;
   overflow-y: scroll;
   margin-left: 1rem;
 }
@@ -619,7 +701,6 @@ table:last-child {
   width: 100%;
 }
 .asset-balances-table th {
-  background-color: var(--turquoise-theme);
   height: 2.5rem;
   font-size: 1.2rem;
 }
@@ -634,15 +715,11 @@ table:last-child {
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* background-color: crimson; */
-  /* position: relative; */
 }
 .port-movements {
   width: 90%;
   max-height: 14rem;
-
   margin: 0 auto;
-  background-color: var(--yellow-theme);
   overflow-y: scroll;
 }
 .port-movements-table {
@@ -650,11 +727,10 @@ table:last-child {
 }
 .port-movements-table th {
   font-size: 1.3rem;
-  background-color: var(--turquoise-theme);
   height: 2.2rem;
 }
 .port-movements-table tr.sell {
-  background-color: var(--grey-movement);
+  background-color: var(--sold-position);
 }
 
 .overlay {
@@ -666,6 +742,7 @@ table:last-child {
   background-color: rgba(0, 0, 0, 0.582);
   background-repeat: no-repeat;
   backdrop-filter: blur();
+  z-index: 5;
 }
 
 /* FORM FOR NEW INVESTMENT */
@@ -684,6 +761,7 @@ table:last-child {
     rgb(194, 193, 193)
   );
   border-radius: 15px;
+  z-index: 6;
 }
 
 .new-investment-form {
@@ -751,13 +829,14 @@ select {
 .investment-inspection-container {
   width: 50rem;
   height: 30rem;
-  position: relative;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 30;
+  z-index: 6;
   /* color: white; */
-  background-color: var(--turquoise-theme);
+  background-color: white;
+  border: solid 2px var(--sienna-theme);
   border-radius: 15px;
   box-sizing: border-box;
   padding: 10px;
@@ -799,6 +878,7 @@ select {
 }
 .investment-data {
   text-align: left;
+  font-weight: bold;
 }
 .investment-inspection-container .investment-interactions {
   flex: 1;
@@ -818,11 +898,11 @@ select {
 .error-message {
   width: 20rem;
   height: 10rem;
-  position: relative;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* z-index: 30; */
+  z-index: 7;
   color: white;
   font-size: 1.5rem;
   background-color: var(--turquoise-theme);

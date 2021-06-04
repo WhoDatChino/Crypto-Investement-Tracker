@@ -30,29 +30,23 @@
         </button>
     </nav>
 
-    <!-- <div class="portfolio-summary">
-        <button>
-        </button>
-        <div class="portfolio-info"></div>
-    </div> -->
-
     <div class="container">
 
 
         <div class="views-container">
 
-            <!-- <div class="portfolio-view">
-                <div class="invest-container">
-                    <div class="invest-blocks"></div>
+            <!-- <div class="treemap-view">
+                <div class="treemap-container">
+                    <h1>Treemap Brudda</h1>
                 </div>
-                <button class="new-invest-BTN">
+                <button class="new-investBTN">
                     <ion-icon name="add-outline"></ion-icon>
                 </button>
             </div> -->
 
-            <!-- <div class="markets-view"> -->
-            <!-- <section class="market-stats">
-                    <h1>24 hour market stats:</h1>
+            <!-- <div class="markets-view">
+                <section class="market-stats">
+                    <h1>24 hour market stats</h1>
                     <div class="stats-grid-container">
                         <div class="stats-grid">
                             <div class="market_perf">
@@ -66,7 +60,7 @@
                             </div>
                             <div class="high_volume">
                                 <h2>Highest Volume:</h2>
-                                <p>Ethereum <span>2990364000</span></p>
+                                <p>Ethereum <span>5</span></p>
                             </div>
                             <div class="big_loser">
                                 <h2>Biggest Loser:</h2>
@@ -78,21 +72,21 @@
                             </div>
                         </div>
                     </div>
-                </section> -->
+                </section>
 
 
-            <!-- <section class="market-info">
+                <section class="market-info"> -->
 
-                    <div class="search-container">
+            <!-- <div class="search-container">
 
                         <input type="search" name="c" id="coin-search" placeholder="Search through coins" maxlength="20"
                             aria-label="Search through available crypto currencies">
                         <button type="submit" class="search-submit">
                             <ion-icon name="search-outline"></ion-icon>
                         </button>
-                    </div>
+                    </div> -->
 
-                    <button class="expand-table">
+            <!-- <button class="expand-tableBTN">
                         <ion-icon name="expand-outline"></ion-icon>
                     </button>
 
@@ -262,18 +256,12 @@
                                 <td>€1.7 billion</td>
                                 <td>€33.4 billion</td>
                             </tr>
-                            <tr class="coin">
-                                <td>Dogecoin</td>
-                                <td>€0.26</td>
-                                <td class="red">-1.67%</td>
-                                <td>€1.7 billion</td>
-                                <td>€33.4 billion</td>
-                            </tr>
+
                         </table>
                     </div>
 
-                </section> -->
-            <!-- </div> -->
+                </section>
+            </div> -->
 
             <!-- <div class="investment-expansion-view">
 
@@ -291,11 +279,11 @@
                         <div class="content">
 
                             <div class="investment-stats">
-                                <p>Coin amount: B 0.000001352</p>
-                                <p>Original investment(s) value: $1400</p>
-                                <p>Current investment value: $2687.50</p>
-                                <p>Investment gain/loss: <span class="green"> +91.96%</span></p>
-                                <p>Total profit/loss on sold positions: <span class="red">-$135.23</span></p>
+                                <p>Coin amount: <span class="bold">B 0.000001352</span></p>
+                                <p>Original investment(s) value: <span class="bold">$1400</span></p>
+                                <p>Current investment value: <span class="bold">$2687.50</span></p>
+                                <p>Investment gain/loss: <span class="bold green"> +91.96%</span></p>
+                                <p>Total profit/loss on sold positions: <span class="bold red">-$135.23</span></p>
                             </div>
 
                             <div class="investment-dates">
@@ -303,13 +291,21 @@
                                 <div class="investment-table-container">
                                     <table class="investment-table">
                                         <tr>
-                                            <th class="investment-table-header" style="width:40%">Amount</th>
-                                            <th class="investment-table-header" style="width:60%">Date</th>
+                                            <th>Amount</th>
+                                            <th>Date</th>
                                         </tr>
 
                                         <tr>
                                             <td><button>700</button></td>
                                             <td><button>22 Mar 2021</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><button data-id="1111" class="sold">600</button></td>
+                                            <td><button data-id="1111" class="sold">05 Jan 2021</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td><button>600</button></td>
+                                            <td><button>05 Jan 2021</button></td>
                                         </tr>
                                         <tr>
                                             <td><button data-id="1111" class="sold">600</button></td>
@@ -337,12 +333,12 @@
                         <div class="content">
 
                             <div class="coin24hour-stats">
-                                <p>Current Price: $36,300.00</p>
-                                <p>Market Cap: $679.92 billion</p>
-                                <p>24h Change: <span class="red">-1.38%</span></p>
-                                <p>24h Volume: $33.50 billion</p>
-                                <p>24h High: $37,908.96</p>
-                                <p>24h Low: $35,715.74</p>
+                                <p>Current Price: <span class="bold">$36,300.00</span></p>
+                                <p>Market Cap: <span class="bold">$679.92 billion</span></p>
+                                <p>24h Change: <span class="bold red">-1.38%</span></p>
+                                <p>24h Volume: <span class="bold">$33.50 billion</span></p>
+                                <p>24h High: <span class="bold">$37,908.96</span></p>
+                                <p>24h Low: <span class="bold">$35,715.74</span></p>
                             </div>
 
                             <div style="margin: 1rem 0;" class="price-graph-container">
@@ -354,19 +350,19 @@
                                     <button class="cashout">
                                         <ion-icon name="cash-outline"></ion-icon>
                                     </button>
-                                    <label style="color: black;" for="cashout">Cashout</label>
+                                    <label style="margin-top: 0.5rem;" for="cashout">Cashout</label>
                                 </div>
                                 <div class="button-and-label">
                                     <button class="delete">
                                         <ion-icon name="trash-outline"></ion-icon>
                                     </button>
-                                    <label style="color: black;" for="delete">Delete</label>
+                                    <label style="margin-top: 0.5rem;" for="delete">Delete</label>
                                 </div>
                                 <div class="button-and-label">
                                     <button class="add-investment">
                                         <ion-icon name="add-outline"></ion-icon>
                                     </button>
-                                    <label style="color: black;" for="add-investment">Add</label>
+                                    <label style="margin-top: 0.5rem;" for="add-investment">Add</label>
                                 </div>
                             </div>
                         </div>
@@ -404,80 +400,99 @@
                 </div>
 
                 <div class="asset-balances-container">
-                    <label for="asset-balances-table">
-                        <h2>Balances:</h2>
-                    </label>
-                    <div class="asset-balances">
-                        <table class="asset-balances-table">
-                            <tr>
-                                <th>Asset</th>
-                                <th>Asset Amount</th>
-                                <th>Value</th>
-                                <th>Portfolio %</th>
-                            </tr>
+                    <div class="wrapper">
+                        <label for="asset-balances-table">
+                            <h2>Balances:</h2>
+                        </label>
+                        <div class="asset-balances">
+                            <table class="asset-balances-table">
+                                <tr>
+                                    <th>Asset</th>
+                                    <th>Asset Amount</th>
+                                    <th>Value</th>
+                                    <th>Portfolio %</th>
+                                </tr>
+                                <tr>
+                                    <td>Bitcoin</td>
+                                    <td>0.0005</td>
+                                    <td>4564850%</td>
+                                    <td>56661</td>
+                                </tr>
+                                <tr>
+                                    <td>Bitcoin</td>
+                                    <td>0.0005</td>
+                                    <td>4564850%</td>
+                                    <td>56661</td>
+                                </tr>
+                                <tr>
+                                    <td>Bitcoin</td>
+                                    <td>0.0005</td>
+                                    <td>4564850%</td>
+                                    <td>56661</td>
+                                </tr>
+                                <tr>
+                                    <td>eth</td>
+                                    <td>0.0005</td>
+                                    <td>4564850%</td>
+                                    <td>56661</td>
+                                </tr>
+                                <tr>
+                                    <td>Bitcoin</td>
+                                    <td>0.0005</td>
+                                    <td>4564850%</td>
+                                    <td>56661</td>
+                                </tr>
+                                <tr>
+                                    <td>eth</td>
+                                    <td>0.0005</td>
+                                    <td>4564850%</td>
+                                    <td>56661</td>
+                                </tr>
+                                <tr>
+                                    <td>Bitcoin</td>
+                                    <td>0.0005</td>
+                                    <td>4564850%</td>
+                                    <td>56661</td>
+                                </tr>
+                                <tr>
+                                    <td>eth</td>
+                                    <td>0.0005</td>
+                                    <td>4564850%</td>
+                                    <td>56661</td>
+                                </tr>
+                                <tr>
+                                    <td>Bitcoin</td>
+                                    <td>0.0005</td>
+                                    <td>4564850%</td>
+                                    <td>56661</td>
+                                </tr>
+                                <tr>
+                                    <td>Bitcoin</td>
+                                    <td>0.0005</td>
+                                    <td>4564850%</td>
+                                    <td>56661</td>
+                                </tr>
+                                <tr>
+                                    <td>Bitcoin</td>
+                                    <td>0.0005</td>
+                                    <td>4564850%</td>
+                                    <td>56661</td>
+                                </tr>
+                                <tr>
+                                    <td>Bitcoin</td>
+                                    <td>0.0005</td>
+                                    <td>4564850%</td>
+                                    <td>56661</td>
+                                </tr>
+                                <tr>
+                                    <td>eth</td>
+                                    <td>0.0005</td>
+                                    <td>4564850%</td>
+                                    <td>56661</td>
+                                </tr>
 
-                            <tr>
-                                <td>Bitcoin</td>
-                                <td>0.0005</td>
-                                <td>4564850%</td>
-                                <td>56661</td>
-                            </tr>
-                            <tr>
-                                <td>Bitcoin</td>
-                                <td>0.0005</td>
-                                <td>4564850%</td>
-                                <td>56661</td>
-                            </tr>
-                            <tr>
-                                <td>Bitcoin</td>
-                                <td>0.0005</td>
-                                <td>4564850%</td>
-                                <td>56661</td>
-                            </tr>
-                            <tr>
-                                <td>eth</td>
-                                <td>0.0005</td>
-                                <td>4564850%</td>
-                                <td>56661</td>
-                            </tr>
-                            <tr>
-                                <td>Bitcoin</td>
-                                <td>0.0005</td>
-                                <td>4564850%</td>
-                                <td>56661</td>
-                            </tr>
-                            <tr>
-                                <td>eth</td>
-                                <td>0.0005</td>
-                                <td>4564850%</td>
-                                <td>56661</td>
-                            </tr>
-                            <tr>
-                                <td>eth</td>
-                                <td>0.0005</td>
-                                <td>4564850%</td>
-                                <td>56661</td>
-                            </tr>
-                            <tr>
-                                <td>eth</td>
-                                <td>0.0005</td>
-                                <td>4564850%</td>
-                                <td>56661</td>
-                            </tr>
-                            <tr>
-                                <td>Bitcoin</td>
-                                <td>0.0005</td>
-                                <td>4564850%</td>
-                                <td>56661</td>
-                            </tr>
-                            <tr>
-                                <td>eth</td>
-                                <td>0.0005</td>
-                                <td>4564850%</td>
-                                <td>56661</td>
-                            </tr>
-
-                        </table>
+                            </table>
+                        </div>
                     </div>
                     <div class="sunburst-diag"></div>
                 </div>
@@ -508,6 +523,20 @@
                                 <td><span class="green">Buy</span></td>
                                 <td>$500</td>
                                 <td>360.531</td>
+                            </tr>
+                            <tr>
+                                <td>05 Nov 2020</td>
+                                <td>Ethereum</td>
+                                <td><span class="green">Buy</span></td>
+                                <td>$150</td>
+                                <td>0.0005</td>
+                            </tr>
+                            <tr>
+                                <td>05 Nov 2020</td>
+                                <td>Ethereum</td>
+                                <td><span class="green">Buy</span></td>
+                                <td>$150</td>
+                                <td>0.0005</td>
                             </tr>
                             <tr>
                                 <td>05 Nov 2020</td>
@@ -600,7 +629,7 @@
 
             </div> -->
 
-            <!-- <div class="investment-inspection-container hidden">
+            <!-- <div class="investment-inspection-container ">
                 <button class="close-modalBTN">
                     <ion-icon name="close-outline"></ion-icon>
                 </button>
@@ -622,16 +651,16 @@
                 </div>
                 <div class="investment-interactions">
                     <div class="button-and-label">
-                        <button class="cashout">
-                            <ion-icon name="cash-outline"></ion-icon>
-                        </button>
-                        <label style="color: black;" for="cashout">Cashout</label>
+                        <input type="checkbox" name="check1" class="check">
+                        <label for="checkbox" class="checkmark"></label>
+                    
+                        <label class="description" for="checkbox">Mark as sold</label>
                     </div>
                     <div class="button-and-label">
                         <button class="delete">
                             <ion-icon name="trash-outline"></ion-icon>
                         </button>
-                        <label style="color: black;" for="delete">Delete</label>
+                        <label class="description" for="delete">Delete</label>
                     </div>
 
                 </div>
