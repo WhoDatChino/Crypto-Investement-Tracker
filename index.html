@@ -9,10 +9,10 @@
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;500&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"></script>
+    <!-- <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"></script> -->
     <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"></script>
     <link rel="stylesheet" href="style.css">
-    <script defer src="./script.js"></script>
+    <script defer src="./JS/controller.js"></script>
 
 </head>
 
@@ -37,7 +37,7 @@
 
             <!-- <div class="treemap-view">
                 <div class="treemap-container">
-                    <h1>Treemap Brudda</h1>
+                    <h1>Treemap </h1>
                 </div>
                 <button class="new-investBTN">
                     <ion-icon name="add-outline"></ion-icon>
@@ -263,7 +263,7 @@
                 </section>
             </div> -->
 
-            <!-- <div class="investment-expansion-view">
+            <div class="investment-expansion-view">
 
                 <div class="crypto-header">
                     <img class="coin-logo" src="./images/Bitcoin.svg.png" alt="Bitcoin logo">
@@ -347,10 +347,10 @@
 
                             <div class="investment-interactions">
                                 <div class="button-and-label">
-                                    <button class="cashout">
-                                        <ion-icon name="cash-outline"></ion-icon>
-                                    </button>
-                                    <label style="margin-top: 0.5rem;" for="cashout">Cashout</label>
+                                    <input type="checkbox" name="check1" id="sellMacro" class="check">
+                                    <label for="checkbox" class="checkmark"></label>
+
+                                    <label class="description" for="checkbox">Mark as sold</label>
                                 </div>
                                 <div class="button-and-label">
                                     <button class="delete">
@@ -371,9 +371,9 @@
 
                 </div>
 
-            </div> -->
+            </div>
 
-            <div class="portfolio-summary-view">
+            <!-- <div class="portfolio-summary-view">
 
                 <h1 class="port-header">Portfolio Dashboard</h1>
 
@@ -584,7 +584,7 @@
                     </div>
                 </div>
 
-            </div>
+            </div> -->
 
             <div class="overlay hidden"></div>
 
@@ -651,9 +651,9 @@
                 </div>
                 <div class="investment-interactions">
                     <div class="button-and-label">
-                        <input type="checkbox" name="check1" class="check">
+                        <input type="checkbox" name="check1" class="check" id="sellMicro">
                         <label for="checkbox" class="checkmark"></label>
-                    
+
                         <label class="description" for="checkbox">Mark as sold</label>
                     </div>
                     <div class="button-and-label">

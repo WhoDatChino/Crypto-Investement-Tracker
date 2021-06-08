@@ -53,23 +53,23 @@ body {
 
 /* width */
 ::-webkit-scrollbar {
-  width: 7px;
+  width: 8px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: rgba(144, 143, 143, 0);
+  background: rgba(8, 8, 8, 0);
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: rgba(126, 125, 125, 0.897);
+  background: var(--orange-theme);
   border-radius: 4px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(175, 173, 173);
+  background: var(--sienna-theme);
 }
 
 /* NAVIGATION */
@@ -234,7 +234,7 @@ tr:hover {
   /* text-decoration: underline; */
   text-align: center;
   background: -webkit-linear-gradient(var(--yellow-theme), var(--sienna-theme));
-  /* -webkit-background-clip: text; */
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -289,12 +289,12 @@ tr:hover {
   margin: 1rem 0 0 1rem;
   color: var(--grey-movement);
   /* background-color: rebeccapurple; */
-  /* background: -webkit-linear-gradient(
+  background: -webkit-linear-gradient(
     var(--charcoal-theme),
     var(--turquoise-theme)
   );
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent; */
+  -webkit-text-fill-color: transparent;
 }
 .market_perf p {
   /* font-size: 2rem; */
@@ -439,7 +439,7 @@ tr.coin {
 .investment-expansion-view h2,
 .investment-expansion-view h3 {
   background: -webkit-linear-gradient(var(--orange-theme), var(--sienna-theme));
-  /* -webkit-background-clip: text; */
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .bold {
@@ -541,7 +541,11 @@ tr.coin {
   height: 3.9rem;
   width: 3.9rem;
   border-radius: 50%;
-  /* margin: 0.5rem 1.1rem; */
+  /* padding: 0 1rem; */
+}
+.investment-interactions div {
+  /* padding: 0 0.5rem; */
+  width: 7rem;
 }
 
 /* Custom checkbox */
@@ -559,13 +563,13 @@ tr.coin {
   box-sizing: border-box;
   border-radius: 50%;
   background-color: var(--transparent-theme);
-  border: 1px solid var(--turquoise-theme);
+  border: 1px solid var(--cashout-theme);
   position: relative;
   transition: background-color 0.4s;
 }
 
 .check:checked ~ .checkmark {
-  background-color: var(--turquoise-theme);
+  background-color: var(--cashout-theme);
   border: none;
 }
 
@@ -593,12 +597,12 @@ label.description {
   margin-top: 0.5rem;
 }
 
-.cashout {
+/* .cashout {
   position: relative;
   border: 1px solid var(--cashout-theme);
   color: var(--cashout-theme);
   font-size: 2.9rem;
-}
+} */
 .delete {
   border: 1px solid var(--delete-theme);
   color: var(--delete-theme);
@@ -644,7 +648,7 @@ label.description {
   justify-content: center;
   align-items: center;
   background: -webkit-linear-gradient(var(--yellow-theme), var(--sienna-theme));
-  /* -webkit-background-clip: text; */
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: bold;
 }
