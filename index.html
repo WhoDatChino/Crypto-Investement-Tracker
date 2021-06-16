@@ -12,7 +12,7 @@
     <!-- <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"></script> -->
     <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"></script>
     <link rel="stylesheet" href="style.css">
-    <script defer src="./JS/model.js"></script>
+    <script type="module" src="./JS/navQueue.js"></script>
 
 </head>
 
@@ -45,7 +45,7 @@
             </div> -->
 
             <div class="markets-view">
-                <section class="market-stats">
+                <!-- <section class="market-stats">
                     <h1>24 hour market stats</h1>
                     <div class="stats-grid-container">
                         <div class="stats-grid">
@@ -72,19 +72,19 @@
                             </div>
                         </div>
                     </div>
-                </section>
+                </section> -->
 
 
                 <section class="market-info">
 
-                    <!-- <div class="search-container">
+                    <div class="search-container">
 
                         <input type="search" name="c" id="coin-search" placeholder="Search through coins" maxlength="20"
                             aria-label="Search through available crypto currencies">
                         <button type="submit" class="search-submit">
                             <ion-icon name="search-outline"></ion-icon>
                         </button>
-                    </div> -->
+                    </div>
 
                     <button class="expand-tableBTN">
                         <ion-icon name="expand-outline"></ion-icon>
@@ -256,6 +256,29 @@
                                 <td>€1.7 billion</td>
                                 <td>€33.4 billion</td>
                             </tr>
+                            <tr class="coin">
+                                <td>Dogecoin</td>
+                                <td>€0.26</td>
+                                <td class="red">-1.67%</td>
+                                <td>€1.7 billion</td>
+                                <td>€33.4 billion</td>
+                            </tr>
+                            <tr class="coin">
+                                <td>Dogecoin</td>
+                                <td>€0.26</td>
+                                <td class="red">-1.67%</td>
+                                <td>€1.7 billion</td>
+                                <td>€33.4 billion</td>
+                            </tr>
+                            <tr class="coin">
+                                <td>Dogecoin</td>
+                                <td>€0.26</td>
+                                <td class="red">-1.67%</td>
+                                <td>€1.7 billion</td>
+                                <td>€33.4 billion</td>
+                            </tr>
+
+
 
                         </table>
                     </div>
@@ -606,7 +629,7 @@
                     <input type="number" name="fiat-amount" class="fiat-amount" required min="0" max="1000000">
 
                     <label for="dueDate">Date of investment:</label>
-                    <input type="date" name="dueDate" class="due-date">
+                    <input type="date" name="dueDate" class="due-date" required>
 
 
 
@@ -619,7 +642,7 @@
                     </div>
 
                     <label for="invest-collection" class="invest-collection ">Pick previous investment:</label>
-                    <select class="invest-collection " disabled>
+                    <select class="invest-collection ">
                         <option value="idMACRO1">Bitcoin - 02 May 2021</option>
                         <option value="idMACRO2">Ethereum - 17 Jan 2021</option>
                         <option value="idMACRO3">Polkadot - 12 Dec 2020</option>

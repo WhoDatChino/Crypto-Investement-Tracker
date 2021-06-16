@@ -1,6 +1,6 @@
 "use strict";
 
-export const state = {
+const state = {
   curAsset: undefined,
   curPage: 1,
 
