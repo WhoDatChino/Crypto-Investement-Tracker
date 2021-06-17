@@ -1,9 +1,11 @@
+import state from "../model.js";
+
 class View {
-  _data;
+  _data = state;
   parentElement = document.querySelector(".views-container");
 
   render() {
-    const html = this._generateGridMarkup();
+    const html = this._generateGridMarkup(this._data);
 
     this._clear();
     this.parentElement.insertAdjacentHTML("afterbegin", html);

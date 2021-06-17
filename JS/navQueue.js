@@ -1,6 +1,9 @@
 import { gridMarkup } from "./Views/gridView.js";
 import { portMarkup } from "./Views/portfolioView.js";
 import { marketsMarkup } from "./Views/marketsView.js";
+import state from "./model.js";
+
+console.log(state);
 
 // console.log(View);
 

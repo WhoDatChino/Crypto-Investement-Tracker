@@ -4,6 +4,8 @@ const state = {
 
   assetClasses: [],
 
+  marketPerf: 5,
+
   portValue: 0, // FUNCTION NEEDED
   originCapital: 0, // FUNCTION NEEDED
   percentChange: 0, // FUNCTION NEEDED
@@ -67,6 +69,7 @@ const loadCurMarket = async function () {
 
     const data = await res.json();
     state.curMarket = data;
+    calcMarketStats(state.curMarket);
   } catch (err) {
     alert(err);
   }
@@ -116,11 +119,19 @@ function calcMarketStats(data) {
   state.lowVol = lowVol;
 }
 
-setTimeout(() => {
-  calcMarketStats(state.curMarket);
-  console.log(`hello`, state);
-}, 2000);
+// const calcStats = async function () {
+//   await loadCurMarket();
 
+//   calcMarketStats(state.curMarket);
+// };
+
+// calcStats();
+
+// setTimeout(() => {
+//   calcMarketStats(state.curMarket);
+//   console.log(`hello`, state);
+// }, 2000);
+export default state;
 // if (state.curMarket !== "") {
 // }
 // console.log(state);
