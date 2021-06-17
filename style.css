@@ -236,6 +236,12 @@ tr:hover {
 
 .stats-grid {
   margin: 0 auto;
+  /* background-color: blue; */
+  background-image: linear-gradient(
+    to bottom,
+    rgb(255, 255, 255),
+    rgba(207, 204, 204, 0.705)
+  );
   width: 90%;
   height: 90%;
   display: grid;
@@ -601,10 +607,11 @@ label.description {
 }
 .port-header {
   flex: 1;
+  font-size: 2.2rem;
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
   background: -webkit-linear-gradient(var(--yellow-theme), var(--sienna-theme));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -625,7 +632,7 @@ label.description {
   background-image: linear-gradient(
     to bottom,
     rgb(255, 255, 255),
-    rgba(161, 161, 161, 0.705)
+    rgba(207, 204, 204, 0.705)
   );
 }
 .port-summary-container label {

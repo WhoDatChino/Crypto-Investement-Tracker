@@ -1,5 +1,3 @@
-"use strict";
-
 const state = {
   curAsset: undefined,
   curPage: 1,

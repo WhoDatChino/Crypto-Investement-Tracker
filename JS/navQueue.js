@@ -1,7 +1,14 @@
+import { gridMarkup } from "./Views/gridView.js";
+import { portMarkup } from "./Views/portfolioView.js";
+import { marketsMarkup } from "./Views/marketsView.js";
+
+// console.log(View);
+
 const homeBTN = document.querySelector(".portfolio-treemapBTN ");
 // const portfolioBTN = document.querySelector(".portfolio-symmaryBTN ");
 // const marketBTN = document.querySelector(".portfolio-infoBTN ");
 const navBar = document.querySelector("nav");
+const markupArr = [gridMarkup, portMarkup, marketsMarkup];
 
 class PageQueue {
   constructor() {
@@ -25,10 +32,20 @@ const curPage = new PageQueue();
 
 // curPage.enqueue();
 
+// function(btn){
+//      renderPage(btn)
+//          where: clears curpage
+//                 inserts new html
+// }
+
 navBar.addEventListener("click", function (e) {
   const button = e.target;
-  if (button === navBar) return;
-  console.log(button);
+  const buttonIndex = +button.dataset.index;
+  if (button === navBar || button === curPage.elements[0]) return;
+  //   console.log(buttonIndex);
+
+  markupArr[buttonIndex].render();
+  //   gridMarkup.render();
 
   curPage.enqueue(button);
   console.log(curPage.elements);
