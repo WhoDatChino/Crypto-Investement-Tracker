@@ -1,7 +1,9 @@
 import View from "./View.js";
 
 class PortfolioView extends View {
-  _generateGridMarkup() {
+  parentElement = document.querySelector(".views-container");
+
+  _generateMarkup() {
     return `<div class="portfolio-summary-view">
   
           <h1 class="port-header">Portfolio Dashboard</h1>

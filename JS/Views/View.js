@@ -2,10 +2,10 @@ import state from "../model.js";
 
 class View {
   _data = state;
-  parentElement = document.querySelector(".views-container");
+  //   parentElement = document.querySelector(".views-container");
 
   render() {
-    const html = this._generateGridMarkup(this._data);
+    const html = this._generateMarkup(this._data);
 
     this._clear();
     this.parentElement.insertAdjacentHTML("afterbegin", html);

@@ -359,7 +359,7 @@ p span {
   height: 90%;
   width: 90%;
   margin: 20px auto;
-  overflow-y: hidden;
+  overflow-y: scroll;
   /* position: relative; */
 }
 tr.coin {

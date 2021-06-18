@@ -1,27 +1,22 @@
 import View from "./View.js";
+import { formatFullCurrency } from "../helpers.js";
 import state from "../model.js";
+import { marketTableElementMarkup } from "./marketTableView.js";
 
 class MarketsView extends View {
-  _data = state;
+  //   _data = state;
+  parentElement = document.querySelector(".views-container");
 
-  _generateGridMarkup(data) {
+  _generateMarkup(data) {
     const aggMarket = data.marketPerf.toFixed(2);
     const bigWinName = data.bigWinner.name;
     const bigWinPercent = data.bigWinner.price_change_percentage_24h.toFixed(2);
     const bigLoseName = data.bigLoser.name;
     const bigLosePercent = data.bigLoser.price_change_percentage_24h.toFixed(2);
     const highVolName = data.highVol.name;
-    const highVolAmount = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      maximumFractionDigits: 0,
-    }).format(+data.highVol.total_volume);
+    const highVolAmount = formatFullCurrency(+data.highVol.total_volume);
     const lowVolName = data.lowVol.name;
-    const lowVolAmount = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      maximumFractionDigits: 0,
-    }).format(+data.lowVol.total_volume);
+    const lowVolAmount = formatFullCurrency(+data.lowVol.total_volume);
 
     let html = ` <div class="markets-view">
           <section class="market-stats">
@@ -76,7 +71,7 @@ class MarketsView extends View {
 
                     <div class="table-container">
                     <table class="crypto-table">
-                    <tr>
+                <tr id="marketTableHead">
                     <th>
                         <div class="table-header">
                             <h2>Name</h2>
@@ -147,29 +142,29 @@ class MarketsView extends View {
                         </div>
                     </th>
 
-                    </tr>
+                </tr>`;
 
-                    <tr class="coin" id="btc">
-                    <td>Bitcoin</td>
-                    <td>€32,325</td>
-                    <td class="green">+2.70%</td>
-                    <td>€29.0 billion</td>
-                    <td>€569.0 billion</td>
-                    </tr>
-                    <tr class="coin" id="doge">
-                    <td>Dogecoin</td>
-                    <td>€0.26</td>
-                    <td class="red">-1.67%</td>
-                    <td>€1.7 billion</td>
-                    <td>€33.4 billion</td>
-                    </tr>
+    html += this._generateTableElements(data);
 
-                    </table>
+    html += `</table>
                     </div>
 
                     </section>
                     </div>`;
 
+    return html;
+  }
+
+  _generateTableElements(data) {
+    let html = "";
+    const arr = data.curMarket;
+    console.log(arr);
+
+    arr.forEach((element) => {
+      html += marketTableElementMarkup.generateMarkup(element);
+      console.log(html);
+    });
+    console.log(html);
     return html;
   }
 }
