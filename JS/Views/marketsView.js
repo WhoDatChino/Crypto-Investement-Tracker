@@ -8,15 +8,21 @@ class MarketsView extends View {
   parentElement = document.querySelector(".views-container");
 
   _generateMarkup(data) {
-    const aggMarket = data.marketPerf.toFixed(2);
-    const bigWinName = data.bigWinner.name;
-    const bigWinPercent = data.bigWinner.price_change_percentage_24h.toFixed(2);
-    const bigLoseName = data.bigLoser.name;
-    const bigLosePercent = data.bigLoser.price_change_percentage_24h.toFixed(2);
-    const highVolName = data.highVol.name;
-    const highVolAmount = formatFullCurrency(+data.highVol.total_volume);
-    const lowVolName = data.lowVol.name;
-    const lowVolAmount = formatFullCurrency(+data.lowVol.total_volume);
+    const aggMarket = data.marketStats.marketPerf.toFixed(2);
+    const bigWinName = data.marketStats.bigWinner.name;
+    const bigWinPercent =
+      data.marketStats.bigWinner.price_change_percentage_24h.toFixed(2);
+    const bigLoseName = data.marketStats.bigLoser.name;
+    const bigLosePercent =
+      data.marketStats.bigLoser.price_change_percentage_24h.toFixed(2);
+    const highVolName = data.marketStats.highVol.name;
+    const highVolAmount = formatFullCurrency(
+      +data.marketStats.highVol.total_volume
+    );
+    const lowVolName = data.marketStats.lowVol.name;
+    const lowVolAmount = formatFullCurrency(
+      +data.marketStats.lowVol.total_volume
+    );
 
     let html = ` <div class="markets-view">
           <section class="market-stats">
@@ -70,17 +76,17 @@ class MarketsView extends View {
                     </button>
 
                     <div class="table-container">
-                    <table class="crypto-table">
+            <table class="crypto-table">
                 <tr id="marketTableHead">
                     <th>
                         <div class="table-header">
                             <h2>Name</h2>
                             <div class="sortBTN-container">
-                                <button id="sortNameAsc">
+                                <button id="sortNameAsc" data-dir="asc">
                                     <ion-icon name="triangle-outline" class="ascending"></ion-icon>
                                 </button>
-                                <button id="sortNameDsc">
-                                    <ion-icon name="triangle" class="descending"></ion-icon>
+                                <button id="sortNameDsc" data-dir="dsc">
+                                    <ion-icon name="triangle-outline" class="descending"></ion-icon>
                                 </button>
                             </div>
                         </div>
@@ -90,10 +96,10 @@ class MarketsView extends View {
                         <div class="table-header">
                             <h2>Price</h2>
                             <div class="sortBTN-container">
-                                <button id="sortPriceAsc">
+                                <button id="sortPriceAsc" data-dir="asc">
                                     <ion-icon name="triangle-outline" class="ascending"></ion-icon>
                                 </button>
-                                <button id="sortPriceDsc">
+                                <button id="sortPriceDsc" data-dir="dsc">
                                     <ion-icon name="triangle-outline" class="descending"></ion-icon>
                                 </button>
                             </div>
@@ -104,10 +110,10 @@ class MarketsView extends View {
                         <div class="table-header">
                             <h2>Change</h2>
                             <div class="sortBTN-container">
-                                <button id="sortChangeAsc">
+                                <button id="sortChangeAsc" data-dir="asc">
                                     <ion-icon name="triangle-outline" class="ascending"></ion-icon>
                                 </button>
-                                <button id="sortChangeDsc">
+                                <button id="sortChangeDsc" data-dir="dsc">
                                     <ion-icon name="triangle-outline" class="descending"></ion-icon>
                                 </button>
                             </div>
@@ -118,10 +124,10 @@ class MarketsView extends View {
                         <div class="table-header">
                             <h2>Volume</h2>
                             <div class="sortBTN-container">
-                                <button id="sortVolAsc">
+                                <button id="sortVolAsc" data-dir="asc">
                                     <ion-icon name="triangle-outline" class="ascending"></ion-icon>
                                 </button>
-                                <button id="sortVolDsc">
+                                <button id="sortVolDsc" data-dir="dsc">
                                     <ion-icon name="triangle-outline" class="descending"></ion-icon>
                                 </button>
                             </div>
@@ -132,11 +138,11 @@ class MarketsView extends View {
                         <div class="table-header">
                             <h2>Market Cap</h2>
                             <div class="sortBTN-container">
-                                <button id="sortMkcpAsc">
+                                <button id="sortMkcpAsc" data-dir="asc">
                                     <ion-icon name="triangle-outline" class="ascending"></ion-icon>
                                 </button>
-                                <button id="sortMkcpDsc">
-                                    <ion-icon name="triangle-outline" class="descending"></ion-icon>
+                                <button id="sortMkcpDsc" data-dir="dsc">
+                                    <ion-icon name="triangle" class="descending"></ion-icon>
                                 </button>
                             </div>
                         </div>
@@ -144,7 +150,7 @@ class MarketsView extends View {
 
                 </tr>`;
 
-    html += this._generateTableElements(data);
+    // html += this._generateTableElements(data);
 
     html += `</table>
                     </div>
@@ -161,11 +167,19 @@ class MarketsView extends View {
     console.log(arr);
 
     arr.forEach((element) => {
-      html += marketTableElementMarkup.generateMarkup(element);
-      console.log(html);
+      html += marketTableElementMarkup._generateMarkup(element);
+      //   console.log(html);
     });
-    console.log(html);
+    // console.log(html);
     return html;
+  }
+
+  sorting() {
+    const marketTable = document.querySelector(".market-info");
+
+    marketTable.addEventListener("click", () => {
+      console.log(`hello`);
+    });
   }
 }
 

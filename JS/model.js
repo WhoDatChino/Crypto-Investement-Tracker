@@ -1,16 +1,116 @@
 const state = {
-  curAsset: undefined,
-  curPage: 1,
+  assetClasses: [
+    {
+      asset: "Bitcoin",
+      ticker: "btc",
+      currentPrice: 38700,
+      assetAmount: 0.01666,
+      originalCapital: 500,
+      currentValue: 645,
+      soldPositions: [
+        {
+          date: " 22 Jan 2021",
+          initialValue: 30,
+          assetAmount: 0.00156,
+          sellValue: 50,
+        },
+        {
+          date: " 19 Dec 2020",
+          initialValue: 90,
+          assetAmount: 0.00375,
+          sellValue: 90,
+        },
+      ],
+      macros: [
+        {
+          id: Math.floor(Math.random() * 1000000),
+          originalCapital: 30,
+          assetAmount: 0.00156,
+          currentValue: 60.372,
+          date: "6 Dec 2020",
+          sold: true,
+          platform: "coinbase",
+        },
+        {
+          id: Math.floor(Math.random() * 1000000),
+          originalCapital: 60,
+          assetAmount: 0.00375,
+          currentValue: 145.125,
+          date: "16 Nov 2020",
+          sold: true,
+          platform: "coinbase",
+        },
+      ],
+    },
+    {
+      asset: "Ethereum",
+      ticker: "eth",
+      currentPrice: 2517,
+      assetAmount: 0.5,
+      originalCapital: 1000,
+      currentValue: 1258.5,
+      soldPositions: [
+        {
+          date: " 11 Mar 2021",
+          initialValue: 326.54,
+          assetAmount: 0.18192,
+          sellValue: 339.614,
+        },
+      ],
+      macros: [
+        {
+          id: Math.floor(Math.random() * 1000000),
+          originalCapital: 200,
+          assetAmount: 0.16129,
+          currentValue: 405.96693,
+          date: "24 Jan 2021",
+          sold: false,
+          platform: "coinbase",
+        },
+        {
+          id: Math.floor(Math.random() * 1000000),
+          originalCapital: 800,
+          assetAmount: 0.33871,
+          currentValue: 852.53307,
+          date: "24 Apr 2021",
+          sold: false,
+          platform: "gemini",
+        },
+        {
+          id: Math.floor(Math.random() * 1000000),
+          originalCapital: 300,
+          assetAmount: 0.21246,
+          currentValue: 534.77337,
+          date: "1 Mar 2021",
+          sold: true,
+          platform: "coinbase",
+        },
+      ],
+    },
+    {
+      asset: "Dogecoin",
+      ticker: "doge",
+      currentPrice: 0.2,
+      assetAmount: 1136.36364,
+      originalCapital: 250,
+      currentValue: 227.27273,
+      soldPositions: [],
+      macros: [
+        {
+          id: Math.floor(Math.random() * 1000000),
+          originalCapital: 250,
+          assetAmount: 1136.36364,
+          currentValue: 227.27273,
+          date: "9 Jul 2021",
+          sold: false,
+          platform: "gemini",
+        },
+      ],
+    },
+  ],
+  marketStats: {},
 
-  assetClasses: [],
-
-  marketPerf: 5,
-
-  portValue: 0, // FUNCTION NEEDED
-  originCapital: 0, // FUNCTION NEEDED
-  percentChange: 0, // FUNCTION NEEDED
-  profitOrLoss: 0, // FUNCTION NEEDED
-  portMakup: [], // FUNCTION NEEDED
+  // marketPerf: 5,
 };
 
 // const createCurMarketObject = function (data) {
@@ -112,11 +212,11 @@ function calcMarketStats(data) {
   // console.log(`high`, highestNum);
 
   // Set in state variable
-  state.marketPerf = +marketPerf.toFixed(2);
-  state.bigWinner = highestNum;
-  state.bigLoser = lowestNum;
-  state.highVol = highVol;
-  state.lowVol = lowVol;
+  state.marketStats.marketPerf = +marketPerf.toFixed(2);
+  state.marketStats.bigWinner = highestNum;
+  state.marketStats.bigLoser = lowestNum;
+  state.marketStats.highVol = highVol;
+  state.marketStats.lowVol = lowVol;
 }
 
 // const calcStats = async function () {

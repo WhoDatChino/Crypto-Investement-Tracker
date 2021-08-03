@@ -2,9 +2,9 @@ import { formatFullCurrency, formatShortCurrency } from "../helpers.js";
 import View from "./View.js";
 
 class marketTableView extends View {
-  parentElement = document.getElementById("marketTableHead");
+  parentElement = document.querySelector(".crypto-table");
 
-  generateMarkup(data) {
+  _generateMarkup(data) {
     const coinPrice = formatFullCurrency(data.current_price);
 
     let priceChange;

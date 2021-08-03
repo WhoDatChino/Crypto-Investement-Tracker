@@ -2,7 +2,7 @@ export const formatFullCurrency = function (number) {
   const num = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    maximumFractionDigits: 5,
+    maximumFractionDigits: 2,
   }).format(number);
   return num;
 };
