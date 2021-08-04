@@ -2,6 +2,7 @@ import { gridMarkup } from "./Views/gridView.js";
 import { marketsMarkup } from "./Views/marketsView.js";
 import { marketTableElementMarkup } from "../JS/Views/marketTableView.js";
 import { renderPortfolioDashboardMarkup } from "./Views/portfolioDashboard.js";
+import { renderMarketOverviewMarkup } from "./Views/marketsOverview.js";
 
 import state from "./model.js";
 
@@ -76,7 +77,8 @@ navBar.addEventListener("click", function (e) {
   if (clickedEl === navBar || clickedEl === pageQueue.elements[0]) return;
 
   // markupArr[buttonIndex].render();
-  renderPortfolioDashboardMarkup(container);
+  if (buttonIndex === 1) renderPortfolioDashboardMarkup(container);
+  if (buttonIndex === 2) renderMarketOverviewMarkup(container);
   curPage = buttonIndex;
 
   pageQueue.enqueue(clickedEl);

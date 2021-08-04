@@ -33,6 +33,13 @@ ion-icon {
   pointer-events: none;
 }
 
+i {
+  color: white;
+  z-index: 10;
+  /* display: flex; */
+  font-size: 20px;
+}
+
 body {
   min-height: 100vh;
   /* background-color: green; */
@@ -118,6 +125,11 @@ nav button.current {
 }
 
 nav button ion-icon {
+  font-size: 2.2rem;
+  color: white;
+  --ionicon-stroke-width: 23px;
+}
+nav button i {
   font-size: 2.2rem;
   color: white;
   --ionicon-stroke-width: 23px;
@@ -381,17 +393,26 @@ tr.coin {
 /* Sorting buttons */
 .sortBTN-container {
   display: flex;
-  margin: 0 1rem;
-  flex-direction: column;
+  margin: 0.5rem;
 }
 .sortBTN-container button {
-  background-color: var(--transparent-theme);
+  background-color: white;
   border: none;
-  font-size: 1.1rem;
-  color: white;
+  height: 1.1rem;
+  width: 1.1rem;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  margin: 1px;
 }
-.descending {
+.sortBTN-container button.dsc {
   transform: rotate(180deg);
+}
+.sortBTN-container button.active {
+  background-image: linear-gradient(
+    to top,
+    var(--sienna-theme),
+    var(--orange-theme),
+    var(--yellow-theme)
+  );
 }
 
 /* INVESTMENT EXPANSION VIEW */
