@@ -3,6 +3,7 @@ import { marketsMarkup } from "./Views/marketsView.js";
 import { marketTableElementMarkup } from "../JS/Views/marketTableView.js";
 import { renderPortfolioDashboardMarkup } from "./Views/portfolioDashboard.js";
 import { renderMarketOverviewMarkup } from "./Views/marketsOverview.js";
+import { loadCurMarket } from "./model.js";
 
 import state from "./model.js";
 
@@ -42,29 +43,29 @@ let curPage = 0;
 
 // //////// FUNCTIONS
 
-function pageEvents(e) {
-  if (curPage === 0) {
-    console.log(`grid`);
-  }
-  if (curPage === 1) {
-    console.log(`port`);
-  }
-  if (curPage === 2) {
-    const parent = document.querySelector(".crypto-table");
-    const rows = document.querySelectorAll(".coin");
-    let html = "";
-    rows.forEach((row) => row.remove());
+// function pageEvents(e) {
+//   if (curPage === 0) {
+//     console.log(`grid`);
+//   }
+//   if (curPage === 1) {
+//     console.log(`port`);
+//   }
+//   if (curPage === 2) {
+//     const parent = document.querySelector(".crypto-table");
+//     const rows = document.querySelectorAll(".coin");
+//     let html = "";
+//     rows.forEach((row) => row.remove());
 
-    sort();
-    state.curMarket.forEach(
-      (ele) => (html += marketTableElementMarkup._generateMarkup(ele))
-    );
-    parent.insertAdjacentHTML("beforeend", html);
+//     sort();
+//     state.curMarket.forEach(
+//       (ele) => (html += marketTableElementMarkup._generateMarkup(ele))
+//     );
+//     parent.insertAdjacentHTML("beforeend", html);
 
-    console.log(e.target.closest("table"));
-    console.log(`markets`, html);
-  }
-}
+//     console.log(e.target.closest("table"));
+//     console.log(`markets`, html);
+//   }
+// }
 
 // //////// EVENT LISTENERS
 
@@ -83,42 +84,3 @@ navBar.addEventListener("click", function (e) {
 
   pageQueue.enqueue(clickedEl);
 });
-
-// container.addEventListener("click", pageEvents);
-
-const sorters = {};
-
-function sort() {
-  // const direction = dir;
-  // const prop = valueIn;
-
-  let arr = state.curMarket;
-  for (let i = 1; i < arr.length; i++) {
-    let current = arr[i];
-    let currentV = arr[i].total_volume;
-    let j = i - 1;
-    while (j > -1 && currentV < arr[j].total_volume) {
-      arr[j + 1] = arr[j];
-
-      j--;
-    }
-    arr[j + 1] = current;
-  }
-  state.curMarket = arr;
-  // const be = state.curMarket.prop;
-  console.log(`new`, state.curMarket);
-  // console.log(`cx`, be);
-}
-
-// const propSelector = {
-//   sortMkcpDsc: state.curMarket.market_cap,
-//   sortMkcpAsc: state.curMarket.market_cap,
-//   sortVolDsc: state.curMarket.total_volume,
-//   sortVolAsc: state.curMarket.total_volume,
-//   sortChangeDsc: state.curMarket.price_change_percentage_24h,
-//   sortChangeAsc: state.curMarket.price_change_percentage_24h,
-//   sortPriceDsc: state.curMarket.current_price,
-//   sortPriceAsc: state.curMarket.current_price,
-//   sortNameDsc: state.curMarket.id,
-//   sortNameAsc: state.curMarket.id,
-// };
