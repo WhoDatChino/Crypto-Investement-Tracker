@@ -161,6 +161,9 @@ class MacroInvestment {
 // );
 // console.log(newI);
 
+// redis for js
+// Want the api to call more times if it fails
+
 export const loadCurMarket = async function () {
   try {
     const res = await fetch(
@@ -168,6 +171,7 @@ export const loadCurMarket = async function () {
     );
 
     const data = await res.json();
+    if (!data) alert(`Please reload`);
     state.curMarket = data;
     calcMarketStats(state.curMarket);
   } catch (err) {

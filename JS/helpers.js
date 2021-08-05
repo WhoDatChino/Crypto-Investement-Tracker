@@ -7,6 +7,15 @@ export const formatFullCurrency = function (number) {
   return num;
 };
 
+export const formatCoinPrice = function (number) {
+  const num = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 6,
+  }).format(number);
+  return num;
+};
+
 export const formatShortCurrency = function (num) {
   // const number = formatFullCurrency(num)
 

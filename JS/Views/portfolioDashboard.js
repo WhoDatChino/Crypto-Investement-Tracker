@@ -6,7 +6,6 @@ import { formatFullCurrency } from "../helpers.js";
 // //////// VARIABLES
 
 // Get data from state
-const portfolio = state.assetClasses;
 
 // //////// FUNCTIONS
 
@@ -94,7 +93,7 @@ function calcBalances() {
   let totalSold = 0;
 
   // Loop array & add to variables
-  portfolio.forEach((invest) => {
+  state.assetClasses.forEach((invest) => {
     portValue += invest.currentValue;
     originalValue += invest.originalCapital;
 
@@ -136,7 +135,7 @@ function populateBalancesTable() {
   const table = document.querySelector(".asset-balances-table");
   const portTotal = balances.portValue;
 
-  portfolio.forEach((invest) => {
+  state.assetClasses.forEach((invest) => {
     const row = document.createElement("tr");
 
     row.innerHTML = `
@@ -159,7 +158,7 @@ function populateMovementsTable() {
 
   const tableItems = [];
 
-  portfolio.forEach((asset) => {
+  state.assetClasses.forEach((asset) => {
     if (asset.soldPositions.length !== 0) {
       asset.soldPositions.forEach((sell) => {
         const row = document.createElement("tr");

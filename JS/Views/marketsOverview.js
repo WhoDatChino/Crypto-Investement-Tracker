@@ -1,24 +1,33 @@
 "use strict";
 
 import state from "../model.js";
-import { formatFullCurrency, formatShortCurrency } from "../helpers.js";
+import {
+  formatFullCurrency,
+  formatShortCurrency,
+  formatCoinPrice,
+} from "../helpers.js";
 
-const marketInfo = state.curMarket;
-const marketStats = state.marketStats;
-const coinElements = [];
+// Cant set state to a variable cz will be set to null as its executed before the data is fetched from the api
+// const state.curMarket = state.curMarket;
+// const marketStats = state.marketStats;
 
+// /////// FUNCTIONS
 function generateMarkup() {
-  const aggMarket = marketStats.marketPerf.toFixed(2);
-  const bigWinName = marketStats.bigWinner.name;
+  const aggMarket = state.marketStats.marketPerf.toFixed(2);
+  const bigWinName = state.marketStats.bigWinner.name;
   const bigWinPercent =
-    marketStats.bigWinner.price_change_percentage_24h.toFixed(2);
-  const bigLoseName = marketStats.bigLoser.name;
+    state.marketStats.bigWinner.price_change_percentage_24h.toFixed(2);
+  const bigLoseName = state.marketStats.bigLoser.name;
   const bigLosePercent =
-    marketStats.bigLoser.price_change_percentage_24h.toFixed(2);
-  const highVolName = marketStats.highVol.name;
-  const highVolAmount = formatFullCurrency(+marketStats.highVol.total_volume);
-  const lowVolName = marketStats.lowVol.name;
-  const lowVolAmount = formatFullCurrency(+marketStats.lowVol.total_volume);
+    state.marketStats.bigLoser.price_change_percentage_24h.toFixed(2);
+  const highVolName = state.marketStats.highVol.name;
+  const highVolAmount = formatFullCurrency(
+    +state.marketStats.highVol.total_volume
+  );
+  const lowVolName = state.marketStats.lowVol.name;
+  const lowVolAmount = formatFullCurrency(
+    +state.marketStats.lowVol.total_volume
+  );
 
   let html = `
   <div class="markets-view">
@@ -74,18 +83,11 @@ function generateMarkup() {
 
     <div class="table-container">
       <table class="crypto-table">
-          <tr>
+          <thead>
               <th>
                   <div class="table-header">
                       <h2>Name</h2>
-                      <div class="sortBTN-container">
-                          <button class='asc '>
-                              
-                          </button>
-                          <button class='dsc'>
-                              
-                          </button>
-                      </div>
+                      
                   </div>
               </th>
 
@@ -93,10 +95,10 @@ function generateMarkup() {
                   <div class="table-header">
                       <h2>Price</h2>
                       <div class="sortBTN-container">
-                          <button class='asc'>
+                          <button class='asc' data-sort='price'>
                               
                           </button>
-                          <button class='dsc'>
+                          <button class='dsc' data-sort='price'>
                               
                           </button>
                       </div>
@@ -107,10 +109,10 @@ function generateMarkup() {
                   <div class="table-header">
                       <h2>Change</h2>
                       <div class="sortBTN-container">
-                          <button class='asc'>
+                          <button class='asc' data-sort='change'>
                               
                           </button>
-                          <button class='dsc'>
+                          <button class='dsc' data-sort='change'>
                               
                           </button>
                       </div>
@@ -121,10 +123,10 @@ function generateMarkup() {
                   <div class="table-header">
                       <h2>Volume</h2>
                       <div class="sortBTN-container">
-                          <button class='asc'>
+                          <button class='asc' data-sort='volume'>
                               
                           </button>
-                          <button class='dsc'>
+                          <button class='dsc' data-sort='volume'>
                               
                           </button>
                       </div>
@@ -135,17 +137,20 @@ function generateMarkup() {
                   <div class="table-header">
                       <h2>Market Cap</h2>
                       <div class="sortBTN-container">
-                          <button class='asc'>
+                          <button class='asc' data-sort='cap'>
                               
                           </button>
-                          <button class='dsc active'>
+                          <button class='dsc active' data-sort='cap'>
                               
                           </button>
                       </div>
                   </div>
               </th>
 
-          </tr>
+          </thead>
+          <tbody class='crypto-table-body'>
+          
+          </tbody>
 
       </table>
     </div>
@@ -158,35 +163,182 @@ function generateMarkup() {
 }
 
 // Insert api coin data into the table
-function populateMarketTable() {
-  // Select table to append dom elements to
-  const table = document.querySelector(".crypto-table");
+function populateMarketTable(data) {
+  const table = document.querySelector(".crypto-table-body");
+  table.innerHTML = "";
+
   // Create table element for each coin
-  marketInfo.forEach((asset) => {
+  data.forEach((asset) => {
     const row = document.createElement("tr");
     row.classList.add("coin");
 
     row.innerHTML = `
-    <td>${asset.name}</td>
-    <td>${formatFullCurrency(asset.current_price)}</td>
-    <td class="green">${(asset.price_change_percentage_24h * 100).toFixed(
-      2
-    )}</td>
+    <td class="coin-name">${asset.name}</td>
+    <td>${formatCoinPrice(asset.current_price)}</td>
+    ${
+      asset.price_change_percentage_24h > 0
+        ? `<td class="green">+${asset.price_change_percentage_24h.toFixed(
+            2
+          )}%</td>`
+        : `<td class="red">${asset.price_change_percentage_24h.toFixed(
+            2
+          )}%</td>`
+    }
     <td>${formatShortCurrency(asset.total_volume)}</td>
     <td>${formatShortCurrency(asset.market_cap)}</td>
     `;
 
-    // Store in array which can be sorted
-    coinElements.push(row);
+    // Show in dom
+    table.appendChild(row);
   });
+}
 
-  coinElements.forEach((coin) => {
-    table.appendChild(coin);
+// Getting the value from the element
+// NEEDS REFACTORING
+function sortData(dir, sortBy) {
+  let arr = state.curMarket;
+
+  // Asc
+  if (dir === "asc") {
+    if (sortBy === "price")
+      arr.sort((a, b) => a.current_price - b.current_price);
+    if (sortBy === "change")
+      arr.sort(
+        (a, b) => a.price_change_percentage_24h - b.price_change_percentage_24h
+      );
+    if (sortBy === "volume")
+      arr.sort((a, b) => a.total_volume - b.total_volume);
+    if (sortBy === "cap") arr.sort((a, b) => a.market_cap - b.market_cap);
+  }
+
+  // Dsc
+  if (dir === "dsc") {
+    if (sortBy === "price")
+      arr.sort((a, b) => b.current_price - a.current_price);
+    if (sortBy === "change")
+      arr.sort(
+        (a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h
+      );
+    if (sortBy === "volume")
+      arr.sort((a, b) => b.total_volume - a.total_volume);
+    if (sortBy === "cap") arr.sort((a, b) => b.market_cap - a.market_cap);
+  }
+
+  state.curMarket = arr;
+  // const be = state.curMarket.prop;
+  // console.log(`new`, state.curMarket);
+}
+
+// Determines which button was clicked on the page and calls the appropriate functions
+function buttonFinder(e) {
+  if (e.target.classList.contains("asc") || e.target.classList.contains("dsc"))
+    sortTableContents(e);
+
+  if (e.target.classList.contains("expand-tableBTN")) {
+    showHideSearch(e);
+  }
+
+  return;
+}
+
+// Sorting table functionality
+function sortTableContents(e) {
+  // 1. Make sure only the buttons are pressed
+
+  const button = e.target;
+
+  // Exit if already sorted
+  if (button.classList.contains("active")) return;
+
+  const sortBy = e.target.dataset.sort;
+  const direction = e.target.className;
+
+  // console.log(sortBy, direction);
+
+  const tableButtons = document
+    .querySelector(".crypto-table")
+    .querySelectorAll("button");
+
+  // 3. remove the colour of the previous button
+  tableButtons.forEach((btn) => btn.classList.remove("active"));
+  // 2. Change the colour of the button that is pressed
+  button.classList.add("active");
+  // 4. execute sort function based on variable
+  sortData(direction, sortBy);
+  // 5. output sorted data to dom
+  populateMarketTable(state.curMarket);
+}
+
+// Expand market table and show search box
+function showHideSearch(e) {
+  e.target.classList.contains("expanded") ? hideSearch(e) : showSearch(e);
+}
+
+function showSearch(e) {
+  // const button = e.target;
+  const sectionHide = document.querySelector(".market-stats");
+  const parentSection = document.querySelector(".market-info");
+  const coinElements = document.querySelectorAll(".coin");
+
+  // Hide the stats
+  sectionHide.style.display = "none";
+  // Show the button has been clicked
+  e.target.classList.toggle("expanded");
+  e.target.innerHTML = `
+  <ion-icon name="contract-outline"></ion-icon>
+  `;
+
+  // Creating the searchBox element
+  const searchBox = document.createElement("div");
+  searchBox.classList.add("search-container");
+  searchBox.innerHTML = `
+  <input type="search" name="c" id="coin-search" placeholder="Search through coins" maxlength="20"
+  aria-label="Search through available crypto currencies">
+  `;
+
+  parentSection.prepend(searchBox);
+
+  searchBox.addEventListener("input", filterCoins);
+}
+
+// Filter coins in the search view
+function filterCoins(e) {
+  const coins = document.querySelectorAll(".coin");
+  const term = e.target.value.toLowerCase();
+
+  coins.forEach((coin) => {
+    // Select the coin name
+    const id = coin.querySelector(".coin-name").innerText.toLowerCase();
+
+    id.indexOf(term) > -1
+      ? (coin.style.display = "revert")
+      : (coin.style.display = "none");
   });
+}
+
+function hideSearch(e) {
+  const button = e.target;
+  const sectionShow = document.querySelector(".market-stats");
+  // const parentSection = document.querySelector(".market-info");
+  const searchBox = document.querySelector(".search-container");
+
+  // Show the stats
+  sectionShow.style.display = "flex";
+  // Show the button has been clicked
+  button.classList.toggle("expanded");
+  button.innerHTML = `
+  <ion-icon name="expand-outline"></ion-icon>
+  `;
+
+  // Removing the searchBox
+  searchBox.remove();
 }
 
 export const renderMarketOverviewMarkup = function (parentEl) {
   // console.log(`info`, marketStats);
   parentEl.innerHTML = generateMarkup();
-  populateMarketTable();
+  const marketInfoSection = document.querySelector(".market-info");
+  populateMarketTable(state.curMarket);
+
+  marketInfoSection.addEventListener("click", buttonFinder);
 };
