@@ -13,8 +13,9 @@
         integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"></script>
+
     <link rel="stylesheet" href="style.css">
-    <script type="module" src="./JS/navQueue.js"></script>
+
 
 </head>
 
@@ -39,7 +40,10 @@
 
             <div class="treemap-view">
                 <div class="treemap-container">
-                    <h1>Treemap </h1>
+                    <h1>Portfolio Performance </h1>
+                    <svg class="treemap" id="treemap">
+
+                    </svg>
                 </div>
                 <button class="new-investBTN">
                     <ion-icon name="add-outline"></ion-icon>
@@ -613,7 +617,6 @@
 
             </div> -->
 
-            <div class="overlay hidden"></div>
 
             <!-- <div class="form-container ">
 
@@ -630,25 +633,15 @@
                     <label for="fiat-amount">Amount invested ($):</label>
                     <input type="number" name="fiat-amount" class="fiat-amount" required min="0" max="1000000">
 
-                    <label for="dueDate">Date of investment:</label>
-                    <input type="date" name="dueDate" class="due-date" required>
+                    <label for="dueDate">Date and time of investment:</label>
+                    <input type="datetime-local" name="dueDate" class="due-date">
 
+                    <label for="buy-price">Price of coin at investment ($):</label>
+                    <input type="number" name="buy-price" class="buy-price" required min="0">
 
-
-                    <label for="radioBTN">Add to previous investment in portfolio:</label>
-                    <div class="radioBTN">
-                        <label for="yes">Yes</label>
-                        <input type="radio" name="join" class="join" id="yes">
-                        <label for="no">No</label>
-                        <input type="radio" name="join" class="join" id="no" checked>
-                    </div>
-
-                    <label for="invest-collection" class="invest-collection ">Pick previous investment:</label>
-                    <select class="invest-collection ">
-                        <option value="idMACRO1">Bitcoin - 02 May 2021</option>
-                        <option value="idMACRO2">Ethereum - 17 Jan 2021</option>
-                        <option value="idMACRO3">Polkadot - 12 Dec 2020</option>
-                    </select>
+                    <label for="platform">Platform of purchase:</label>
+                    <input type="text" name="platform" placeholder="Where did you buy it?" maxlength="20"
+                        class="platform" required>
 
                     <div class="action-btns">
                         <button type="submit" class="add-btn">Add</button>
@@ -720,7 +713,8 @@
         </div>
     </div>
 
-
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script type="module" src="./JS/navQueue.js"></script>
 
 </body>
 

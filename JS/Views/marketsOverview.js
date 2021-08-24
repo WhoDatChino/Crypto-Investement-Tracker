@@ -32,7 +32,7 @@ function generateMarkup() {
   let html = `
   <div class="markets-view">
   <section class="market-stats">
-      <h1>24 hour market stats</h1>
+      <h1>24 Hour Market Stats</h1>
       <div class="stats-grid-container">
           <div class="stats-grid">
               <div class="market_perf">
@@ -200,28 +200,44 @@ function sortData(dir, sortBy) {
 
   // Asc
   if (dir === "asc") {
-    if (sortBy === "price")
-      arr.sort((a, b) => a.current_price - b.current_price);
-    if (sortBy === "change")
-      arr.sort(
-        (a, b) => a.price_change_percentage_24h - b.price_change_percentage_24h
-      );
-    if (sortBy === "volume")
-      arr.sort((a, b) => a.total_volume - b.total_volume);
-    if (sortBy === "cap") arr.sort((a, b) => a.market_cap - b.market_cap);
+    switch (sortBy) {
+      case "price":
+        arr.sort((a, b) => a.current_price - b.current_price);
+        break;
+      case "change":
+        arr.sort(
+          (a, b) =>
+            a.price_change_percentage_24h - b.price_change_percentage_24h
+        );
+        break;
+      case "volume":
+        arr.sort((a, b) => a.total_volume - b.total_volume);
+        break;
+      case "cap":
+        arr.sort((a, b) => a.market_cap - b.market_cap);
+        break;
+    }
   }
 
   // Dsc
   if (dir === "dsc") {
-    if (sortBy === "price")
-      arr.sort((a, b) => b.current_price - a.current_price);
-    if (sortBy === "change")
-      arr.sort(
-        (a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h
-      );
-    if (sortBy === "volume")
-      arr.sort((a, b) => b.total_volume - a.total_volume);
-    if (sortBy === "cap") arr.sort((a, b) => b.market_cap - a.market_cap);
+    switch (sortBy) {
+      case "price":
+        arr.sort((a, b) => b.current_price - a.current_price);
+        break;
+      case "change":
+        arr.sort(
+          (a, b) =>
+            b.price_change_percentage_24h - a.price_change_percentage_24h
+        );
+        break;
+      case "volume":
+        arr.sort((a, b) => b.total_volume - a.total_volume);
+        break;
+      case "cap":
+        arr.sort((a, b) => b.market_cap - a.market_cap);
+        break;
+    }
   }
 
   state.curMarket = arr;

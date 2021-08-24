@@ -3,10 +3,10 @@ const state = {
     {
       asset: "Bitcoin",
       ticker: "btc",
-      currentPrice: 38700,
-      assetAmount: 0.01666,
+      currentPrice: 44812.6,
+      assetAmount: 0.01409,
       originalCapital: 500,
-      currentValue: 645,
+      currentValue: 631.4271,
       soldPositions: [
         {
           date: " 22 Jan 2021",
@@ -23,6 +23,17 @@ const state = {
       ],
       macros: [
         {
+          asset: "Bitcoin",
+          id: Math.floor(Math.random() * 1000000),
+          originalCapital: 500,
+          assetAmount: 0.01409,
+          currentValue: 631.4271,
+          date: "19 June 2021",
+          sold: false,
+          platform: "gemini",
+        },
+        {
+          asset: "Bitcoin",
           id: Math.floor(Math.random() * 1000000),
           originalCapital: 30,
           assetAmount: 0.00156,
@@ -32,6 +43,7 @@ const state = {
           platform: "coinbase",
         },
         {
+          asset: "Bitcoin",
           id: Math.floor(Math.random() * 1000000),
           originalCapital: 60,
           assetAmount: 0.00375,
@@ -59,6 +71,7 @@ const state = {
       ],
       macros: [
         {
+          asset: "Ethereum",
           id: Math.floor(Math.random() * 1000000),
           originalCapital: 200,
           assetAmount: 0.16129,
@@ -68,6 +81,7 @@ const state = {
           platform: "coinbase",
         },
         {
+          asset: "Ethereum",
           id: Math.floor(Math.random() * 1000000),
           originalCapital: 800,
           assetAmount: 0.33871,
@@ -77,6 +91,7 @@ const state = {
           platform: "gemini",
         },
         {
+          asset: "Ethereum",
           id: Math.floor(Math.random() * 1000000),
           originalCapital: 300,
           assetAmount: 0.21246,
@@ -90,17 +105,18 @@ const state = {
     {
       asset: "Dogecoin",
       ticker: "doge",
-      currentPrice: 0.2,
+      currentPrice: 0.1,
       assetAmount: 1136.36364,
       originalCapital: 250,
-      currentValue: 227.27273,
+      currentValue: 113.63636,
       soldPositions: [],
       macros: [
         {
+          asset: "Dogecoin",
           id: Math.floor(Math.random() * 1000000),
           originalCapital: 250,
           assetAmount: 1136.36364,
-          currentValue: 227.27273,
+          currentValue: 113.63636,
           date: "9 Jul 2021",
           sold: false,
           platform: "gemini",
@@ -109,8 +125,7 @@ const state = {
     },
   ],
   marketStats: {},
-
-  // marketPerf: 5,
+  platforms: ["gemini", "coinbase"],
 };
 
 // const createCurMarketObject = function (data) {
@@ -120,46 +135,16 @@ const state = {
 
 // const curMarket ={}
 
-class MacroInvestment {
-  id = +(Date.now() + "").slice(-10);
-  constructor(
-    coinName,
-    cumulateInvest,
-    originalInvest,
-    microInvests,
-    soldMicros,
-    change,
-    date,
-    sold
-  ) {
-    (this.coinName = coinName),
-      (this.cumulateInvest = cumulateInvest),
-      (this.originalInvest = originalInvest),
-      (this.microInvests = microInvests),
-      (this.soldMicros = soldMicros),
-      (this.change = change),
-      (this.date = date),
-      (this.sold = sold);
-  }
-}
+// class MacroInvestment {
+//   id = +(Date.now() + "").slice(-10);
+//   constructor(props) {
+//      {asset , originalCapital,assetAmount,
+//       currentValue,
+//       platform,
+//       date,
+//       sold} props
 
-// class MicroInvestment extends MacroInvestment{
-//     id = +(Date.now() + "").slice(-10)
-
-//     super()
 // }
-
-// const newI = new MacroInvestment(
-//   "bitcoin",
-//   500,
-//   400,
-//   [],
-//   100,
-//   0,
-//   "12 May 2021",
-//   false
-// );
-// console.log(newI);
 
 // redis for js
 // Want the api to call more times if it fails

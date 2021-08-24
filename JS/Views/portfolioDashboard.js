@@ -10,7 +10,7 @@ import { formatFullCurrency } from "../helpers.js";
 // //////// FUNCTIONS
 
 function generateMarkup() {
-  const html = `
+  return `
     <div class="portfolio-summary-view">
 
                 <h1 class="port-header">Portfolio Dashboard</h1>
@@ -80,8 +80,6 @@ function generateMarkup() {
 
             </div>
     `;
-
-  return html;
 }
 
 // Calculate balances obtained from portfolio
