@@ -146,9 +146,9 @@ function formatState() {
 
 // New investment button clicked - show form
 function showNewInvestForm() {
-  // Display overlay
   const overlay = document.querySelector(".overlay");
-  overlay.classList.toggle("hidden");
+
+  showOverlay(overlay);
 
   // Create form and append to dom
   const form = document.createElement("div");
@@ -172,7 +172,7 @@ function showNewInvestForm() {
 
                     <label for="fiat-amount">Amount invested ($):</label>
                     <div class="input-data">
-                      <input type="number" name="Amount Invested" class="fiat-amount"  min="0" max="10000000">
+                      <input type="number" name="Amount Invested" class="fiat-amount" step='0.01' max='10000000'>
                       <small>Message</small>
                     </div>
 
@@ -206,10 +206,11 @@ function showNewInvestForm() {
   function populateSelectOptions() {
     let html = "";
     state.curMarket.forEach((coin) => {
-      html += `<option value=${coin.symbol.toUpperCase()}>
+      html += `<option value=${coin.symbol} data-id=${coin.id}>
                   ${coin.name}
                 </option>`;
     });
+    console.log(`state`, state.curMarket);
     return html;
   }
 
@@ -218,27 +219,34 @@ function showNewInvestForm() {
   const cancelBTN = document.querySelector(".cancel-btn");
 
   // Using closures
-  function hideOverlay() {
-    form.remove();
-    overlay.classList.toggle("hidden");
-  }
 
   // Event Listeners
-  cancelBTN.addEventListener("click", hideOverlay);
-  overlay.addEventListener("click", hideOverlay);
+  cancelBTN.addEventListener("click", hideOverlayRemoveSibling);
+  overlay.addEventListener("click", hideOverlayRemoveSibling);
   form.addEventListener("submit", formValidator);
 }
 
+function showOverlay(overlay) {
+  // Display overlay
+  overlay.classList.remove("hidden");
+}
+
+function hideOverlayRemoveSibling() {
+  const overlay = document.querySelector(".overlay");
+
+  overlay.nextElementSibling.remove();
+  overlay.classList.add("hidden");
+}
 // Form Validator - Checks to see if user has input correct values and will then call for creation of new investment or will throw errors for user to correct in inputs
 function formValidator(e) {
   e.preventDefault();
-  console.log(`validator`);
 
   const ticker = document.querySelector(".coin-ticker");
   const originalCapital = document.querySelector(".fiat-amount");
   const date = document.querySelector(".due-date");
   const price = document.querySelector(".buy-price");
   const platform = document.querySelector(".platform");
+
   let valid = 0;
 
   // Checks to see if all the required fields have a value
@@ -253,7 +261,25 @@ function formValidator(e) {
     });
   }
 
-  // Displays error for user
+  // Checks that valid number is entered
+  function checkOriginalCapital() {
+    if (+originalCapital.value === 0 || +originalCapital.value < 0) {
+      showError(originalCapital, `Value must be greater than 0`);
+      valid++;
+      return;
+    }
+  }
+
+  // Checks that date is not in the future
+  function checkDate() {
+    if (new Date(date.value).getTime() > Date.now()) {
+      showError(date, `Can't use future date`);
+      valid++;
+      return;
+    }
+  }
+
+  // Displays error for user on input fields
   function showError(input, message) {
     const parent = input.parentElement;
 
@@ -269,15 +295,90 @@ function formValidator(e) {
     return input.getAttribute("name");
   }
 
+  // Performs API call to get price data for coin on specific date or uses user provided value. Returns the value as a number in each case
+  async function getPriceData() {
+    // If price value given by user, no need to make api call
+    if (price.value !== 0 && price.value !== "") return +price.value;
+
+    try {
+      // Perform fetch to get price data on certain date
+      const dateString = new Date(date.value).toISOString();
+      const coin = ticker.value.toUpperCase();
+      const apiKey = `923F38CF-FBE2-49B9-A382-C9B12A0B96A7`;
+
+      const req = await fetch(
+        `https://rest.coinapi.io/v1/exchangerate/${coin}T/USD?time=${dateString}&apikey=${apiKey}`
+      );
+
+      if (!req.ok) {
+        throw req.status;
+      }
+
+      const data = await req.json();
+
+      console.log(`data`, data);
+      return data.rate;
+    } catch (err) {
+      displayErrorMessage(err);
+    }
+  }
+
   // Creates new investment object
   function createInvestment() {
-    console.log(price.value);
+    // 1. Check if that asset class already exists
+    // 2. If it does, create a MacroInvestment
+    // - Asset class needs to be updated (pub/sub)
+    // 3. If it doesn't create a AssetClass
+    // getPriceData();
   }
 
   checkRequired([ticker, originalCapital, date, platform]);
+  checkOriginalCapital();
+  checkDate();
+  // Create valid will be >0 if any required input field is invalid
+  if (valid === 0) getPriceData();
+}
 
-  // Create n
-  if (valid === 0) createInvestment();
+const errorMap = {
+  400: `Something went wrong, please try again.`,
+  401: `API key invalid.`,
+  403: `API key unauthorised.`,
+  429: `Too many requests. Daily limit reached.`,
+  550: `No data. Can't fufill request.`,
+};
+
+function displayErrorMessage(code) {
+  const errorPopup = document.createElement("div");
+  errorPopup.classList.add("error-message");
+  console.log(`map`, errorMap[code]);
+
+  const message = errorMap[code];
+
+  errorPopup.innerHTML = `
+  <ion-icon name="warning-outline"></ion-icon>
+  <p>${message} If error persists, please manually input coin price.</p>
+  
+  <button class="cancel-btn">
+  </button>
+  `;
+  document.querySelector(".views-container").append(errorPopup);
+  console.log(`heeeeeeelllll`);
+  errorPopup.querySelector(".close-errorBTN").addEventListener("click", () => {
+    errorPopup.remove();
+  });
+}
+
+class MacroInvestment {
+  id = +(Date.now() + "").slice(-10);
+  constructor(props) {
+    this.asset = props.asset;
+    this.originalCapital = props.originalCapital;
+    this.assetAmount = props.assetAmount;
+    this.currentValue = props.currentValue;
+    this.platform = props.platform;
+    this.date = props.date;
+    this.sold = false;
+  }
 }
 
 export const renderTreemapMarkup = function (parentEl) {

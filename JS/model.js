@@ -116,7 +116,7 @@ const state = {
           id: Math.floor(Math.random() * 1000000),
           originalCapital: 250,
           assetAmount: 1136.36364,
-          currentValue: 113.63636,
+          currentValue: 113.63636, // assetAmount * currentPrice
           date: "9 Jul 2021",
           sold: false,
           platform: "gemini",
@@ -134,17 +134,24 @@ const state = {
 // };
 
 // const curMarket ={}
+class Crypto {}
 
-// class MacroInvestment {
-//   id = +(Date.now() + "").slice(-10);
-//   constructor(props) {
-//      {asset , originalCapital,assetAmount,
-//       currentValue,
-//       platform,
-//       date,
-//       sold} props
+class MacroInvestment extends Crypto {
+  id = +(Date.now() + "").slice(-10);
+  constructor(props) {
+    this.asset = props.asset;
+    this.originalCapital = props.originalCapital;
+    this.assetAmount = props.assetAmount;
+    this.currentValue = props.price;
+    this.platform = props.platform;
+    this.date = props.date;
+    this.sold = false;
+  }
 
-// }
+  _calcCoinAmount() {
+    return this.curre;
+  }
+}
 
 // redis for js
 // Want the api to call more times if it fails
