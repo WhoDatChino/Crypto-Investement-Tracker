@@ -1,6 +1,7 @@
 "use strict";
 
 import state from "../model.js";
+import { AssetClass, MacroInvestment } from "../investmentsLogic.js";
 
 // /////// FUNCTIONS
 
@@ -57,16 +58,16 @@ export const createTreemap = function () {
     .append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-  const root = d3
-    .hierarchy(data)
-    .sum((d) => +Math.abs(d.value))
-    .sort((a, b) => d3.descending(a.value, b.value));
+  const root = d3.hierarchy(data).sum((d) => +Math.abs(d.value));
+  // .sort((a, b) => d3.descending(a.value, b.value));
 
   const treemap = d3
     .treemap()
     .size([innerWidth, innerHeight])
     .padding(8)
     .paddingInner(7)(root);
+
+  console.log(`root`, root, `leaves`, root.leaves());
 
   const leaf = g
     .selectAll("g")
@@ -89,7 +90,12 @@ export const createTreemap = function () {
   // Text
   const boxInfo = g
     .selectAll(".info")
-    .data(root.leaves().filter((d) => d.value > 0))
+    .data(
+      root
+        .leaves()
+        .filter((d) => d.value > 0)
+        .filter((d) => d.value > root.value * 0.05)
+    )
     .join("g")
     .style("font-size", "1.5rem");
 
@@ -237,16 +243,23 @@ function hideOverlayRemoveSibling() {
   overlay.nextElementSibling.remove();
   overlay.classList.add("hidden");
 }
+
 // Form Validator - Checks to see if user has input correct values and will then call for creation of new investment or will throw errors for user to correct in inputs
 function formValidator(e) {
   e.preventDefault();
 
+  // Values used in Macro creations
   const ticker = document.querySelector(".coin-ticker");
   const originalCapital = document.querySelector(".fiat-amount");
   const date = document.querySelector(".due-date");
   const price = document.querySelector(".buy-price");
   const platform = document.querySelector(".platform");
+  // Getting selected option's data attr - Used in AssetClass creation
+  const geckoId = ticker.options[ticker.selectedIndex].dataset.id;
+  const assetName = ticker.options[ticker.selectedIndex].innerText.trim();
+  console.log(assetName);
 
+  // Counter - ensures all fields have valid inputs & data is correct to create investment
   let valid = 0;
 
   // Checks to see if all the required fields have a value
@@ -277,6 +290,8 @@ function formValidator(e) {
       valid++;
       return;
     }
+
+    console.log(`DATE`, date.value);
   }
 
   // Displays error for user on input fields
@@ -307,7 +322,7 @@ function formValidator(e) {
       const apiKey = `923F38CF-FBE2-49B9-A382-C9B12A0B96A7`;
 
       const req = await fetch(
-        `https://rest.coinapi.io/v1/exchangerate/${coin}T/USD?time=${dateString}&apikey=${apiKey}`
+        `https://rest.coinapi.io/v1/exchangerate/${coin}/USD?time=${dateString}&apikey=${apiKey}`
       );
 
       if (!req.ok) {
@@ -319,26 +334,56 @@ function formValidator(e) {
       console.log(`data`, data);
       return data.rate;
     } catch (err) {
+      throw err;
+    }
+  }
+
+  // Creates new AssetClass and MacroInvestment instances
+  function newClassMacro(props) {
+    const assetClass = new AssetClass(props);
+    const macro = new MacroInvestment(props);
+  }
+
+  // Creates new MacroInvestment
+  function newMacro(props) {
+    const macro = new MacroInvestment(props);
+  }
+
+  // Creates new investment object
+  async function createInvestment() {
+    try {
+      const props = {
+        asset: assetName,
+        originalCapital: +originalCapital.value,
+        date: date.value,
+        price: await getPriceData(),
+        geckoId: geckoId,
+        platform: platform.value,
+      };
+
+      // 1. Check if that asset class already exists
+      // 2. If it does, create a MacroInvestment
+      // - Asset class needs to be updated
+      // 3. If it doesn't create a AssetClass
+      state.assetClasses.findIndex((aClass) => aClass.asset === props.asset) < 0
+        ? newClassMacro(props)
+        : newMacro(props);
+
+      console.log(state);
+    } catch (err) {
       displayErrorMessage(err);
     }
   }
 
-  // Creates new investment object
-  function createInvestment() {
-    // 1. Check if that asset class already exists
-    // 2. If it does, create a MacroInvestment
-    // - Asset class needs to be updated (pub/sub)
-    // 3. If it doesn't create a AssetClass
-    // getPriceData();
-  }
-
+  // FORM VALIDATION
   checkRequired([ticker, originalCapital, date, platform]);
   checkOriginalCapital();
   checkDate();
   // Create valid will be >0 if any required input field is invalid
-  if (valid === 0) getPriceData();
+  if (valid === 0) createInvestment();
 }
 
+// Error messages and codes as specified by CoinApi
 const errorMap = {
   400: `Something went wrong, please try again.`,
   401: `API key invalid.`,
@@ -347,6 +392,7 @@ const errorMap = {
   550: `No data. Can't fufill request.`,
 };
 
+// Shows popup error message based on the error returned by CoinApi response
 function displayErrorMessage(code) {
   const errorPopup = document.createElement("div");
   errorPopup.classList.add("error-message");
@@ -362,23 +408,9 @@ function displayErrorMessage(code) {
   </button>
   `;
   document.querySelector(".views-container").append(errorPopup);
-  console.log(`heeeeeeelllll`);
-  errorPopup.querySelector(".close-errorBTN").addEventListener("click", () => {
+  errorPopup.querySelector(".cancel-btn").addEventListener("click", () => {
     errorPopup.remove();
   });
-}
-
-class MacroInvestment {
-  id = +(Date.now() + "").slice(-10);
-  constructor(props) {
-    this.asset = props.asset;
-    this.originalCapital = props.originalCapital;
-    this.assetAmount = props.assetAmount;
-    this.currentValue = props.currentValue;
-    this.platform = props.platform;
-    this.date = props.date;
-    this.sold = false;
-  }
 }
 
 export const renderTreemapMarkup = function (parentEl) {

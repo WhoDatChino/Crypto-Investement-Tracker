@@ -1,11 +1,7 @@
 "use strict";
 
 import state from "../model.js";
-import {
-  formatFullCurrency,
-  formatShortCurrency,
-  formatCoinPrice,
-} from "../helpers.js";
+import { formatCurrency, formatShortCurrency } from "../helpers.js";
 
 // Cant set state to a variable cz will be set to null as its executed before the data is fetched from the api
 // const state.curMarket = state.curMarket;
@@ -21,13 +17,9 @@ function generateMarkup() {
   const bigLosePercent =
     state.marketStats.bigLoser.price_change_percentage_24h.toFixed(2);
   const highVolName = state.marketStats.highVol.name;
-  const highVolAmount = formatFullCurrency(
-    +state.marketStats.highVol.total_volume
-  );
+  const highVolAmount = formatCurrency(+state.marketStats.highVol.total_volume);
   const lowVolName = state.marketStats.lowVol.name;
-  const lowVolAmount = formatFullCurrency(
-    +state.marketStats.lowVol.total_volume
-  );
+  const lowVolAmount = formatCurrency(+state.marketStats.lowVol.total_volume);
 
   let html = `
   <div class="markets-view">
@@ -174,7 +166,11 @@ function populateMarketTable(data) {
 
     row.innerHTML = `
     <td class="coin-name">${asset.name}</td>
-    <td>${formatCoinPrice(asset.current_price)}</td>
+    <td>${
+      asset.current_price < 1
+        ? formatCurrency(asset.current_price, 6)
+        : formatCurrency(asset.current_price)
+    }</td>
     ${
       asset.price_change_percentage_24h > 0
         ? `<td class="green">+${asset.price_change_percentage_24h.toFixed(

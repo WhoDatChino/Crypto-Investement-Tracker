@@ -1,5 +1,6 @@
 import state from "../model.js";
-import { formatFullCurrency } from "../helpers.js";
+import { formatCurrency, formatReadableDate } from "../helpers.js";
+import { MacroInvestment } from "../investmentsLogic.js";
 
 // Export 1 function that loads the markup and creates all the event listeners for that page
 
@@ -86,14 +87,14 @@ function generateMarkup() {
 function calcBalances() {
   // Inintialize values
   let portValue = 0;
-  let originalValue = 0;
+  let totalInvested = 0;
   let change = 0;
   let totalSold = 0;
 
   // Loop array & add to variables
   state.assetClasses.forEach((invest) => {
     portValue += invest.currentValue;
-    originalValue += invest.originalCapital;
+    totalInvested += invest.totalInvested;
 
     if (invest.soldPositions.length !== 0) {
       invest.soldPositions.forEach((item) => {
@@ -102,34 +103,39 @@ function calcBalances() {
     }
   });
 
-  change = (portValue / originalValue - 1) * 100;
+  totalInvested === 0
+    ? (change = 0)
+    : (change = ((portValue - totalInvested) / totalInvested) * 100);
 
-  return { portValue, originalValue, change, totalSold };
+  return { portValue, totalInvested, change, totalSold };
 }
-// Setting to variable instead of calling multiple times
-const balances = calcBalances();
 
 // Generate portfolio summary data
 function generatePortSummary() {
+  // Setting to variable instead of calling multiple times
+  const balances = calcBalances();
+
   // Select html elements
   const portValueEl = document.querySelector(".port-value");
   const originalValueEl = document.querySelector(".start-value");
   const changeEl = document.querySelector(".value-change");
   const totalSoldEl = document.querySelector(".sold-pos");
 
-  //   console.log(calcBalances());
+  console.log(`balance`, balances);
 
-  portValueEl.innerText = `${formatFullCurrency(balances.portValue)}`;
-  originalValueEl.innerText = `${formatFullCurrency(balances.originalValue)}`;
+  portValueEl.innerText = `${formatCurrency(balances.portValue)}`;
+  originalValueEl.innerText = `${formatCurrency(balances.totalInvested)}`;
   changeEl.innerHTML =
     balances.change > 0
       ? `<span class="green">+${balances.change.toFixed(2)}%</span>`
       : `<span class="red">${balances.change.toFixed(2)}%</span>`;
-  totalSoldEl.innerText = `${formatFullCurrency(balances.totalSold)}`;
+  totalSoldEl.innerText = `${formatCurrency(balances.totalSold)}`;
 }
 
 // Generate portfolio balance summary table elements
 function populateBalancesTable() {
+  const balances = calcBalances();
+
   const table = document.querySelector(".asset-balances-table");
   const portTotal = balances.portValue;
 
@@ -139,7 +145,7 @@ function populateBalancesTable() {
     row.innerHTML = `
             <td>${invest.asset}</td>
             <td>${invest.assetAmount}</td>
-            <td>${formatFullCurrency(invest.currentValue)}</td>
+            <td>${formatCurrency(invest.currentValue)}</td>
             <td>${((invest.currentValue / portTotal) * 100).toFixed(2)}%</td>
         `;
 
@@ -156,42 +162,52 @@ function populateMovementsTable() {
 
   const tableItems = [];
 
+  // Sold positions
   state.assetClasses.forEach((asset) => {
     if (asset.soldPositions.length !== 0) {
-      asset.soldPositions.forEach((sell) => {
-        const row = document.createElement("tr");
-        row.classList.add("sell");
-
-        row.innerHTML = `
-            <td>${sell.date}</td>
-            <td>${asset.asset}</td>
-            <td><span class="red">Sell</span></td>
-            <td>${formatFullCurrency(sell.sellValue)}</td>
-            <td>${sell.assetAmount}</td>
-            `;
-        tableItems.push(row);
+      asset.soldPositions.forEach((sold) => {
+        sold.asset = asset.asset;
+        tableItems.push(sold);
       });
     }
 
+    // HODL positions
     if (asset.macros.length !== 0) {
-      asset.macros.forEach((buy) => {
-        const row = document.createElement("tr");
-        // row.classList.add('sell')
-
-        row.innerHTML = `
-            <td>${buy.date}</td>
-            <td>${asset.asset}</td>
-            <td><span class="green">Buy</span></td>
-            <td>${formatFullCurrency(buy.originalCapital)}</td>
-            <td>${buy.assetAmount}</td>
-            `;
-        tableItems.push(row);
-      });
+      tableItems.push(...asset.macros);
     }
   });
 
+  tableItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  console.log(`tttttttt`, tableItems);
+
   tableItems.forEach((item) => {
-    table.appendChild(item);
+    if (item instanceof MacroInvestment) {
+      const row = document.createElement("tr");
+      // row.classList.add('sell')
+
+      row.innerHTML = `
+        <td>${formatReadableDate(item.date, true)}</td>
+        <td>${item.asset}</td>
+        <td><span class="green">Buy</span></td>
+        <td>${formatCurrency(item.originalCapital)}</td>
+        <td>${item.assetAmount}</td>
+        `;
+      table.appendChild(row);
+    } else {
+      const row = document.createElement("tr");
+      row.classList.add("sell");
+
+      row.innerHTML = `
+      <td>${formatReadableDate(item.date, true)}</td>
+      <td>${item.asset}</td>
+      <td><span class="red">Sell</span></td>
+      <td>${formatCurrency(item.sellPrice)}</td>
+      <td>${item.assetAmount}</td>
+      `;
+
+      table.appendChild(row);
+    }
   });
 }
 
@@ -202,3 +218,31 @@ export const renderPortfolioDashboardMarkup = function (parentEl) {
   populateBalancesTable();
   populateMovementsTable();
 };
+
+// asset.soldPositions.forEach((sell) => {
+//   const row = document.createElement("tr");
+//   row.classList.add("sell");
+
+//   row.innerHTML = `
+//       <td>${sell.date}</td>
+//       <td>${asset.asset}</td>
+//       <td><span class="red">Sell</span></td>
+//       <td>${formatCurrency(sell.sellValue)}</td>
+//       <td>${sell.assetAmount}</td>
+//       `;
+//   tableItems.push(row);
+// });
+
+// asset.macros.forEach((buy) => {
+//   const row = document.createElement("tr");
+//   // row.classList.add('sell')
+
+//   row.innerHTML = `
+//       <td>${buy.date}</td>
+//       <td>${asset.asset}</td>
+//       <td><span class="green">Buy</span></td>
+//       <td>${formatCurrency(buy.originalCapital)}</td>
+//       <td>${buy.assetAmount}</td>
+//       `;
+//   tableItems.push(row);
+// });
