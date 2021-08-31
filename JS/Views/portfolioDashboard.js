@@ -1,6 +1,7 @@
 import state from "../model.js";
 import { formatCurrency, formatReadableDate } from "../helpers.js";
 import { MacroInvestment } from "../investmentsLogic.js";
+import { formatState } from "./treemap.js";
 
 // Export 1 function that loads the markup and creates all the event listeners for that page
 
@@ -57,7 +58,10 @@ function generateMarkup() {
                         </div>
                     </div>
 
-                    <div class="sunburst-diag"></div>
+                    <div class="sunburst-diag">
+                      <svg id="sun-burst" class="sun-burst">
+                      </svg>
+                    </div>
 
                 </div>
 
@@ -71,7 +75,7 @@ function generateMarkup() {
                                 <th>Date</th>
                                 <th>Asset</th>
                                 <th>Transaction</th>
-                                <th>Amount</th>
+                                <th>Value</th>
                                 <th>Asset amount</th>
                             </tr>
                             
@@ -211,12 +215,92 @@ function populateMovementsTable() {
   });
 }
 
+function renderSunburst() {
+  const data = formatState();
+
+  const svg = d3.select("#sun-burst");
+
+  const container = document.querySelector(".sunburst-diag");
+
+  const height = Math.min(container.clientHeight * 0.9, container.clientWidth);
+  svg.attr("width", height);
+  svg.attr("height", height);
+
+  const radius = height / 2;
+
+  const hierarchy = d3.hierarchy(data).sum((d) => d.currentValue);
+  console.log(`hhhh`, hierarchy);
+
+  const root = d3.partition().size([2 * Math.PI, radius])(hierarchy);
+
+  const arc = d3
+    .arc()
+    .startAngle((d) => d.x0)
+    .endAngle((d) => d.x1)
+    .padAngle((d) => Math.min((d.x1 - d.x0) / 2, 0.005))
+    .padRadius(radius / 2)
+    .innerRadius((d) => d.y0)
+    .outerRadius((d) => d.y1 - 1);
+
+  const color = d3.scaleOrdinal(
+    d3.quantize(d3.interpolateRainbow, data.children.length + 1)
+  );
+
+  console.log(root);
+
+  const g = svg.append("g").attr("transform", `translate(${radius},${radius})`);
+
+  console.log(
+    `rootototot`,
+    root.descendants().filter((d) => d.depth && d.parent.children.length !== 1)
+  );
+  g.append("g")
+    .selectAll("path")
+    .data(
+      root
+        .descendants()
+        .filter((d) => d.depth && d.parent.children.length !== 1)
+    )
+    .join("path")
+    .attr("fill", (d) => {
+      while (d.depth > 1) d = d.parent;
+      return color(d.data.name);
+    })
+    .attr("d", arc)
+    .attr("stroke", "white")
+    .attr("stroke-width", 1);
+
+  g.append("g")
+    .attr("pointer-events", "none")
+    .attr("text-anchor", "middle")
+    .attr("font-size", 12)
+    .selectAll("text")
+    .data(
+      root
+        .descendants()
+        .filter(
+          (d) =>
+            d.depth === 1 &&
+            d.value > d3.max(root.descendants(), (d) => d.value) * 0.04
+        )
+    )
+    .join("text")
+    .attr("transform", function (d) {
+      const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
+      const y = (d.y0 + d.y1) / 2;
+      return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
+    })
+    .attr("dy", "0.35em")
+    .text((d) => d.data.name);
+}
+
 // Add the default html to the page
 export const renderPortfolioDashboardMarkup = function (parentEl) {
   parentEl.innerHTML = generateMarkup();
   generatePortSummary();
   populateBalancesTable();
   populateMovementsTable();
+  renderSunburst();
 };
 
 // asset.soldPositions.forEach((sell) => {

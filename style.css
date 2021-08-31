@@ -675,7 +675,7 @@ label.description {
 
 /* Asset balances */
 .asset-balances-container {
-  flex: 4;
+  flex: 5;
   width: 100%;
   display: flex;
   align-items: center;
@@ -686,6 +686,7 @@ label.description {
   display: flex;
   flex-direction: column;
   height: 90%;
+  justify-content: center;
 }
 .wrapper label {
   margin: 1rem;
@@ -707,10 +708,13 @@ label.description {
 .sunburst-diag {
   flex: 3;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .port-movements-container {
-  flex: 4;
+  flex: 3;
   width: 100%;
   display: flex;
   flex-direction: column;

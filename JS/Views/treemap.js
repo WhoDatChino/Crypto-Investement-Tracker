@@ -93,8 +93,8 @@ export const createTreemap = function () {
     .data(
       root
         .leaves()
-        .filter((d) => d.value > 0)
-        .filter((d) => d.value > root.value * 0.05)
+        .filter((d) => d.value > d3.max(root.leaves(), (d) => d.value) * 0.05)
+      // .filter((d) => d.value > root.value * 0.04)
     )
     .join("g")
     .style("font-size", "1.5rem");
@@ -109,7 +109,7 @@ export const createTreemap = function () {
 };
 
 // Format's assetClasses data from state into usable format for treemap
-function formatState() {
+export const formatState = function () {
   const data = {
     name: "Portfolio",
     children: [],
@@ -140,6 +140,7 @@ function formatState() {
         id: invest.id,
         name: invest.asset,
         date: invest.date,
+        currentValue: invest.currentValue,
         value,
       });
     });
@@ -148,7 +149,7 @@ function formatState() {
   }
 
   return data;
-}
+};
 
 // New investment button clicked - show form
 function showNewInvestForm() {
@@ -371,6 +372,7 @@ function formValidator(e) {
 
       console.log(state);
     } catch (err) {
+      console.log(`err code:`, err);
       displayErrorMessage(err);
     }
   }
