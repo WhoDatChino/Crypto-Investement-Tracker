@@ -527,7 +527,35 @@ tr.coin {
 .price-graph-container {
   flex: 5;
   width: 95%;
-  border: solid 1px yellow;
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.price-graph-container h3 {
+  margin-bottom: 5px;
+}
+.price-graph {
+  flex: 5;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+.button-container button {
+  width: 5rem;
+  height: 1.5rem;
+  border-radius: 1.5rem;
+  background-color: transparent;
+  color: var(--sienna-theme);
+  border: 2px solid var(--orange-theme);
+  transition: all 100ms ease-in;
+}
+.button-container button.active {
+  background-color: var(--orange-theme);
+  color: white;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.424);
 }
 
 .coin24hour-stats {
@@ -1032,4 +1060,9 @@ select {
 }
 .delete-invest-prompt ion-icon {
   font-size: 4rem;
+}
+
+.summary-text {
+  position: absolute;
+  font-size: 1.5rem;
 }

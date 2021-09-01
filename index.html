@@ -305,50 +305,59 @@
 
                     <section class="user-investment" style="margin-left: 2rem;">
 
-                        <h2>Your Investment:</h2>
+                        <h2>Your Investment in Bitcoin:</h2>
 
                         <div class="content">
 
                             <div class="investment-stats">
-                                <p>Coin amount: <span class="bold">B 0.000001352</span></p>
-                                <p>Original investment(s) value: <span class="bold">$1400</span></p>
-                                <p>Current investment value: <span class="bold">$2687.50</span></p>
-                                <p>Investment gain/loss: <span class="bold green"> +91.96%</span></p>
-                                <p>Total profit/loss on sold positions: <span class="bold red">-$135.23</span></p>
+                                <p>Total coin amount: <span class="bold">0</span></p>
+                                <p>Original investment(s) value: <span class="bold">0</span></p>
+                                <p>Current value: <span class="bold">0</span></p>
+                                <p>Percentage change: <span class="bold green"> 0</span></p>
+                                <p>Total sold positions: <span class="bold red">0</span></p>
                             </div>
 
                             <div class="investment-dates">
-                                <h3 style="margin-bottom: 5px; font-size: 1.3rem;">Investment Dates</h3>
+                                <h3 style="margin-bottom: 5px; font-size: 1.3rem;">Individual Investment(s):</h3>
                                 <div class="investment-table-container">
                                     <table class="investment-table">
                                         <tr>
                                             <th>Amount</th>
                                             <th>Date</th>
+                                            <th>Platform</th>
                                         </tr>
 
-                                        <tr>
+                                        <tr data-id="1111">
                                             <td><button>700</button></td>
                                             <td><button>22 Mar 2021</button></td>
+                                            <td><button>Gemini</button></td>
                                         </tr>
-                                        <tr>
-                                            <td><button data-id="1111" class="sold">600</button></td>
-                                            <td><button data-id="1111" class="sold">05 Jan 2021</button></td>
+                                        <tr data-id="2222">
+                                            <td><button class="sold">600</button></td>
+                                            <td><button class="sold">05 Jan 2021</button></td>
+                                            <td><button class="sold">Gemini</button></td>
+
                                         </tr>
-                                        <tr>
+                                        <tr data-id="3333">
                                             <td><button>600</button></td>
                                             <td><button>05 Jan 2021</button></td>
+                                            <td><button>Gemini</button></td>
+
                                         </tr>
-                                        <tr>
-                                            <td><button data-id="1111" class="sold">600</button></td>
-                                            <td><button data-id="1111" class="sold">05 Jan 2021</button></td>
+                                        <tr data-id="4444">
+                                            <td><button class="sold">600</button></td>
+                                            <td><button class="sold">05 Jan 2021</button></td>
+                                            <td><button class="sold">Gemini</button></td>
                                         </tr>
-                                        <tr>
+                                        <tr data-id="5555">
                                             <td><button>600</button></td>
                                             <td><button>05 Jan 2021</button></td>
+                                            <td><button>Gemini</button></td>
                                         </tr>
-                                        <tr>
+                                        <tr data-id="6666">
                                             <td><button>600</button></td>
                                             <td><button>05 Jan 2021</button></td>
+                                            <td><button>Gemini</button></td>
                                         </tr>
 
 
@@ -372,8 +381,17 @@
                                 <p>24h Low: <span class="bold">$35,715.74</span></p>
                             </div>
 
-                            <div style="margin: 1rem 0;" class="price-graph-container">
-                                <h3 style="margin-bottom: 5px;">Price Graph</h3>
+                            <div class="price-graph-container">
+                                <h3>Price Graph:</h3>
+                                <svg class="price-graph" id="price-graph"></svg>
+                                <div class="button-container">
+                                    <button class="change-period active" id="1w">1 Week</button>
+                                    <button class="change-period" id="1m">1 Month</button>
+                                    <button class="change-period" id="6m">6 Months</button>
+                                    <button class="change-period" id="1y">1 Year</button>
+                                    <button class="change-period" id="max">Max</button>
+                                </div>
+
                             </div>
 
                             <div class="investment-interactions">
@@ -711,6 +729,7 @@
                     <button class="cancel-btn">Cancel</button>
                 </div>
             </div> -->
+            <p class='summary-text'></p>
 
         </div>
     </div>

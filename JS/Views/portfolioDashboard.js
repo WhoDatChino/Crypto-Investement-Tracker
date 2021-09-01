@@ -229,7 +229,6 @@ function renderSunburst() {
   const radius = height / 2;
 
   const hierarchy = d3.hierarchy(data).sum((d) => d.currentValue);
-  console.log(`hhhh`, hierarchy);
 
   const root = d3.partition().size([2 * Math.PI, radius])(hierarchy);
 
@@ -243,17 +242,11 @@ function renderSunburst() {
     .outerRadius((d) => d.y1 - 1);
 
   const color = d3.scaleOrdinal(
-    d3.quantize(d3.interpolateRainbow, data.children.length + 1)
+    d3.quantize(d3.interpolateCool, data.children.length + 1)
   );
-
-  console.log(root);
 
   const g = svg.append("g").attr("transform", `translate(${radius},${radius})`);
 
-  console.log(
-    `rootototot`,
-    root.descendants().filter((d) => d.depth && d.parent.children.length !== 1)
-  );
   g.append("g")
     .selectAll("path")
     .data(
@@ -268,7 +261,30 @@ function renderSunburst() {
     })
     .attr("d", arc)
     .attr("stroke", "white")
-    .attr("stroke-width", 1);
+    .attr("stroke-width", 2)
+    .append("title")
+    // Following function appends different text based on whether the node is a leaf or a parent w/ either 1 child or more than 1 child
+    .text(function (d) {
+      if (d.children && d.children.length === 1) {
+        return `${d.data.children[0].name} (${formatReadableDate(
+          d.data.children[0].date
+        )})\nValue: ${formatCurrency(
+          d.data.children[0].currentValue
+        )}\nInitial Investment: ${formatCurrency(
+          d.data.children[0].originalCapital
+        )}
+        `;
+      } else if (d.children && d.children.length !== 1) {
+        return;
+      } else {
+        return `${d.data.name} (${formatReadableDate(
+          d.data.date
+        )})\nValue: ${formatCurrency(
+          d.data.currentValue
+        )}\nInitial Investment: ${formatCurrency(d.data.originalCapital)}
+        `;
+      }
+    });
 
   g.append("g")
     .attr("pointer-events", "none")
@@ -302,31 +318,3 @@ export const renderPortfolioDashboardMarkup = function (parentEl) {
   populateMovementsTable();
   renderSunburst();
 };
-
-// asset.soldPositions.forEach((sell) => {
-//   const row = document.createElement("tr");
-//   row.classList.add("sell");
-
-//   row.innerHTML = `
-//       <td>${sell.date}</td>
-//       <td>${asset.asset}</td>
-//       <td><span class="red">Sell</span></td>
-//       <td>${formatCurrency(sell.sellValue)}</td>
-//       <td>${sell.assetAmount}</td>
-//       `;
-//   tableItems.push(row);
-// });
-
-// asset.macros.forEach((buy) => {
-//   const row = document.createElement("tr");
-//   // row.classList.add('sell')
-
-//   row.innerHTML = `
-//       <td>${buy.date}</td>
-//       <td>${asset.asset}</td>
-//       <td><span class="green">Buy</span></td>
-//       <td>${formatCurrency(buy.originalCapital)}</td>
-//       <td>${buy.assetAmount}</td>
-//       `;
-//   tableItems.push(row);
-// });

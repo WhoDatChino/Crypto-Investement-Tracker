@@ -2,6 +2,7 @@
 
 import state from "../model.js";
 import { AssetClass, MacroInvestment } from "../investmentsLogic.js";
+import { renderInvestmentInspection } from "./investmentInspection.js";
 
 // /////// FUNCTIONS
 
@@ -19,6 +20,8 @@ function generateMarkup() {
                     <ion-icon name="add-outline"></ion-icon>
                 </button>
             </div>
+
+            <p class='summary-text'></p>
 
             <div class="overlay hidden"></div>
 
@@ -75,7 +78,7 @@ export const createTreemap = function () {
     .join("g")
     .attr("transform", (d) => `translate(${d.x0}, ${d.y0})`);
 
-  // Creating the rect's the
+  // Creating the rect's
   leaf
     .append("rect")
     .attr("height", (d) => d.y1 - d.y0)
@@ -86,7 +89,19 @@ export const createTreemap = function () {
     .attr("stroke", (d) =>
       d.data.value > 0 ? "rgba(30, 243, 136,1)" : "rgba(209, 25, 71,1)"
     )
-    .attr("stroke-width", 3);
+    .attr("stroke-width", 3)
+    .style("cursor", "pointer");
+
+  // Interactions
+  leaf
+    .on("mousemove", function (ev, d) {
+      moveSummaryText(ev, d);
+    })
+    .on("mouseout", hideSummaryText)
+    .on("click", function (ev, d) {
+      renderInvestmentInspection(d);
+    });
+
   // Text
   const boxInfo = g
     .selectAll(".info")
@@ -105,8 +120,30 @@ export const createTreemap = function () {
     .attr("x", (d) => (d.x1 - d.x0) / 2 + d.x0)
     .attr("y", (d) => (d.y1 - d.y0) / 2 + d.y0 + 10)
     .attr("text-anchor", "middle")
-    .attr("fill", "black");
+    .attr("fill", "black")
+    .attr("pointer-events", "none");
 };
+
+function moveSummaryText(ev, d) {
+  const div = document.querySelector(".summary-text");
+
+  // Change position of p tag
+  div.style.top = `${ev.offsetY}px`;
+  div.style.left = `${ev.offsetX}px`;
+
+  // Set colour and text
+  if (d.data.value > 0) {
+    div.innerText = `+${d.data.value.toFixed(2)}%`;
+    div.style.color = "var(--cashout-theme)";
+  } else {
+    div.innerText = `${d.data.value.toFixed(2)}%`;
+    div.style.color = "var(--delete-theme)";
+  }
+}
+
+function hideSummaryText() {
+  document.querySelector(".summary-text").innerText = ``;
+}
 
 // Format's assetClasses data from state into usable format for treemap
 export const formatState = function () {
@@ -138,9 +175,9 @@ export const formatState = function () {
       arr.push({
         name: invest.asset,
         id: invest.id,
-        name: invest.asset,
         date: invest.date,
         currentValue: invest.currentValue,
+        originalCapital: invest.originalCapital,
         value,
       });
     });
