@@ -83,7 +83,6 @@ export class AssetClass {
     this.currentPrice = this._findAssset().current_price;
     this.assetAmount = 0;
     this.totalInvested = 0;
-    this.image = this._findAssset().image;
     this.currentValue = 0;
     this.macros = [];
     this.soldPositions = [];
@@ -107,7 +106,7 @@ export class AssetClass {
   _updateAssetAmount() {
     this.assetAmount = this.macros
       .filter((macro) => macro.sold === false)
-      .reduce((acc, cur) => (acc += cur.assetAmount), this.assetAmount);
+      .reduce((acc, cur) => (acc += cur.assetAmount), 0);
     this._updateCurrentValue();
   }
 

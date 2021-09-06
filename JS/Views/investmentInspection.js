@@ -1,80 +1,80 @@
 "use strict";
 
 import state from "../model.js";
+import {
+  formatCurrency,
+  formatReadableDate,
+  formatShortCurrency,
+} from "../helpers.js";
 
 // /////// FUNCTIONS
-function generateMarkup(id) {
-  return `
+function generateMarkup(asset) {
+  // Finding the asset in the curMarket and the matching macro in the assetClass that was clicked in the treemap
+  const assetClass = state.assetClasses.find(
+    (assetClass) => assetClass.asset === asset.name
+  );
+
+  const macroMarket = state.curMarket.find((coin) => coin.name === asset.name);
+
+  const change = (
+    ((assetClass.currentValue - assetClass.totalInvested) /
+      assetClass.totalInvested) *
+    100
+  ).toFixed(2);
+
+  let html = `
     <div class="investment-expansion-view">
 
     <div class="crypto-header">
         <img class="coin-logo"
-            src="https://assets.coingecko.com/coins/images/14577/large/tko-logo.png?1617093467"
-            alt="Bitcoin logo">
-        <h1>Bitcoin</h1>
+            src=${macroMarket.image}
+            alt="${assetClass.asset} logo">
+        <h1>${assetClass.asset}</h1>
     </div>
 
     <div class="investment-info">
 
         <section class="user-investment" style="margin-left: 2rem;">
 
-            <h2>Your Investment in Bitcoin:</h2>
+            <h2>Your Investment in ${assetClass.asset}:</h2>
 
             <div class="content">
 
                 <div class="investment-stats">
-                    <p>Total coin amount: <span class="bold">0</span></p>
-                    <p>Original investment(s) value: <span class="bold">0</span></p>
-                    <p>Current value: <span class="bold">0</span></p>
-                    <p>Percentage change: <span class="bold green"> 0</span></p>
-                    <p>Total sold positions: <span class="bold red">0</span></p>
+                    <p>Total coin amount: <span class="bold">${
+                      assetClass.assetAmount
+                    } ${macroMarket.symbol}</span></p>
+                    <p>Original investment(s) value: <span class="bold">${formatCurrency(
+                      assetClass.totalInvested
+                    )}</span></p>
+                    <p>Current value: <span class="bold">${formatCurrency(
+                      assetClass.currentValue
+                    )}</span></p>
+                    <p>Percentage change: <span class="bold ${
+                      change > 0 ? "green" : "red"
+                    }"> ${change > 0 ? `+${change}%` : `${change}%`}</span></p>
+                    <p>Total sold positions: <span class="bold">${formatCurrency(
+                      assetClass.soldPositions.reduce(
+                        (acc, cur) => (acc += cur.sellValue),
+                        0
+                      )
+                    )}</span></p>
                 </div>
 
                 <div class="investment-dates">
-                    <h3 style="margin-bottom: 5px; font-size: 1.3rem;">Individual Investment(s):</h3>
+                    <h3>Individual Investment(s):</h3>
                     <div class="investment-table-container">
                         <table class="investment-table">
                             <thead>
                                 <tr>
-                                    <th>Amount</th>
-                                    <th>Date</th>
+                                    <th>Investment</th>
+                                    <th>Purchase Date</th>
                                     <th>Platform</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                <tr data-id="1111">
-                                    <td><button>700</button></td>
-                                    <td><button>22 Mar 2021</button></td>
-                                    <td><button>Gemini</button></td>
-                                </tr>
-                                <tr data-id="2222">
-                                    <td><button class="sold">600</button></td>
-                                    <td><button class="sold">05 Jan 2021</button></td>
-                                    <td><button class="sold">Gemini</button></td>
-
-                                </tr>
-                                <tr data-id="3333">
-                                    <td><button>600</button></td>
-                                    <td><button>05 Jan 2021</button></td>
-                                    <td><button>Gemini</button></td>
-
-                                </tr>
-                                <tr data-id="4444">
-                                    <td><button class="sold">600</button></td>
-                                    <td><button class="sold">05 Jan 2021</button></td>
-                                    <td><button class="sold">Gemini</button></td>
-                                </tr>
-                                <tr data-id="5555">
-                                    <td><button>600</button></td>
-                                    <td><button>05 Jan 2021</button></td>
-                                    <td><button>Gemini</button></td>
-                                </tr>
-                                <tr data-id="6666">
-                                    <td><button>600</button></td>
-                                    <td><button>05 Jan 2021</button></td>
-                                    <td><button>Gemini</button></td>
-                                </tr>
+                                
                             </tbody>
 
                         </table>
@@ -85,16 +85,37 @@ function generateMarkup(id) {
         </section>
 
         <section class="crypto-info">
-            <h2>Bitcoin stats:</h2>
+            <h2>${assetClass.asset} stats:</h2>
             <div class="content">
 
                 <div class="coin24hour-stats">
-                    <p>Current Price: <span class="bold">$36,300.00</span></p>
-                    <p>Market Cap: <span class="bold">$679.92 billion</span></p>
-                    <p>24h Change: <span class="bold red">-1.38%</span></p>
-                    <p>24h Volume: <span class="bold">$33.50 billion</span></p>
-                    <p>24h High: <span class="bold">$37,908.96</span></p>
-                    <p>24h Low: <span class="bold">$35,715.74</span></p>
+                    <p>Current Price: <span class="bold">${formatCurrency(
+                      macroMarket.current_price,
+                      6
+                    )}</span></p>
+                    <p>Market Cap: <span class="bold">${formatShortCurrency(
+                      macroMarket.market_cap
+                    )}</span></p>
+                    <p>Volume: <span class="bold">${formatShortCurrency(
+                      macroMarket.total_volume
+                    )}</span></p>
+                    <p>24h Change: ${
+                      macroMarket.price_change_percentage_24h > 0
+                        ? `<span class="bold green">${macroMarket.price_change_percentage_24h.toFixed(
+                            2
+                          )}%</span>`
+                        : `<span class="bold red">${macroMarket.price_change_percentage_24h.toFixed(
+                            2
+                          )}%</span>`
+                    } </p>
+                    <p>24h High: <span class="bold">${formatCurrency(
+                      macroMarket.high_24h,
+                      6
+                    )}</span></p>
+                    <p>24h Low: <span class="bold">${formatCurrency(
+                      macroMarket.low_24h,
+                      6
+                    )}</span></p>
                 </div>
 
                 <div class="price-graph-container">
@@ -116,8 +137,55 @@ function generateMarkup(id) {
 
     </div>
     `;
+
+  return html;
 }
 
+function populateInvestmentsTable(asset) {
+  const macros = state.assetClasses.find(
+    (assetClass) => assetClass.asset === asset.name
+  ).macros;
+
+  const table = document.querySelector(".investment-table tbody");
+
+  macros.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+
+  macros.forEach((macro) => {
+    const row = document.createElement("tr");
+    row.setAttribute("id", macro.id);
+
+    if (macro.sold) row.classList.add("sold");
+
+    row.innerHTML = `
+        <td><button>${macro.originalCapital}</button></td>
+        <td><button>${formatReadableDate(macro.date)}</button></td>
+        <td><button>${macro.platform}</button></td>
+        `;
+    table.append(row);
+  });
+}
+
+// function viewIndividualInvest() {
+//   const tbody = document.querySelector(".investment-table tbody");
+
+//   tbody.addEventListener("click", function (e) {
+//     // const target = e.target.closest("tr").id;
+
+//     renderIndividInvest(e.target.closest("tr").id)
+//   });
+// }
+
+// Called when clicking on leaf on treemap
 export const renderInvestmentInspection = function (d) {
-  document.querySelector(".views-container").innerHTML = generateMarkup();
+  document.querySelector(".views-container").innerHTML = generateMarkup(d);
+  populateInvestmentsTable(d);
+  document
+    .querySelector(".investment-table tbody")
+    .addEventListener("click", function (e) {
+      // const target = e.target.closest("tr").id;
+
+      renderIndividInvest(e.target.closest("tr").id);
+    });
 };

@@ -253,6 +253,10 @@ function buttonFinder(e) {
   return;
 }
 
+// //////////////////////////////////////////////////////////////////////////
+// NOTE: CURmARKET IS SORTED AND CHANGES THE ORDER OF THE OPTIONS WHEN ADDING A NEW INVESTMENT
+// //////////////////////////////////////////////////////////////////////////
+
 // Sorting table functionality
 function sortTableContents(e) {
   // 1. Make sure only the buttons are pressed

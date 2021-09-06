@@ -3,6 +3,7 @@
 import state from "../model.js";
 import { AssetClass, MacroInvestment } from "../investmentsLogic.js";
 import { renderInvestmentInspection } from "./investmentInspection.js";
+import { renderIndividInvest } from "./individualInvestmentView.js";
 
 // /////// FUNCTIONS
 
@@ -99,7 +100,7 @@ export const createTreemap = function () {
     })
     .on("mouseout", hideSummaryText)
     .on("click", function (ev, d) {
-      renderInvestmentInspection(d);
+      renderIndividInvest(d.data);
     });
 
   // Text
@@ -116,7 +117,7 @@ export const createTreemap = function () {
 
   boxInfo
     .append("text")
-    .text((d) => d.data.name)
+    .text((d) => d.data.asset)
     .attr("x", (d) => (d.x1 - d.x0) / 2 + d.x0)
     .attr("y", (d) => (d.y1 - d.y0) / 2 + d.y0 + 10)
     .attr("text-anchor", "middle")
@@ -173,12 +174,14 @@ export const formatState = function () {
         100;
 
       arr.push({
-        name: invest.asset,
-        id: invest.id,
-        date: invest.date,
-        currentValue: invest.currentValue,
-        originalCapital: invest.originalCapital,
+        // name: invest.asset,
+        // id: invest.id,
+        // date: invest.date,
+        // currentValue: invest.currentValue,
+        // originalCapital: invest.originalCapital,
+        // assetAmount: invest.assetAmount,
         value,
+        ...invest,
       });
     });
 
@@ -270,17 +273,17 @@ function showNewInvestForm() {
   form.addEventListener("submit", formValidator);
 }
 
-function showOverlay(overlay) {
+export const showOverlay = function (overlay) {
   // Display overlay
   overlay.classList.remove("hidden");
-}
+};
 
-function hideOverlayRemoveSibling() {
+export const hideOverlayRemoveSibling = function () {
   const overlay = document.querySelector(".overlay");
 
   overlay.nextElementSibling.remove();
   overlay.classList.add("hidden");
-}
+};
 
 // Form Validator - Checks to see if user has input correct values and will then call for creation of new investment or will throw errors for user to correct in inputs
 function formValidator(e) {

@@ -102,7 +102,7 @@ function calcBalances() {
 
     if (invest.soldPositions.length !== 0) {
       invest.soldPositions.forEach((item) => {
-        totalSold += item.sellValue;
+        totalSold += item.sellPrice * item.assetAmount;
       });
     }
   });
@@ -145,15 +145,18 @@ function populateBalancesTable() {
 
   state.assetClasses.forEach((invest) => {
     const row = document.createElement("tr");
+    let percentage;
+    portTotal === 0
+      ? (percentage = 0)
+      : (percentage = (invest.currentValue / portTotal) * 100);
 
     row.innerHTML = `
             <td>${invest.asset}</td>
-            <td>${invest.assetAmount}</td>
+            <td>${invest.assetAmount.toFixed(6)}</td>
             <td>${formatCurrency(invest.currentValue)}</td>
-            <td>${((invest.currentValue / portTotal) * 100).toFixed(2)}%</td>
+            <td>${percentage.toFixed(2)}%</td>
         `;
 
-    // console.log((invest.currentValue / portTotal) * 100);
     table.appendChild(row);
   });
 
@@ -183,8 +186,6 @@ function populateMovementsTable() {
 
   tableItems.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  console.log(`tttttttt`, tableItems);
-
   tableItems.forEach((item) => {
     if (item instanceof MacroInvestment) {
       const row = document.createElement("tr");
@@ -195,7 +196,7 @@ function populateMovementsTable() {
         <td>${item.asset}</td>
         <td><span class="green">Buy</span></td>
         <td>${formatCurrency(item.originalCapital)}</td>
-        <td>${item.assetAmount}</td>
+        <td>${item.assetAmount.toFixed(6)}</td>
         `;
       table.appendChild(row);
     } else {
@@ -206,8 +207,8 @@ function populateMovementsTable() {
       <td>${formatReadableDate(item.date, true)}</td>
       <td>${item.asset}</td>
       <td><span class="red">Sell</span></td>
-      <td>${formatCurrency(item.sellPrice)}</td>
-      <td>${item.assetAmount}</td>
+      <td>${formatCurrency(item.sellPrice * item.assetAmount)}</td>
+      <td>${item.assetAmount.toFixed(6)}</td>
       `;
 
       table.appendChild(row);
@@ -247,13 +248,22 @@ function renderSunburst() {
 
   const g = svg.append("g").attr("transform", `translate(${radius},${radius})`);
 
+  // Data to be used for sunburst. Default is points that have a depth
+  function determineData(data = root.descendants().filter((d) => d.depth)) {
+    // If length is 2, means there is only 1 investment therefore 2 data points. Only need to use first
+    if (data.length === 2) data = [data[0]];
+
+    // If more than 2, means there are multiple investments, only need to render those who's parents have more than one child
+    if (data.length > 2)
+      data = data.filter((d) => d.parent.children.length !== 1);
+    console.log(`dddda`, data);
+
+    return data;
+  }
+
   g.append("g")
     .selectAll("path")
-    .data(
-      root
-        .descendants()
-        .filter((d) => d.depth && d.parent.children.length !== 1)
-    )
+    .data(determineData())
     .join("path")
     .attr("fill", (d) => {
       while (d.depth > 1) d = d.parent;
@@ -277,7 +287,7 @@ function renderSunburst() {
       } else if (d.children && d.children.length !== 1) {
         return;
       } else {
-        return `${d.data.name} (${formatReadableDate(
+        return `${d.data.asset} (${formatReadableDate(
           d.data.date
         )})\nValue: ${formatCurrency(
           d.data.currentValue
