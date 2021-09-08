@@ -4,6 +4,7 @@ import state from "../model.js";
 import { AssetClass, MacroInvestment } from "../investmentsLogic.js";
 import { renderInvestmentInspection } from "./investmentInspection.js";
 import { renderIndividInvest } from "./individualInvestmentView.js";
+import { checkRequired, checkDate, checkMoney } from "../helpers.js";
 
 // /////// FUNCTIONS
 
@@ -298,58 +299,19 @@ function formValidator(e) {
   // Getting selected option's data attr - Used in AssetClass creation
   const geckoId = ticker.options[ticker.selectedIndex].dataset.id;
   const assetName = ticker.options[ticker.selectedIndex].innerText.trim();
-  console.log(assetName);
 
-  // Counter - ensures all fields have valid inputs & data is correct to create investment
-  let valid = 0;
+  // FORM VALIDATION
+  function validateInputs() {
+    // Counter - ensures all fields have valid inputs & data is correct to create investment
+    let valid = 0;
+    valid += checkRequired([ticker, originalCapital, date, platform]);
+    valid += checkMoney(originalCapital);
+    valid += checkDate(date);
 
-  // Checks to see if all the required fields have a value
-  function checkRequired(inputArr) {
-    inputArr.forEach((input) => {
-      if (input.value.trim() === "") {
-        showError(input, `${getFieldName(input)} is required`);
-        valid++;
-      } else {
-        showSuccess(input);
-      }
-    });
+    // Create valid will be >0 if any required input field is invalid
+    if (valid === 0) createInvestment();
   }
-
-  // Checks that valid number is entered
-  function checkOriginalCapital() {
-    if (+originalCapital.value === 0 || +originalCapital.value < 0) {
-      showError(originalCapital, `Value must be greater than 0`);
-      valid++;
-      return;
-    }
-  }
-
-  // Checks that date is not in the future
-  function checkDate() {
-    if (new Date(date.value).getTime() > Date.now()) {
-      showError(date, `Can't use future date`);
-      valid++;
-      return;
-    }
-
-    console.log(`DATE`, date.value);
-  }
-
-  // Displays error for user on input fields
-  function showError(input, message) {
-    const parent = input.parentElement;
-
-    parent.className = "input-data error";
-    parent.querySelector("small").innerText = message;
-  }
-  // Removes any error styling
-  function showSuccess(input) {
-    input.parentElement.className = "input-data";
-  }
-  // Gets field name for use in error message
-  function getFieldName(input) {
-    return input.getAttribute("name");
-  }
+  validateInputs();
 
   // Performs API call to get price data for coin on specific date or uses user provided value. Returns the value as a number in each case
   async function getPriceData() {
@@ -416,13 +378,6 @@ function formValidator(e) {
       displayErrorMessage(err);
     }
   }
-
-  // FORM VALIDATION
-  checkRequired([ticker, originalCapital, date, platform]);
-  checkOriginalCapital();
-  checkDate();
-  // Create valid will be >0 if any required input field is invalid
-  if (valid === 0) createInvestment();
 }
 
 // Error messages and codes as specified by CoinApi

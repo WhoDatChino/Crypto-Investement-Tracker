@@ -814,7 +814,6 @@ label.description {
   right: 0;
   bottom: 0;
   z-index: 6;
-  transition: ease all 3000ms;
 }
 
 .sell-popup {
@@ -824,7 +823,7 @@ label.description {
     rgb(194, 193, 193)
   );
   width: 50rem;
-  border-radius: 5px;
+  border-radius: 15px;
   /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); */
   border: solid 3px var(--yellow-theme);
   position: absolute;
@@ -989,7 +988,7 @@ select,
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  transition: all 2000ms ease;
+  transition: all 1000ms ease;
 }
 
 .investment-inspection-container.move {
@@ -1014,7 +1013,13 @@ select,
   position: absolute;
   top: 0;
   right: 0;
+  transition: ease 250ms all;
 }
+.close-modalBTN:hover {
+  transform: scale(1.1);
+  color: var(--grey-movement);
+}
+
 .close-modalBTN ion-icon {
   font-size: 2.8rem;
   --ionicon-stroke-width: 25px;
@@ -1023,6 +1028,7 @@ select,
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
 .investment-inspection-info {
   flex: 5;
   font-size: 1.3rem;

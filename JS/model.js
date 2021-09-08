@@ -57,7 +57,7 @@ const state = {
     {
       asset: "Ethereum",
       ticker: "eth",
-      currentPrice: 2517,
+      currentPrice: 3439.72,
       assetAmount: 0.5,
       totalInvested: 1000,
       currentValue: 1258.5,

@@ -107,9 +107,9 @@ function calcBalances() {
     }
   });
 
-  totalInvested === 0
-    ? (change = 0)
-    : (change = ((portValue - totalInvested) / totalInvested) * 100);
+  totalSold = totalSold || 0;
+
+  change = ((portValue - totalInvested) / totalInvested) * 100 || 0;
 
   return { portValue, totalInvested, change, totalSold };
 }
@@ -145,10 +145,10 @@ function populateBalancesTable() {
 
   state.assetClasses.forEach((invest) => {
     const row = document.createElement("tr");
-    let percentage;
-    portTotal === 0
-      ? (percentage = 0)
-      : (percentage = (invest.currentValue / portTotal) * 100);
+    const percentage = (invest.currentValue / portTotal) * 100 || 0;
+    // portTotal === 0
+    //   ? (percentage = 0)
+    //   : (percentage = (invest.currentValue / portTotal) * 100);
 
     row.innerHTML = `
             <td>${invest.asset}</td>

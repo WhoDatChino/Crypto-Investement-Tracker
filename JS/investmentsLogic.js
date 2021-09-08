@@ -59,12 +59,22 @@ export class MacroInvestment {
       sellPrice,
     });
 
+    // Reflect sale in obj
+    this.assetAmount = 0;
+    this.currentValue = this.updateCurrentValue();
+
     // Reflect change in parent
     state.assetClasses[this._findParentClassIndex()].updateMacros();
   }
 
   markUnsold() {
     this.sold = false;
+
+    // Get assetAmount sent to soldPositions when sold
+    this.assetAmount = state.assetClasses[
+      this._findParentClassIndex()
+    ].soldPositions.find((obj) => obj.id === this.id).assetAmount;
+    this.currentValue = this.updateCurrentValue();
 
     // Remove summary obj from parent soldPositions that corresponds with this instance
     state.assetClasses[this._findParentClassIndex()].soldPositions =
