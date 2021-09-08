@@ -1002,6 +1002,7 @@ select,
     var(--sienna-theme),
     #fff
   );
+  margin-top: 1.5rem;
 }
 
 .close-modalBTN {
@@ -1119,9 +1120,19 @@ select,
   transform: translate(-50%, -50%) rotateZ(45deg);
 }
 
+.delete-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.479);
+  z-index: 20;
+}
+
 .delete-invest-prompt {
-  width: 40rem;
-  height: 20rem;
+  width: 35rem;
+  height: 15rem;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1134,6 +1145,7 @@ select,
     var(--orange-theme)
   );
   border-radius: 15px;
+  border: 3px solid white;
   box-sizing: border-box;
   padding: 10px;
   align-items: center;
@@ -1148,6 +1160,9 @@ select,
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
+}
+.prompt h2 {
+  text-align: center;
 }
 .delete-invest-prompt .delete-invest-btns {
   flex: 1;

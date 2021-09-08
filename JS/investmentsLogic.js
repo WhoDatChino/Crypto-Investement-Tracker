@@ -133,4 +133,15 @@ export class AssetClass {
   _addAssetClass() {
     state.assetClasses.push(this);
   }
+
+  deleteMacro(macro) {
+    const delObj = this.macros.find((obj) => obj.id === macro.id);
+
+    console.log(`delted`, delObj);
+    if (delObj.sold) delObj.markUnsold();
+
+    this.macros = this.macros.filter((invest) => invest.id !== delObj.id);
+
+    this.updateMacros();
+  }
 }

@@ -10,6 +10,7 @@ import {
   checkDate,
 } from "../helpers.js";
 import { showOverlay, hideOverlayRemoveSibling } from "./treemap.js";
+import { deletionConfirmation } from "./deletionConfirmation.js";
 
 // function viewIndividualInvest() {
 //   const tbody = document.querySelector(".investment-table tbody");
@@ -30,7 +31,7 @@ function showInvestment(macro) {
 
   const overlay = document.querySelector(".overlay");
 
-  // 1st popup
+  // Invest inspect popup
   investInspect(macro);
 
   // ///// Lexical functions
@@ -128,6 +129,7 @@ function showInvestment(macro) {
     }
     generatePopup(macro);
 
+    // Updates investInspect popup when MacroInvestChanges
     function updatePopup(data) {
       let changeHTML;
 
@@ -333,87 +335,37 @@ function showInvestment(macro) {
     document
       .querySelector(".close-modalBTN")
       .addEventListener("click", hideOverlayRemoveSibling);
-
     overlay.addEventListener("click", hideOverlayRemoveSibling);
+
     // Mark sold (checkbox)
     document.querySelector("#checkbox").addEventListener("click", sellOrUnsell);
+    // Delete Investment
+    document.querySelector(".delete").addEventListener("click", function (e) {
+      const deleteModal = deletionConfirmation();
+
+      // Cancel deletion
+      document
+        .querySelector(".cancel-btn")
+        .addEventListener("click", function (e) {
+          deleteModal.remove();
+        });
+
+      // Complete deletion
+      document
+        .querySelector(".delete-btn")
+        .addEventListener("click", function (e) {
+          state.assetClasses
+            .find((assClass) => assClass.asset === stateMacro.asset)
+            .deleteMacro(stateMacro);
+          deleteModal.remove();
+          hideOverlayRemoveSibling();
+        });
+    });
   }
 
   // /////////////////////////////////////////////////////////////////
-
-  // Gets the obj in state associated w/ leaf clicked (macro)
-
-  // Marks macro sold or unsold and updates state
-
-  // Displays form to sell investment - called when check box is checked
-
-  // /// Functions for sellInvestPopup
-
-  function sellFormValidator(e) {
-    console.log(`hello`);
-    e.preventDefault();
-
-    const date = document.querySelector(".due-date");
-    const sellPrice = document.querySelector(".sell-price");
-
-    // Code copied from formValidator in treemap
-    let valid = 0;
-
-    // Checks to see if all the required fields have a value
-    function checkRequired(inputArr) {
-      inputArr.forEach((input) => {
-        if (input.value.trim() === "") {
-          showError(input, `${getFieldName(input)} is required`);
-          valid++;
-        } else {
-          showSuccess(input);
-        }
-      });
-    }
-
-    function showError(input, message) {
-      const parent = input.parentElement;
-
-      parent.className = "input-data error";
-      parent.querySelector("small").innerText = message;
-    }
-
-    function showSuccess(input) {
-      input.parentElement.className = "input-data";
-    }
-
-    function getFieldName(input) {
-      return input.getAttribute("name");
-    }
-
-    checkRequired([date, sellPrice]);
-  }
-
-  // /// eventListeners for sellInvestPopup
-
-  // Close the modal
-  //   document.querySelector(".cancel-btn").addEventListener("click", closePopup);
-  //   document
-  //     .querySelector(".sell-form-container")
-  //     .addEventListener("click", closePopup);
-
-  // Submit the modal
-  //   document.querySelector(".add-btn").addEventListener("submit", function (e) {
-  //     e.preventDefault();
-  //     console.log(`2snfdndfjno`);
-  //   });
-
-  // ///// Event listeners
-
-  // 1. Hide the popup
-
-  // 2. Sell the asset
-  //   document.querySelector("#checkbox").addEventListener("click", sellOrUnsell);
-
-  // 3. Delete the asset
 }
 
 export const renderIndividInvest = function (data) {
-  // 1. Display overlay and individual investment inspection popup
   showInvestment(data);
 };
