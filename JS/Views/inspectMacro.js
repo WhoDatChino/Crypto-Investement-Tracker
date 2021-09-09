@@ -5,22 +5,14 @@ import {
   formatCurrency,
   formatReadableDate,
   formatShortCurrency,
-  showSuccessPopup,
   checkRequired,
   checkDate,
+  checkSellDate,
 } from "../helpers.js";
-import { showOverlay, hideOverlayRemoveSibling } from "./treemap.js";
+import { createOverlay, removeModal } from "./overlay.js";
 import { deletionConfirmation } from "./deletionConfirmation.js";
-
-// function viewIndividualInvest() {
-//   const tbody = document.querySelector(".investment-table tbody");
-
-//   tbody.addEventListener("click", function (e) {
-//     const target = e.target.closest("tr").dataset.id;
-
-//     console.log(target);
-//   });
-// }
+import { notificationMessage } from "./notificationMessage.js";
+import { updateInspectAsset } from "./inspectAsset.js";
 
 function showInvestment(macro) {
   // Parent to which eveything is appended
@@ -28,8 +20,6 @@ function showInvestment(macro) {
 
   // Coin in curMarket that matches one fed into function
   const marketCoin = state.curMarket.find((coin) => coin.name === macro.asset);
-
-  const overlay = document.querySelector(".overlay");
 
   // Invest inspect popup
   investInspect(macro);
@@ -71,7 +61,7 @@ function showInvestment(macro) {
             )}%</span></p>`;
       }
 
-      showOverlay(overlay);
+      createOverlay();
 
       const investInspect = document.createElement("div");
       investInspect.classList.add("investment-inspection-container");
@@ -90,6 +80,8 @@ function showInvestment(macro) {
                             <p class="investment-data">${formatReadableDate(
                               data.date
                             )}</p>
+                            <p>Platform:</p>
+                            <p class="investment-data">${data.platform}</p>
                             <p>Coin Amount:</p>
                             <p class="investment-data">${data.assetAmount}</p>
                             <p>Original investment:</p>
@@ -110,10 +102,14 @@ function showInvestment(macro) {
         
                         <div class="investment-interactions">
                             <div class="button-and-label">
-                                <input type="checkbox" name="check1" class="check" id="checkbox">
+                                <input type="checkbox" name="check1" class="check" id="checkbox" ${
+                                  data.sold ? "checked" : ""
+                                }>
                                 <label for="checkbox" class="checkmark"></label>
         
-                                <label class="description" for="checkbox">Mark as sold</label>
+                                <label class="description" for="checkbox">Mark ${
+                                  data.sold ? "unsold" : "sold"
+                                }</label>
                             </div>
                             <div class="button-and-label">
                                 <button class="delete">
@@ -126,6 +122,11 @@ function showInvestment(macro) {
                     `;
 
       parent.append(investInspect);
+
+      document
+        .querySelector(".close-modalBTN")
+        .addEventListener("click", removeModal);
+      document.querySelector(".overlay").addEventListener("click", removeModal);
     }
     generatePopup(macro);
 
@@ -166,6 +167,8 @@ function showInvestment(macro) {
       document.querySelector(".investment-inspection-info").innerHTML = `
         <p>Date of investment:</p>
         <p class="investment-data">${formatReadableDate(data.date)}</p>
+        <p>Platform:</p>
+        <p class="investment-data">${data.platform}</p>
         <p>Coin Amount:</p>
         <p class="investment-data">${data.assetAmount}</p>
         <p>Original investment:</p>
@@ -245,6 +248,7 @@ function showInvestment(macro) {
           let valid = 0;
           valid += checkRequired([dateInput]);
           valid += checkDate(dateInput);
+          valid += checkSellDate(dateInput, stateMacro.date);
 
           if (valid === 0) sellMacro();
         }
@@ -293,6 +297,15 @@ function showInvestment(macro) {
             // 5. Close sale form and show investInspect
             updatePopup(findMacro(macro));
             closeSaleForm();
+
+            // Show and hide notification message
+            notificationMessage(`Sale recorded successfully!`);
+
+            // If on port dashboard page, update the page
+            if (state.curPage === 1)
+              updateInspectAsset(
+                state.assetClasses[stateMacro.findParentClassIndex()]
+              );
           } catch (err) {
             alert(`problem getting sellPrice: (${err})`, err);
           }
@@ -326,16 +339,17 @@ function showInvestment(macro) {
         // Unsell invest
         stateMacro.markUnsold();
         updatePopup(stateMacro);
+
+        if (state.curPage === 1)
+          updateInspectAsset(
+            state.assetClasses[stateMacro.findParentClassIndex()]
+          );
       }
     }
 
     // //// EventListeners for investInspect
 
     // Close investInspect
-    document
-      .querySelector(".close-modalBTN")
-      .addEventListener("click", hideOverlayRemoveSibling);
-    overlay.addEventListener("click", hideOverlayRemoveSibling);
 
     // Mark sold (checkbox)
     document.querySelector("#checkbox").addEventListener("click", sellOrUnsell);
@@ -354,18 +368,22 @@ function showInvestment(macro) {
       document
         .querySelector(".delete-btn")
         .addEventListener("click", function (e) {
+          // Delete macro from assetClass
           state.assetClasses
             .find((assClass) => assClass.asset === stateMacro.asset)
             .deleteMacro(stateMacro);
+
+          // Remove modals
           deleteModal.remove();
-          hideOverlayRemoveSibling();
+          removeModal();
+
+          // Show and hide notification message
+          notificationMessage(`Investment deleted`);
         });
     });
   }
-
-  // /////////////////////////////////////////////////////////////////
 }
 
-export const renderIndividInvest = function (data) {
+export const renderMacro = function (data) {
   showInvestment(data);
 };

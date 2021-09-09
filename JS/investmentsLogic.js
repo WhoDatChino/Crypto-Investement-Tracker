@@ -15,7 +15,7 @@ export class MacroInvestment {
     this._addPlatform();
   }
 
-  _findParentClassIndex() {
+  findParentClassIndex() {
     return state.assetClasses.findIndex(
       (assetClass) => assetClass.asset === this.asset
     );
@@ -26,7 +26,7 @@ export class MacroInvestment {
   }
 
   _addToAssetClass() {
-    const parent = state.assetClasses[this._findParentClassIndex()];
+    const parent = state.assetClasses[this.findParentClassIndex()];
     parent.macros.push(this);
     parent.updateMacros();
   }
@@ -39,7 +39,7 @@ export class MacroInvestment {
 
   updateCurrentValue() {
     return +(
-      state.assetClasses[this._findParentClassIndex()].currentPrice *
+      state.assetClasses[this.findParentClassIndex()].currentPrice *
       this.assetAmount
     ).toFixed(2);
   }
@@ -52,7 +52,7 @@ export class MacroInvestment {
     const { date, sellPrice } = props;
 
     // Send summary copy to soldPos of parent
-    state.assetClasses[this._findParentClassIndex()].soldPositions.push({
+    state.assetClasses[this.findParentClassIndex()].soldPositions.push({
       id,
       assetAmount,
       date,
@@ -64,7 +64,7 @@ export class MacroInvestment {
     this.currentValue = this.updateCurrentValue();
 
     // Reflect change in parent
-    state.assetClasses[this._findParentClassIndex()].updateMacros();
+    state.assetClasses[this.findParentClassIndex()].updateMacros();
   }
 
   markUnsold() {
@@ -72,17 +72,17 @@ export class MacroInvestment {
 
     // Get assetAmount sent to soldPositions when sold
     this.assetAmount = state.assetClasses[
-      this._findParentClassIndex()
+      this.findParentClassIndex()
     ].soldPositions.find((obj) => obj.id === this.id).assetAmount;
     this.currentValue = this.updateCurrentValue();
 
     // Remove summary obj from parent soldPositions that corresponds with this instance
-    state.assetClasses[this._findParentClassIndex()].soldPositions =
-      state.assetClasses[this._findParentClassIndex()].soldPositions.filter(
+    state.assetClasses[this.findParentClassIndex()].soldPositions =
+      state.assetClasses[this.findParentClassIndex()].soldPositions.filter(
         (pos) => pos.id !== this.id
       );
 
-    state.assetClasses[this._findParentClassIndex()].updateMacros();
+    state.assetClasses[this.findParentClassIndex()].updateMacros();
   }
 }
 
@@ -137,11 +137,16 @@ export class AssetClass {
   deleteMacro(macro) {
     const delObj = this.macros.find((obj) => obj.id === macro.id);
 
-    console.log(`delted`, delObj);
     if (delObj.sold) delObj.markUnsold();
 
     this.macros = this.macros.filter((invest) => invest.id !== delObj.id);
 
+    if (this.macros.length === 0) {
+      state.assetClasses = state.assetClasses.filter(
+        (assClass) => assClass.asset !== this.asset
+      );
+      return;
+    }
     this.updateMacros();
   }
 }

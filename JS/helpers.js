@@ -115,6 +115,15 @@ export const checkDate = function (input) {
   }
   return 0;
 };
+// Ensures sell date is not before buy date
+export const checkSellDate = function (input, buyDate) {
+  if (new Date(input.value).getTime() < new Date(buyDate).getTime()) {
+    showError(input, `Sell date can't be before buy date`);
+    return 1;
+  } else {
+    return 0;
+  }
+};
 
 // Checks that valid number is entered
 export const checkMoney = function (input) {
@@ -123,19 +132,6 @@ export const checkMoney = function (input) {
     return 1;
   }
   return 0;
-};
-
-// /////// SUCCESS MESSAGE POPUP
-export const showSuccessPopup = function (message) {
-  const popup = document.createElement("div");
-  popup.classList.add("success-message");
-
-  popup.innerHTML = `
-  <ion-icon name="checkmark-done-outline"></ion-icon>
-  <p>${message}</p>
-  `;
-
-  document.querySelector(".views-container").append(popup);
 };
 
 // /////// ASYNC API CALL

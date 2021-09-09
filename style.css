@@ -495,7 +495,7 @@ tr.coin {
   margin-bottom: 5px;
   font-size: 1.3rem;
 }
-.investment-dates p {
+.tiny-info {
   font-size: 0.8rem;
   text-indent: 1rem;
   color: rgb(59, 59, 59);
@@ -722,6 +722,10 @@ label.description {
 }
 .wrapper label {
   margin: 1rem;
+}
+
+.asset-balances tbody {
+  cursor: pointer;
 }
 
 .asset-balances {
@@ -1052,14 +1056,14 @@ select,
 .investment-inspection-container.hidden,
 .overlay.hidden,
 .form-container.hidden,
-.success-message.hidden,
+.notification-message.hidden,
 .error-message.hidden,
 .delete-invest-prompt.hidden {
   display: none;
 }
 
 /* POPUP MESSAGES */
-.success-message,
+.notification-message,
 .error-message {
   width: 20rem;
   height: 10rem;
@@ -1078,7 +1082,7 @@ select,
   align-items: center;
   box-shadow: 2px 2px 30px var(--turquoise-theme);
 }
-.success-message ion-icon,
+.notification-message ion-icon,
 .error-message ion-icon {
   font-size: 4rem;
   padding: 0 2rem;
@@ -1089,6 +1093,7 @@ select,
   width: 40rem;
   background-color: var(--charcoal-theme);
   box-shadow: 2px 2px 30px var(--charcoal-theme);
+  border: solid 3px white;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1174,4 +1179,102 @@ select,
 .summary-text {
   position: absolute;
   font-size: 1.5rem;
+}
+
+/* LOADER ANIMATION */
+.loader {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(22, 22, 22, 0.493);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 50;
+}
+.bar {
+  width: 15px;
+  height: 50px;
+  background: #fff;
+  display: inline-block;
+  transform-origin: bottom center;
+  /* border-radius: 50%; */
+  /* border-top-right-radius: 50%; */
+  /* border-top-left-radius: 50%; */
+  /*   box-shadow:5px 10px 20px inset rgba(255,23,25.2); */
+  animation: loaderAni 1.2s linear infinite;
+}
+.bar1 {
+  animation-delay: 0.1s;
+  background-color: ;
+}
+.bar2 {
+  animation-delay: 0.2s;
+}
+.bar3 {
+  animation-delay: 0.3s;
+}
+.bar4 {
+  animation-delay: 0.4s;
+}
+.bar5 {
+  animation-delay: 0.5s;
+}
+.bar6 {
+  animation-delay: 0.6s;
+}
+.bar7 {
+  animation-delay: 0.7s;
+}
+.bar8 {
+  animation-delay: 0.8s;
+}
+
+@keyframes loaderAni {
+  0% {
+    height: calc(50px * 0.1);
+    background: #d9ed92;
+  }
+  10% {
+    height: calc(50px * 0.2);
+    background: #b5e48c;
+  }
+  20% {
+    height: calc(50px * 0.4);
+    background: #99d98c;
+  }
+  30% {
+    height: calc(50px * 0.6);
+    background: #76c893;
+  }
+  40% {
+    height: calc(50px * 0.8);
+    background: #52b69a;
+  }
+  50% {
+    height: calc(50px * 1);
+    background: #34a0a4;
+  }
+  60% {
+    height: calc(50px * 0.8);
+    background: #168aad;
+  }
+  70% {
+    height: calc(50px * 0.6);
+    background: #1a759f;
+  }
+  80% {
+    height: calc(50px * 0.4);
+    background: #1e6091;
+  }
+  90% {
+    height: calc(50px * 0.2);
+    background: #184e77;
+  }
+  100% {
+    height: calc(50px * 0.1);
+    background: transparent;
+  }
 }

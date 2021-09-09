@@ -2,9 +2,10 @@
 
 import state from "../model.js";
 import { AssetClass, MacroInvestment } from "../investmentsLogic.js";
-import { renderInvestmentInspection } from "./investmentInspection.js";
-import { renderIndividInvest } from "./individualInvestmentView.js";
+import { renderMacro } from "./inspectMacro.js";
 import { checkRequired, checkDate, checkMoney } from "../helpers.js";
+import { createOverlay, removeModal } from "./overlay.js";
+import { createLoader, removeLoader } from "./loader.js";
 
 // /////// FUNCTIONS
 
@@ -21,11 +22,12 @@ function generateMarkup() {
                 <button class="new-investBTN">
                     <ion-icon name="add-outline"></ion-icon>
                 </button>
+
+                <p class="tiny-info">Hover to see percentage change; click for more info</p>
             </div>
 
             <p class='summary-text'></p>
 
-            <div class="overlay hidden"></div>
 
       `;
 }
@@ -101,7 +103,7 @@ export const createTreemap = function () {
     })
     .on("mouseout", hideSummaryText)
     .on("click", function (ev, d) {
-      renderIndividInvest(d.data);
+      renderMacro(d.data);
     });
 
   // Text
@@ -194,9 +196,7 @@ export const formatState = function () {
 
 // New investment button clicked - show form
 function showNewInvestForm() {
-  const overlay = document.querySelector(".overlay");
-
-  showOverlay(overlay);
+  const overlay = createOverlay();
 
   // Create form and append to dom
   const form = document.createElement("div");
@@ -269,22 +269,10 @@ function showNewInvestForm() {
   // Using closures
 
   // Event Listeners
-  cancelBTN.addEventListener("click", hideOverlayRemoveSibling);
-  overlay.addEventListener("click", hideOverlayRemoveSibling);
+  cancelBTN.addEventListener("click", removeModal);
+  overlay.addEventListener("click", removeModal);
   form.addEventListener("submit", formValidator);
 }
-
-export const showOverlay = function (overlay) {
-  // Display overlay
-  overlay.classList.remove("hidden");
-};
-
-export const hideOverlayRemoveSibling = function () {
-  const overlay = document.querySelector(".overlay");
-
-  overlay.nextElementSibling.remove();
-  overlay.classList.add("hidden");
-};
 
 // Form Validator - Checks to see if user has input correct values and will then call for creation of new investment or will throw errors for user to correct in inputs
 function formValidator(e) {

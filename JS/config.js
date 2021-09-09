@@ -1,1 +1,1 @@
-export const MODAL_CLOSE_SECONDS = 2;
+export const MODAL_CLOSE_SECONDS = 1.5;

@@ -2,6 +2,8 @@ import state from "../model.js";
 import { formatCurrency, formatReadableDate } from "../helpers.js";
 import { MacroInvestment } from "../investmentsLogic.js";
 import { formatState } from "./treemap.js";
+import { renderAssetInspection } from "./inspectAsset.js";
+import { renderMacro } from "./inspectMacro.js";
 
 // Export 1 function that loads the markup and creates all the event listeners for that page
 
@@ -46,16 +48,21 @@ function generateMarkup() {
                         </label>
                         <div class="asset-balances">
                             <table class="asset-balances-table">
+                            <thead>
                                 <tr>
                                     <th>Asset</th>
                                     <th>Asset Amount</th>
                                     <th>Value</th>
                                     <th>Portfolio %</th>
                                 </tr>
-                                
+                                </thead>
+                                <tbody>
+                                </tbody> 
 
                             </table>
-                        </div>
+                            </div>
+                    <p class='tiny-info' style="margin-top: 5px">Click to view/edit investment</p>
+
                     </div>
 
                     <div class="sunburst-diag">
@@ -82,8 +89,9 @@ function generateMarkup() {
                         </table>
                     </div>
                 </div>
+                
+                </div>
 
-            </div>
     `;
 }
 
@@ -140,7 +148,7 @@ function generatePortSummary() {
 function populateBalancesTable() {
   const balances = calcBalances();
 
-  const table = document.querySelector(".asset-balances-table");
+  const table = document.querySelector(".asset-balances-table tbody");
   const portTotal = balances.portValue;
 
   state.assetClasses.forEach((invest) => {
@@ -160,7 +168,18 @@ function populateBalancesTable() {
     table.appendChild(row);
   });
 
-  //   console.log(portTotal);
+  table.addEventListener("click", inspectAsset);
+}
+
+// Shows assetClass inspection. Called when table row clicked in balances table
+function inspectAsset(ev) {
+  // Get asset class associated w/ row pressed
+  const assetClass = state.assetClasses.find(
+    (assClass) =>
+      assClass.asset === ev.target.closest("tr").firstElementChild.innerText
+  );
+
+  renderAssetInspection(assetClass);
 }
 
 // Populate portfolio movements table
