@@ -1,4 +1,6 @@
 import { MODAL_CLOSE_SECONDS } from "./config.js";
+import state from "./model.js";
+import { displayErrorMessage } from "./Views/errorMsg.js";
 
 export const formatCurrency = function (number, decimals = 2) {
   const num = new Intl.NumberFormat("en-US", {
@@ -9,29 +11,32 @@ export const formatCurrency = function (number, decimals = 2) {
   return num;
 };
 
+export const formatCoinAmount = function (number) {
+  if (number === 0 || number > 10) return +number.toFixed(2);
+
+  if (number < 10) return +number.toFixed(6);
+};
+
 export const formatShortCurrency = function (num) {
   // const number = formatFullCurrency(num)
 
+  if (num < 1000) {
+    return `${formatCurrency(num)}`;
+  }
   if (num < 1000000) {
-    let number = num.toFixed(2);
-
-    return `${formatCurrency(number, 2)}`;
+    return `${formatCurrency(num / 1000)}k`;
   }
   // million
   if (num >= 1000000 && num < 1000000000) {
-    let number = (num / 1000000).toFixed(2);
-
-    return `${formatCurrency(number, 2)} million`;
+    return `${formatCurrency(num / 1000000)} million`;
   }
   //   billion
   if (num >= 1000000000 && num < 1000000000000) {
-    let number = (num / 1000000000).toFixed(2);
-    return `${formatCurrency(number, 2)} billion`;
+    return `${formatCurrency(num / 1000000000)} billion`;
   }
   //trillion
   if (num >= 1000000000000) {
-    let number = (num / 1000000000000).toFixed(2);
-    return `${formatCurrency(number, 2)} trillion`;
+    return `${formatCurrency(num / 1000000000000)} trillion`;
   }
 };
 
@@ -132,6 +137,21 @@ export const checkMoney = function (input) {
     return 1;
   }
   return 0;
+};
+
+// /////// SET LOCAL STORAGE
+
+export const setLocalStorage = function () {
+  try {
+    localStorage.setItem("assetClasses", JSON.stringify(state.assetClasses));
+  } catch (err) {
+    throw 900;
+  }
+};
+
+export const getLocalStorage = function () {
+  const saved = localStorage.getItem("assetClasses");
+  if (saved) state.assetClasses = JSON.parse(saved);
 };
 
 // /////// ASYNC API CALL

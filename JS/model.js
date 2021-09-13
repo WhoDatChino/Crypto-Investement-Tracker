@@ -4,6 +4,7 @@ const state = {
       asset: "Bitcoin",
       ticker: "btc",
       currentPrice: 44812.6,
+      geckoId: "bitcoin",
       assetAmount: 0.01409,
       totalInvested: 500,
       currentValue: 631.4271,
@@ -58,6 +59,7 @@ const state = {
       asset: "Ethereum",
       ticker: "eth",
       currentPrice: 3439.72,
+      geckoId: "ethereum",
       assetAmount: 0.5,
       totalInvested: 1000,
       currentValue: 1258.5,
@@ -107,6 +109,7 @@ const state = {
       ticker: "doge",
       currentPrice: 0.1,
       assetAmount: 1136.36364,
+      geckoId: "dogecoin",
       totalInvested: 250,
       currentValue: 113.63636,
       soldPositions: [],
@@ -126,6 +129,7 @@ const state = {
   ],
   marketStats: {},
   platforms: ["gemini", "coinbase"],
+  curPage: 0,
 };
 
 // redis for js

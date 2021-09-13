@@ -5,11 +5,12 @@ import { loadCurMarket } from "./model.js";
 
 import state from "./model.js";
 import { removeLoader } from "./Views/loader.js";
+import { getLocalStorage } from "./helpers.js";
 
 console.log(state);
 
 // ////// VARIABLES
-const homeBTN = document.querySelector(".portfolio-treemapBTN ");
+const navBTN = document.querySelectorAll("nav button ");
 const navBar = document.querySelector("nav");
 const container = document.querySelector(".views-container");
 
@@ -18,48 +19,40 @@ const container = document.querySelector(".views-container");
 // const markupArr = [gridMarkup, portMarkup, marketsMarkup];
 
 // Page queuer - When nav button clicked, prev page removed from queue, new page added and styling added.
-class PageQueue {
-  constructor() {
-    this.elements = [homeBTN];
+export default class ButtonQueue {
+  constructor(button) {
+    this.elements = [button];
   }
 
   enqueue(btn) {
-    btn.classList.add("current");
+    btn.classList.add("active");
     this.elements.push(btn);
-    state.curPage = +btn.dataset.index;
-    console.log(`STATE`, state);
     this.dequeue();
   }
 
   dequeue() {
     // console.log(`hello`);
-    this.elements[0].classList.remove("current");
+    this.elements[0].classList.remove("active");
     return this.elements.shift();
   }
 }
 // Create pageQueue variable
-const pageQueue = new PageQueue();
+const pageQueue = new ButtonQueue(navBTN[0]);
 // Initialize page to first page
-let curPage = 0;
-
+// state.curPage = 0;
+console.log(`PQ`, pageQueue);
 loadCurMarket();
+// setAssetPrices();
 createTreemap();
+// getLocalStorage();
 removeLoader();
 
-async function createStuff() {
-  await loadCurMarket();
-
-  // const obj = state.curMarket[2];
-  // const classAsset = new AssetClass(props2, obj);
-
-  // const macro = new MacroInvestment(props);
-  // const macro2 = new MacroInvestment(props1);
-  // console.log(`sss`, state);
-  // const pppp = { date: "25 August 2021", sellPrice: 2.63 };
-  // macro2.markSold(pppp);
-  // macro2.markUnsold();
+// Called after getting curMarket info. Updates assetClasse prices
+function setAssetPrices() {
+  state.assetClasses.forEach((obj) => obj.updateCurrentPrice());
+  console.log(`UPDATED STATE`, state.assetClasses);
 }
-createStuff();
+// createStuff();
 
 // //////// FUNCTIONS
 
@@ -89,6 +82,9 @@ createStuff();
 
 // //////// EVENT LISTENERS
 
+const pages = ["home", "dashboard", "market"];
+window.location.hash = pages[0];
+
 // NavBar clicks - Determine clicked button and load its corresponding contents
 navBar.addEventListener("click", function (e) {
   const clickedEl = e.target;
@@ -97,7 +93,30 @@ navBar.addEventListener("click", function (e) {
   // Ensure only valid buttons are clicked
   if (clickedEl === navBar || clickedEl === pageQueue.elements[0]) return;
 
+  // state.curPage = buttonIndex;
+  window.location.hash = pages[buttonIndex];
+
+  console.log(pages.indexOf(window.location.hash.slice(1)));
+
   // markupArr[buttonIndex].render();
+  // changePage(buttonIndex);
+  // if (buttonIndex === 2)
+  // state.curPage = buttonIndex;
+
+  // pageQueue.enqueue(clickedEl);
+});
+
+window.addEventListener("hashchange", function (e) {
+  if (pages.indexOf(window.location.hash.slice(1)) < 0) {
+    return;
+  }
+
+  state.curPage = pages.indexOf(window.location.hash.slice(1));
+  changePage(state.curPage);
+  pageQueue.enqueue(navBTN[state.curPage]);
+});
+
+function changePage(buttonIndex) {
   switch (buttonIndex) {
     case 0:
       renderTreemapMarkup(container);
@@ -109,8 +128,4 @@ navBar.addEventListener("click", function (e) {
       renderMarketOverviewMarkup(container);
       break;
   }
-  // if (buttonIndex === 2)
-  curPage = buttonIndex;
-
-  pageQueue.enqueue(clickedEl);
-});
+}

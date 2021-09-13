@@ -5,6 +5,9 @@ export const createLoader = function (parent) {
   if (!parent) {
     loader.style.position = "fixed";
     parent = document.querySelector(".views-container");
+  } else {
+    loader.style.position = "absolute";
+    loader.style.height = "100%";
   }
 
   loader.innerHTML = `

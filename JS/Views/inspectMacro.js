@@ -4,15 +4,19 @@ import state from "../model.js";
 import {
   formatCurrency,
   formatReadableDate,
-  formatShortCurrency,
+  formatCoinAmount,
   checkRequired,
   checkDate,
   checkSellDate,
+  setLocalStorage,
 } from "../helpers.js";
 import { createOverlay, removeModal } from "./overlay.js";
 import { deletionConfirmation } from "./deletionConfirmation.js";
-import { notificationMessage } from "./notificationMessage.js";
 import { updateInspectAsset } from "./inspectAsset.js";
+import { renderPortfolioDashboardMarkup } from "./portfolioDashboard.js";
+import { notificationMessage } from "./notificationMessage.js";
+import { displayErrorMessage } from "./errorMsg.js";
+import { createLoader, removeLoader } from "./loader.js";
 
 function showInvestment(macro) {
   // Parent to which eveything is appended
@@ -66,6 +70,11 @@ function showInvestment(macro) {
       const investInspect = document.createElement("div");
       investInspect.classList.add("investment-inspection-container");
 
+      console.log(
+        `NUMBER`,
+        data.assetAmount,
+        formatCoinAmount(data.assetAmount)
+      );
       investInspect.innerHTML = `
                     
                         <button class="close-modalBTN">
@@ -83,7 +92,9 @@ function showInvestment(macro) {
                             <p>Platform:</p>
                             <p class="investment-data">${data.platform}</p>
                             <p>Coin Amount:</p>
-                            <p class="investment-data">${data.assetAmount}</p>
+                            <p class="investment-data">${formatCoinAmount(
+                              data.assetAmount
+                            )}</p>
                             <p>Original investment:</p>
                             <p class="investment-data">${formatCurrency(
                               data.originalCapital
@@ -170,7 +181,7 @@ function showInvestment(macro) {
         <p>Platform:</p>
         <p class="investment-data">${data.platform}</p>
         <p>Coin Amount:</p>
-        <p class="investment-data">${data.assetAmount}</p>
+        <p class="investment-data">${formatCoinAmount(data.assetAmount)}</p>
         <p>Original investment:</p>
         <p class="investment-data">${formatCurrency(data.originalCapital)}</p>
         <p>Current value of investment:</p>
@@ -263,6 +274,8 @@ function showInvestment(macro) {
             const coin = marketCoin.symbol.toUpperCase();
             const apiKey = `923F38CF-FBE2-49B9-A382-C9B12A0B96A7`;
 
+            createLoader();
+
             const req = await fetch(
               `https://rest.coinapi.io/v1/exchangerate/${coin}/USD?time=${dateString}&apikey=${apiKey}`
             );
@@ -273,7 +286,7 @@ function showInvestment(macro) {
 
             const data = await req.json();
 
-            console.log(`SellPrice DATA`, data);
+            removeLoader();
             return data.rate;
           } catch (err) {
             throw err;
@@ -303,11 +316,12 @@ function showInvestment(macro) {
 
             // If on port dashboard page, update the page
             if (state.curPage === 1)
-              updateInspectAsset(
-                state.assetClasses[stateMacro.findParentClassIndex()]
-              );
+              updateInspectAsset(stateMacro.findParentClass());
+
+            setLocalStorage();
           } catch (err) {
-            alert(`problem getting sellPrice: (${err})`, err);
+            removeLoader();
+            displayErrorMessage(err);
           }
         }
 
@@ -340,10 +354,10 @@ function showInvestment(macro) {
         stateMacro.markUnsold();
         updatePopup(stateMacro);
 
+        setLocalStorage();
+
         if (state.curPage === 1)
-          updateInspectAsset(
-            state.assetClasses[stateMacro.findParentClassIndex()]
-          );
+          updateInspectAsset(stateMacro.findParentClass());
       }
     }
 
@@ -364,21 +378,36 @@ function showInvestment(macro) {
           deleteModal.remove();
         });
 
-      // Complete deletion
+      // Complete deletion - 3 situations
       document
         .querySelector(".delete-btn")
         .addEventListener("click", function (e) {
-          // Delete macro from assetClass
-          state.assetClasses
-            .find((assClass) => assClass.asset === stateMacro.asset)
-            .deleteMacro(stateMacro);
+          const assClass = stateMacro.findParentClass();
 
-          // Remove modals
-          deleteModal.remove();
-          removeModal();
-
-          // Show and hide notification message
-          notificationMessage(`Investment deleted`);
+          // Render port dashboard if the assetClass contains no more Macros
+          if (state.curPage === 1 && assClass.macros.length === 1) {
+            assClass.deleteMacro(stateMacro);
+            renderPortfolioDashboardMarkup(
+              document.querySelector(".views-container")
+            );
+            notificationMessage(`Investment deleted`);
+            setLocalStorage();
+          } else if (state.curPage === 1) {
+            // Deletion when user on inspectAsset and there are still more Macros
+            assClass.deleteMacro(stateMacro);
+            deleteModal.remove();
+            removeModal();
+            updateInspectAsset(assClass);
+            notificationMessage(`Investment deleted`);
+            setLocalStorage();
+          } else {
+            // Deletion when user on treemap
+            assClass.deleteMacro(stateMacro);
+            deleteModal.remove();
+            removeModal();
+            notificationMessage(`Investment deleted`);
+            setLocalStorage();
+          }
         });
     });
   }

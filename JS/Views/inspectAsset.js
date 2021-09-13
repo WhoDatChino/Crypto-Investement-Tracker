@@ -5,8 +5,13 @@ import {
   formatCurrency,
   formatReadableDate,
   formatShortCurrency,
+  formatCoinAmount,
 } from "../helpers.js";
 import { renderMacro } from "./inspectMacro.js";
+import ButtonQueue from "../navQueue.js";
+import { renderPortfolioDashboardMarkup } from "./portfolioDashboard.js";
+import { createLoader, removeLoader } from "./loader.js";
+import { FROM_DATE_HISTORIC_DATA, TO_DATE_HISTORIC_DATA } from "../config.js";
 
 // /////// FUNCTIONS
 
@@ -39,6 +44,7 @@ function markupData(assetClass) {
   return { soldPos, change, changeHTML, macroMarket };
 }
 
+// Generates initial html
 function generateMarkup(assetClass) {
   // Finding the asset in the curMarket and the matching macro in the assetClass that was clicked in the treemap
 
@@ -48,6 +54,8 @@ function generateMarkup(assetClass) {
 
   let html = `
     <div class="investment-expansion-view">
+
+    <button class='back-btn'></button>
 
     <div class="crypto-header">
         <img class="coin-logo"
@@ -65,11 +73,9 @@ function generateMarkup(assetClass) {
             <div class="content">
 
                 <div class="investment-stats">
-                    <p>Total coin amount: <span class="bold">${
-                      assetClass.assetAmount > 10
-                        ? assetClass.assetAmount.toFixed(2)
-                        : assetClass.assetAmount.toFixed(6)
-                    } ${macroMarket.symbol}</span></p>
+                    <p>Total coin amount: <span class="bold">
+                    ${formatCoinAmount(assetClass.assetAmount)} 
+                    ${macroMarket.symbol}</span></p>
                     <p>Original investment(s) value: <span class="bold">
                     ${formatCurrency(assetClass.totalInvested)}</span>
                     </p>
@@ -137,14 +143,17 @@ function generateMarkup(assetClass) {
 
                 <div class="price-graph-container">
                     <h3>Price Graph:</h3>
-                    <svg class="price-graph" id="price-graph"></svg>
-                    <div class="button-container">
-                        <button class="change-period active" id="1w">1 Week</button>
-                        <button class="change-period" id="1m">1 Month</button>
-                        <button class="change-period" id="6m">6 Months</button>
-                        <button class="change-period" id="1y">1 Year</button>
-                        <button class="change-period" id="max">Max</button>
+                    <div class="price-graph">
+                      <svg class='graph'></svg>
                     </div>
+                    <div class="button-container">
+                        <button class="change-period active" id="7">1 Week</button>
+                        <button class="change-period" id="31">1 Month</button>
+                        <button class="change-period" id="188">6 Months</button>
+                        <button class="change-period" id="365">1 Year</button>
+                        <button class="change-period" id="0">Max</button>
+                    </div>
+                   
                 </div>
 
             </div>
@@ -164,11 +173,9 @@ export const updateInspectAsset = function (assetClass) {
   document.querySelector(".content").innerHTML = `
 
   <div class="investment-stats">
-      <p>Total coin amount: <span class="bold">${
-        assetClass.assetAmount > 10
-          ? assetClass.assetAmount.toFixed(2)
-          : assetClass.assetAmount.toFixed(6)
-      } ${macroMarket.symbol}</span></p>
+      <p>Total coin amount: <span class="bold">${formatCoinAmount(
+        assetClass.assetAmount
+      )} ${macroMarket.symbol}</span></p>
       <p>Original investment(s) value: <span class="bold">
       ${formatCurrency(assetClass.totalInvested)}</span>
       </p>
@@ -204,6 +211,7 @@ export const updateInspectAsset = function (assetClass) {
   populateInvestmentsTable(assetClass);
 };
 
+// Fills table w/ macros contained in the assetClass
 function populateInvestmentsTable(asset) {
   const macros = asset.macros;
 
@@ -234,25 +242,195 @@ function populateInvestmentsTable(asset) {
   });
 }
 
-// function viewIndividualInvest() {
-//   const tbody = document.querySelector(".investment-table tbody");
+// Line graph for price data
+function renderLineGraph(dataIn, period = 7) {
+  const parent = document.querySelector(".price-graph");
+  const svg = d3.select("svg");
 
-//   tbody.addEventListener("click", function (e) {
-//     // const target = e.target.closest("tr").id;
+  // Data
+  let data;
+  period ? (data = dataIn.slice(dataIn.length - 1 - period)) : (data = dataIn);
 
-//     renderIndividInvest(e.target.closest("tr").id)
-//   });
-// }
+  const xValue = (d) => d[0];
+  const yValue = (d) => d[1];
 
-// Called when clicking on leaf on treemap
-export const renderAssetInspection = function (d) {
-  document.querySelector(".views-container").innerHTML = generateMarkup(d);
-  populateInvestmentsTable(d);
-  // document
-  //   .querySelector(".investment-table tbody")
-  //   .addEventListener("click", function (e) {
-  //     // const target = e.target.closest("tr").id;
+  const height = +parent.clientHeight;
+  const width = +parent.clientWidth;
 
-  //     renderIndividInvest(e.target.closest("tr").id);
-  //   });
+  const margin = {
+    top: 5,
+    left: 50,
+    bottom: 30,
+    right: 15,
+  };
+
+  const innerHeight = height - margin.top - margin.bottom;
+  const innerWidth = width - margin.left - margin.right;
+
+  svg.attr("height", height).attr("width", width);
+
+  const dates = data.map((item) => new Date(item[0]));
+
+  // Scales
+  const xScale = d3.scaleTime().domain(d3.extent(dates)).range([0, innerWidth]);
+  // .nice();
+
+  const yScale = d3
+    .scaleLinear()
+    .domain([d3.min(data, (d) => d[1]) * 0.95, d3.max(data, (d) => d[1])])
+    .range([innerHeight, 0])
+    .nice();
+
+  const xAxis = d3.axisBottom(xScale).ticks(5).tickPadding(10);
+
+  const yAxis = d3.axisLeft(yScale).ticks(5).tickFormat(formatShortCurrency);
+
+  const colorGrad = (start, end) => {
+    if (start > end) {
+      return [
+        { offset: "45%", color: "#9D0208" },
+        { offset: "55%", color: "#AA1708" },
+        { offset: "60%", color: "#B62D07" },
+        { offset: "65%", color: "#C34207" },
+        { offset: "70%", color: "#CF5706" },
+        { offset: "80%", color: "#DC6D06" },
+        { offset: "85%", color: "#E88205" },
+      ];
+    } else {
+      return [
+        { offset: "35%", color: "#1662A1" },
+        { offset: "45%", color: "#1780B5" },
+        { offset: "55%", color: "#179ECA" },
+        { offset: "65%", color: "#18BBDE" },
+        { offset: "75%", color: "#18D9F2" },
+        { offset: "80%", color: "#21E6CE" },
+        { offset: "90%", color: "#2AF2AA" },
+        { offset: "95%", color: "#33FF86" },
+      ];
+    }
+  };
+
+  const container = svg
+    .append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+  const lineGenerator = d3
+    .line()
+    .x((d) => xScale(new Date(xValue(d))))
+    .y((d) => yScale(yValue(d)));
+
+  container
+    .append("linearGradient")
+    .attr("id", "line-gradient")
+    .attr("gradientUnits", "userSpaceOnUse")
+    .attr("x1", 0)
+    .attr("y1", yScale(0))
+    .attr("x2", 0)
+    .attr("y2", yScale(d3.max(data, (d) => yValue(d))))
+    .selectAll("stop")
+    .data(colorGrad(yValue(data[0]), yValue(data[data.length - 1])))
+    .enter()
+    .append("stop")
+    .attr("offset", function (d) {
+      return d.offset;
+    })
+    .attr("stop-color", function (d) {
+      return d.color;
+    });
+
+  container
+    .append("path")
+    .attr("d", lineGenerator(data))
+    .attr("stroke", "url(#line-gradient)") // ID of custom gradient
+    .attr("stroke-width", 3)
+    .attr("stroke-linejoin", "round") // Smoothes the joints
+    .attr("fill", "none");
+
+  const xAxisGroup = container
+    .append("g")
+    .attr("transform", `translate(0,${innerHeight})`)
+    .call(xAxis);
+
+  const yAxisGroup = container.append("g").call(yAxis);
+}
+
+function showReloadButton() {
+  const container = document.createElement("div");
+  container.classList.add("reload");
+
+  container.innerHTML = `
+    <button class='reload-btn'>Retry</button>
+  `;
+
+  document.querySelector(".price-graph-container").append(container);
+
+  document.querySelector(".reload-btn").addEventListener("click", function () {
+    container.remove();
+    createPriceGraph();
+  });
+}
+
+async function getHistoricData() {
+  try {
+    const req = await fetch(
+      `https://api.coingecko.com/api/v3/coins/${state.curAsset}/market_chart/range?vs_currency=usd&from=${FROM_DATE_HISTORIC_DATA}&to=${TO_DATE_HISTORIC_DATA}`
+    );
+
+    if (!req.ok) {
+      throw req.status;
+    }
+
+    const data = await req.json();
+    console.log(`REQ`, data);
+    removeLoader();
+    return data.prices;
+  } catch (err) {
+    removeLoader();
+    showReloadButton();
+  }
+}
+
+// Buttons to change time period of price graph
+function changePriceGraph(data) {
+  const defaultBTN = document.querySelectorAll(".change-period")[0];
+  const buttonQ = new ButtonQueue(defaultBTN);
+
+  document
+    .querySelector(".button-container")
+    .addEventListener("click", function (e) {
+      const clickedBtn = e.target.closest("button");
+      if (!clickedBtn) return;
+      buttonQ.enqueue(clickedBtn);
+      document.querySelector("svg").innerHTML = ``;
+      renderLineGraph(data, +clickedBtn.id);
+    });
+}
+
+async function createPriceGraph() {
+  try {
+    // Show loader
+    createLoader(document.querySelector(".price-graph-container"));
+    // 1. get api data
+    // - if fails, show a reload button
+    const data = await getHistoricData();
+    // 2. Use that data to render line graph
+    renderLineGraph(data);
+    // 3. Eventlisteners to change the graph period
+    changePriceGraph(data);
+  } catch (err) {
+    console.log(`Error getting historical data`, err);
+  }
+}
+
+// Called when clicking on row in asset balances table
+export const renderAssetInspection = async function (assetClass) {
+  document.querySelector(".views-container").innerHTML =
+    generateMarkup(assetClass);
+  populateInvestmentsTable(assetClass);
+  createPriceGraph();
+
+  // Back button
+  document.querySelector(".back-btn").addEventListener("click", function () {
+    renderPortfolioDashboardMarkup(document.querySelector(".views-container"));
+  });
 };

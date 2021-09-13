@@ -182,17 +182,19 @@ function populateMarketTable(data) {
     }
     <td>${formatShortCurrency(asset.total_volume)}</td>
     <td>${formatShortCurrency(asset.market_cap)}</td>
+
     `;
 
     // Show in dom
     table.appendChild(row);
   });
 }
+//
 
 // Getting the value from the element
-// NEEDS REFACTORING
 function sortData(dir, sortBy) {
-  let arr = state.curMarket;
+  // copy state
+  let arr = [...state.curMarket];
 
   // Asc
   if (dir === "asc") {
@@ -236,7 +238,7 @@ function sortData(dir, sortBy) {
     }
   }
 
-  state.curMarket = arr;
+  return arr;
   // const be = state.curMarket.prop;
   // console.log(`new`, state.curMarket);
 }
@@ -280,9 +282,8 @@ function sortTableContents(e) {
   // 2. Change the colour of the button that is pressed
   button.classList.add("active");
   // 4. execute sort function based on variable
-  sortData(direction, sortBy);
   // 5. output sorted data to dom
-  populateMarketTable(state.curMarket);
+  populateMarketTable(sortData(direction, sortBy));
 }
 
 // Expand market table and show search box

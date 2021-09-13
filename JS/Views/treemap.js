@@ -3,9 +3,16 @@
 import state from "../model.js";
 import { AssetClass, MacroInvestment } from "../investmentsLogic.js";
 import { renderMacro } from "./inspectMacro.js";
-import { checkRequired, checkDate, checkMoney } from "../helpers.js";
+import {
+  checkRequired,
+  checkDate,
+  checkMoney,
+  setLocalStorage,
+} from "../helpers.js";
 import { createOverlay, removeModal } from "./overlay.js";
 import { createLoader, removeLoader } from "./loader.js";
+import { notificationMessage } from "./notificationMessage.js";
+import { displayErrorMessage } from "./errorMsg.js";
 
 // /////// FUNCTIONS
 
@@ -297,7 +304,9 @@ function formValidator(e) {
     valid += checkDate(date);
 
     // Create valid will be >0 if any required input field is invalid
-    if (valid === 0) createInvestment();
+    if (valid === 0) {
+      createInvestment();
+    }
   }
   validateInputs();
 
@@ -312,6 +321,8 @@ function formValidator(e) {
       const coin = ticker.value.toUpperCase();
       const apiKey = `923F38CF-FBE2-49B9-A382-C9B12A0B96A7`;
 
+      createLoader();
+
       const req = await fetch(
         `https://rest.coinapi.io/v1/exchangerate/${coin}/USD?time=${dateString}&apikey=${apiKey}`
       );
@@ -322,7 +333,8 @@ function formValidator(e) {
 
       const data = await req.json();
 
-      console.log(`data`, data);
+      removeLoader();
+
       return data.rate;
     } catch (err) {
       throw err;
@@ -338,6 +350,11 @@ function formValidator(e) {
   // Creates new MacroInvestment
   function newMacro(props) {
     const macro = new MacroInvestment(props);
+  }
+
+  // Clears form
+  function clearForm(arr) {
+    arr.forEach((input) => (input.value = ""));
   }
 
   // Creates new investment object
@@ -360,42 +377,15 @@ function formValidator(e) {
         ? newClassMacro(props)
         : newMacro(props);
 
-      console.log(state);
+      notificationMessage(`Investment added!`);
+      clearForm([ticker, originalCapital, date, price, platform]);
+      setLocalStorage();
     } catch (err) {
+      removeLoader();
       console.log(`err code:`, err);
       displayErrorMessage(err);
     }
   }
-}
-
-// Error messages and codes as specified by CoinApi
-const errorMap = {
-  400: `Something went wrong, please try again.`,
-  401: `API key invalid.`,
-  403: `API key unauthorised.`,
-  429: `Too many requests. Daily limit reached.`,
-  550: `No data. Can't fufill request.`,
-};
-
-// Shows popup error message based on the error returned by CoinApi response
-function displayErrorMessage(code) {
-  const errorPopup = document.createElement("div");
-  errorPopup.classList.add("error-message");
-  console.log(`map`, errorMap[code]);
-
-  const message = errorMap[code];
-
-  errorPopup.innerHTML = `
-  <ion-icon name="warning-outline"></ion-icon>
-  <p>${message} If error persists, please manually input coin price.</p>
-  
-  <button class="cancel-btn">
-  </button>
-  `;
-  document.querySelector(".views-container").append(errorPopup);
-  errorPopup.querySelector(".cancel-btn").addEventListener("click", () => {
-    errorPopup.remove();
-  });
 }
 
 export const renderTreemapMarkup = function (parentEl) {

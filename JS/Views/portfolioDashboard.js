@@ -1,5 +1,9 @@
 import state from "../model.js";
-import { formatCurrency, formatReadableDate } from "../helpers.js";
+import {
+  formatCurrency,
+  formatReadableDate,
+  formatCoinAmount,
+} from "../helpers.js";
 import { MacroInvestment } from "../investmentsLogic.js";
 import { formatState } from "./treemap.js";
 import { renderAssetInspection } from "./inspectAsset.js";
@@ -160,7 +164,7 @@ function populateBalancesTable() {
 
     row.innerHTML = `
             <td>${invest.asset}</td>
-            <td>${invest.assetAmount.toFixed(6)}</td>
+            <td>${formatCoinAmount(invest.assetAmount)}</td>
             <td>${formatCurrency(invest.currentValue)}</td>
             <td>${percentage.toFixed(2)}%</td>
         `;
@@ -178,6 +182,9 @@ function inspectAsset(ev) {
     (assClass) =>
       assClass.asset === ev.target.closest("tr").firstElementChild.innerText
   );
+
+  state.curAsset = assetClass.geckoId;
+  console.log(`STSTSTSTS`, state);
 
   renderAssetInspection(assetClass);
 }
@@ -206,16 +213,23 @@ function populateMovementsTable() {
   tableItems.sort((a, b) => new Date(b.date) - new Date(a.date));
 
   tableItems.forEach((item) => {
+    // If item is an instance, it means it isnt sold
     if (item instanceof MacroInvestment) {
       const row = document.createElement("tr");
-      // row.classList.add('sell')
+
+      let assetAmount;
+      item.sold
+        ? (assetAmount = item
+            .findParentClass()
+            .soldPositions.find((tx) => tx.id === item.id).assetAmount)
+        : (assetAmount = item.assetAmount);
 
       row.innerHTML = `
         <td>${formatReadableDate(item.date, true)}</td>
         <td>${item.asset}</td>
         <td><span class="green">Buy</span></td>
         <td>${formatCurrency(item.originalCapital)}</td>
-        <td>${item.assetAmount.toFixed(6)}</td>
+        <td>${formatCoinAmount(assetAmount)}</td>
         `;
       table.appendChild(row);
     } else {
@@ -227,7 +241,7 @@ function populateMovementsTable() {
       <td>${item.asset}</td>
       <td><span class="red">Sell</span></td>
       <td>${formatCurrency(item.sellPrice * item.assetAmount)}</td>
-      <td>${item.assetAmount.toFixed(6)}</td>
+      <td>${formatCoinAmount(item.assetAmount)}</td>
       `;
 
       table.appendChild(row);
