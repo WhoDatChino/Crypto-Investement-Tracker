@@ -44,8 +44,7 @@ export const createTreemap = function () {
   const data = formatState();
 
   // Guard clause if there is no macro investments to show
-  if (data.children.length === 0)
-    return console.log(`No macros investments to show`);
+  if (data.children.length === 0) return;
 
   const svg = d3.select("#treemap");
   const container = document.querySelector(".treemap-container");
@@ -135,6 +134,11 @@ export const createTreemap = function () {
     .attr("pointer-events", "none");
 };
 
+export const reRenderTree = function () {
+  document.querySelector("#treemap").innerHTML = ``;
+  createTreemap();
+};
+
 function moveSummaryText(ev, d) {
   const div = document.querySelector(".summary-text");
 
@@ -184,12 +188,6 @@ export const formatState = function () {
         100;
 
       arr.push({
-        // name: invest.asset,
-        // id: invest.id,
-        // date: invest.date,
-        // currentValue: invest.currentValue,
-        // originalCapital: invest.originalCapital,
-        // assetAmount: invest.assetAmount,
         value,
         ...invest,
       });
@@ -265,7 +263,6 @@ function showNewInvestForm() {
                   ${coin.name}
                 </option>`;
     });
-    console.log(`state`, state.curMarket);
     return html;
   }
 
@@ -379,10 +376,12 @@ function formValidator(e) {
 
       notificationMessage(`Investment added!`);
       clearForm([ticker, originalCapital, date, price, platform]);
+      // Recreate treemap
+      reRenderTree();
+      // Save to storage
       setLocalStorage();
     } catch (err) {
       removeLoader();
-      console.log(`err code:`, err);
       displayErrorMessage(err);
     }
   }

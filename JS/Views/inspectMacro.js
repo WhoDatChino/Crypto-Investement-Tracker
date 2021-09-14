@@ -17,6 +17,7 @@ import { renderPortfolioDashboardMarkup } from "./portfolioDashboard.js";
 import { notificationMessage } from "./notificationMessage.js";
 import { displayErrorMessage } from "./errorMsg.js";
 import { createLoader, removeLoader } from "./loader.js";
+import { reRenderTree } from "./treemap.js";
 
 function showInvestment(macro) {
   // Parent to which eveything is appended
@@ -70,11 +71,6 @@ function showInvestment(macro) {
       const investInspect = document.createElement("div");
       investInspect.classList.add("investment-inspection-container");
 
-      console.log(
-        `NUMBER`,
-        data.assetAmount,
-        formatCoinAmount(data.assetAmount)
-      );
       investInspect.innerHTML = `
                     
                         <button class="close-modalBTN">
@@ -309,11 +305,12 @@ function showInvestment(macro) {
             stateMacro.markSold(props);
             // 5. Close sale form and show investInspect
             updatePopup(findMacro(macro));
+
             closeSaleForm();
 
             // Show and hide notification message
             notificationMessage(`Sale recorded successfully!`);
-
+            if (state.curPage === 0) reRenderTree();
             // If on port dashboard page, update the page
             if (state.curPage === 1)
               updateInspectAsset(stateMacro.findParentClass());
@@ -353,6 +350,8 @@ function showInvestment(macro) {
         // Unsell invest
         stateMacro.markUnsold();
         updatePopup(stateMacro);
+
+        if (state.curPage === 0) reRenderTree();
 
         setLocalStorage();
 
@@ -406,6 +405,7 @@ function showInvestment(macro) {
             deleteModal.remove();
             removeModal();
             notificationMessage(`Investment deleted`);
+            reRenderTree();
             setLocalStorage();
           }
         });

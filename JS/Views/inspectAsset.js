@@ -381,7 +381,6 @@ async function getHistoricData() {
     }
 
     const data = await req.json();
-    console.log(`REQ`, data);
     removeLoader();
     return data.prices;
   } catch (err) {

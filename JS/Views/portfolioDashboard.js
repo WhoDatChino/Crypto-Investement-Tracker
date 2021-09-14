@@ -4,7 +4,7 @@ import {
   formatReadableDate,
   formatCoinAmount,
 } from "../helpers.js";
-import { MacroInvestment } from "../investmentsLogic.js";
+import { MacroInvestment, ResetMacro } from "../investmentsLogic.js";
 import { formatState } from "./treemap.js";
 import { renderAssetInspection } from "./inspectAsset.js";
 import { renderMacro } from "./inspectMacro.js";
@@ -214,22 +214,15 @@ function populateMovementsTable() {
 
   tableItems.forEach((item) => {
     // If item is an instance, it means it isnt sold
-    if (item instanceof MacroInvestment) {
+    if (item instanceof MacroInvestment || item instanceof ResetMacro) {
       const row = document.createElement("tr");
-
-      let assetAmount;
-      item.sold
-        ? (assetAmount = item
-            .findParentClass()
-            .soldPositions.find((tx) => tx.id === item.id).assetAmount)
-        : (assetAmount = item.assetAmount);
 
       row.innerHTML = `
         <td>${formatReadableDate(item.date, true)}</td>
         <td>${item.asset}</td>
         <td><span class="green">Buy</span></td>
         <td>${formatCurrency(item.originalCapital)}</td>
-        <td>${formatCoinAmount(assetAmount)}</td>
+        <td>${formatCoinAmount(item.assetAmount)}</td>
         `;
       table.appendChild(row);
     } else {
@@ -281,15 +274,11 @@ function renderSunburst() {
 
   const g = svg.append("g").attr("transform", `translate(${radius},${radius})`);
 
-  // Data to be used for sunburst. Default is points that have a depth
-  function determineData(data = root.descendants().filter((d) => d.depth)) {
-    // If length is 2, means there is only 1 investment therefore 2 data points. Only need to use first
-    if (data.length === 2) data = [data[0]];
-
-    // If more than 2, means there are multiple investments, only need to render those who's parents have more than one child
-    if (data.length > 2)
-      data = data.filter((d) => d.parent.children.length !== 1);
-    console.log(`dddda`, data);
+  // Data to be used for sunburst. Default descendants
+  function determineData(data = root.descendants()) {
+    data = data
+      .filter((d) => d.depth)
+      .filter((d) => !(d.height === 0 && d.parent.children.length === 1));
 
     return data;
   }
@@ -309,7 +298,7 @@ function renderSunburst() {
     // Following function appends different text based on whether the node is a leaf or a parent w/ either 1 child or more than 1 child
     .text(function (d) {
       if (d.children && d.children.length === 1) {
-        return `${d.data.children[0].name} (${formatReadableDate(
+        return `${d.data.children[0].asset} (${formatReadableDate(
           d.data.children[0].date
         )})\nValue: ${formatCurrency(
           d.data.children[0].currentValue

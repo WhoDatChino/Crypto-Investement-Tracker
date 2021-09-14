@@ -239,8 +239,6 @@ function sortData(dir, sortBy) {
   }
 
   return arr;
-  // const be = state.curMarket.prop;
-  // console.log(`new`, state.curMarket);
 }
 
 // Determines which button was clicked on the page and calls the appropriate functions
@@ -270,8 +268,6 @@ function sortTableContents(e) {
 
   const sortBy = e.target.dataset.sort;
   const direction = e.target.className;
-
-  // console.log(sortBy, direction);
 
   const tableButtons = document
     .querySelector(".crypto-table")
@@ -352,7 +348,6 @@ function hideSearch(e) {
 }
 
 export const renderMarketOverviewMarkup = function (parentEl) {
-  // console.log(`info`, marketStats);
   parentEl.innerHTML = generateMarkup();
   const marketInfoSection = document.querySelector(".market-info");
   populateMarketTable(state.curMarket);

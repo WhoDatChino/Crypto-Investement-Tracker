@@ -68,8 +68,8 @@ export class MacroInvestment {
     });
 
     // Reflect sale in obj
-    this.assetAmount = 0;
-    this.currentValue = this._calcCurrentValue();
+    // this.assetAmount = 0;
+    // this.currentValue = this._calcCurrentValue();
 
     // Reflect change in parent
     this.findParentClass().updateMacros();
@@ -81,10 +81,10 @@ export class MacroInvestment {
     const parentCl = this.findParentClass();
 
     // Get assetAmount sent to soldPositions when sold
-    this.assetAmount = parentCl.soldPositions.find(
-      (obj) => obj.id === this.id
-    ).assetAmount;
-    this.currentValue = this._calcCurrentValue();
+    // this.assetAmount = parentCl.soldPositions.find(
+    //   (obj) => obj.id === this.id
+    // ).assetAmount;
+    // this.currentValue = this._calcCurrentValue();
 
     // Remove summary obj from parent soldPositions that corresponds with this instance
     parentCl.soldPositions = parentCl.soldPositions.filter(
@@ -166,5 +166,150 @@ export class AssetClass {
       return;
     }
     this.updateMacros();
+  }
+}
+
+export class ResetAssetClass {
+  constructor(obj) {
+    this.asset = obj.asset;
+    this.ticker = obj.ticker;
+    this.currentPrice = this._findMarketAsset().current_price;
+    this.geckoId = obj.geckoId;
+    this.assetAmount = obj.assetAmount;
+    this.totalInvested = obj.totalInvested;
+    this.currentValue = this.currentPrice * this.assetAmount;
+    this.soldPositions = obj.soldPositions;
+    this.macros = this._resetMacros(obj.macros);
+    this.updateCurrentPrice();
+  }
+
+  _resetMacros(macrosArr) {
+    return macrosArr.map((obj) => new ResetMacro(obj));
+  }
+
+  _findMarketAsset() {
+    return state.curMarket.find((asset) => asset.name === this.asset);
+  }
+
+  _initAssetClass() {
+    state.assetClasses.push(this);
+  }
+
+  // Update currentPrice from market
+  updateCurrentPrice() {
+    this.currentPrice = this._findMarketAsset().current_price;
+    this.macros.forEach((macro) => macro.updateCurrentPrice(this.currentPrice));
+    this._updateCurrentValue();
+  }
+
+  // Called when macro is deleted/sold
+  updateMacros() {
+    this._updateAssetAmount();
+    this._updateTotalInvested();
+    this._updateCurrentValue();
+  }
+
+  // Sums assetAmount of each unsold macro
+  _updateAssetAmount() {
+    this.assetAmount = this.macros
+      .filter((macro) => macro.sold === false)
+      .reduce((acc, cur) => (acc += cur.assetAmount), 0);
+  }
+
+  // Multiplies assetAmount by currentPrice
+  _updateCurrentValue() {
+    this.currentValue = +(this.assetAmount * this.currentPrice).toFixed(2);
+  }
+
+  // Sums originalCapital of unsold macros
+  _updateTotalInvested() {
+    this.totalInvested = this.macros
+      .filter((macro) => macro.sold === false)
+      .reduce((acc, cur) => (acc += cur.originalCapital), 0);
+  }
+
+  // Deletes macro passed in and updates class
+  deleteMacro(macro) {
+    const delObj = this.macros.find((obj) => obj.id === macro.id);
+
+    if (delObj.sold) delObj.markUnsold();
+
+    this.macros = this.macros.filter((invest) => invest.id !== delObj.id);
+
+    // Delete class if it doesnt have any macros remaining
+    if (this.macros.length === 0) {
+      state.assetClasses = state.assetClasses.filter(
+        (assClass) => assClass.asset !== this.asset
+      );
+      return;
+    }
+    this.updateMacros();
+  }
+}
+
+export class ResetMacro {
+  constructor(obj) {
+    this.id = obj.id;
+    this.asset = obj.asset;
+    this.originalCapital = obj.originalCapital;
+    this.assetAmount = obj.assetAmount;
+    this.currentValue = obj.currentValue;
+    this.platform = obj.platform;
+    this.date = obj.date;
+    this.sold = obj.sold;
+  }
+
+  findParentClass() {
+    return state.assetClasses.find(
+      (assetClass) => assetClass.asset === this.asset
+    );
+  }
+
+  // Called on loadup by parent when currentPrice obtained from coinGecko
+  updateCurrentPrice(price) {
+    return (this.currentValue = price * this.assetAmount);
+  }
+
+  // Marks macro sold and sends summary obj to parent soldPos
+  markSold(props) {
+    this.sold = true;
+
+    const { id, assetAmount } = this;
+    // Sell price and date sold fed into here by input from user
+    const { date, sellPrice } = props;
+
+    // Send summary copy to soldPos of parent
+    this.findParentClass().soldPositions.push({
+      id,
+      assetAmount,
+      date,
+      sellPrice,
+    });
+
+    // Reflect sale in obj
+    // this.assetAmount = 0;
+    // this.currentValue = this._calcCurrentValue();
+
+    // Reflect change in parent
+    this.findParentClass().updateMacros();
+  }
+
+  markUnsold() {
+    this.sold = false;
+
+    const parentCl = this.findParentClass();
+
+    // Get assetAmount sent to soldPositions when sold
+    // this.assetAmount = parentCl.soldPositions.find(
+    //   (obj) => obj.id === this.id
+    // ).assetAmount;
+    // this.currentValue = this._calcCurrentValue();
+
+    // Remove summary obj from parent soldPositions that corresponds with this instance
+    parentCl.soldPositions = parentCl.soldPositions.filter(
+      (pos) => pos.id !== this.id
+    );
+
+    parentCl.updateMacros();
   }
 }
