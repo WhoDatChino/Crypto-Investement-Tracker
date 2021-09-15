@@ -60,9 +60,11 @@ removeLoader();
 // Called after getting curMarket info. Updates assetClasse prices
 async function init() {
   await loadCurMarket();
-  state.assetClasses = state.assetClasses.map(
-    (obj) => new ResetAssetClass(obj)
-  );
+  state.assetClasses.length > 0
+    ? (state.assetClasses = state.assetClasses.map(
+        (obj) => new ResetAssetClass(obj)
+      ))
+    : true;
   console.log(`UPDATED STATE`, state.assetClasses);
 }
 

@@ -12,6 +12,7 @@ import ButtonQueue from "../navQueue.js";
 import { renderPortfolioDashboardMarkup } from "./portfolioDashboard.js";
 import { createLoader, removeLoader } from "./loader.js";
 import { FROM_DATE_HISTORIC_DATA, TO_DATE_HISTORIC_DATA } from "../config.js";
+import { geckoHistoricData } from "../apiCalls.js";
 
 // /////// FUNCTIONS
 
@@ -354,6 +355,7 @@ function renderLineGraph(dataIn, period = 7) {
   const yAxisGroup = container.append("g").call(yAxis);
 }
 
+// Called if createGraph throws error
 function showReloadButton() {
   const container = document.createElement("div");
   container.classList.add("reload");
@@ -361,32 +363,13 @@ function showReloadButton() {
   container.innerHTML = `
     <button class='reload-btn'>Retry</button>
   `;
-
   document.querySelector(".price-graph-container").append(container);
 
+  // Clicking button removes the button & reCalls createGraph
   document.querySelector(".reload-btn").addEventListener("click", function () {
     container.remove();
     createPriceGraph();
   });
-}
-
-async function getHistoricData() {
-  try {
-    const req = await fetch(
-      `https://api.coingecko.com/api/v3/coins/${state.curAsset}/market_chart/range?vs_currency=usd&from=${FROM_DATE_HISTORIC_DATA}&to=${TO_DATE_HISTORIC_DATA}`
-    );
-
-    if (!req.ok) {
-      throw req.status;
-    }
-
-    const data = await req.json();
-    removeLoader();
-    return data.prices;
-  } catch (err) {
-    removeLoader();
-    showReloadButton();
-  }
 }
 
 // Buttons to change time period of price graph
@@ -394,6 +377,7 @@ function changePriceGraph(data) {
   const defaultBTN = document.querySelectorAll(".change-period")[0];
   const buttonQ = new ButtonQueue(defaultBTN);
 
+  // Changes button clicked styling & changes graph
   document
     .querySelector(".button-container")
     .addEventListener("click", function (e) {
@@ -410,19 +394,21 @@ async function createPriceGraph() {
     // Show loader
     createLoader(document.querySelector(".price-graph-container"));
     // 1. get api data
-    // - if fails, show a reload button
-    const data = await getHistoricData();
+    // - if fails, show a reload button & remove loader
+    const data = await geckoHistoricData();
     // 2. Use that data to render line graph
     renderLineGraph(data);
     // 3. Eventlisteners to change the graph period
     changePriceGraph(data);
+    removeLoader();
   } catch (err) {
-    console.log(`Error getting historical data`, err);
+    removeLoader();
+    showReloadButton();
   }
 }
 
 // Called when clicking on row in asset balances table
-export const renderAssetInspection = async function (assetClass) {
+export const renderAssetInspection = function (assetClass) {
   document.querySelector(".views-container").innerHTML =
     generateMarkup(assetClass);
   populateInvestmentsTable(assetClass);

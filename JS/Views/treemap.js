@@ -77,7 +77,7 @@ export const createTreemap = function () {
   const treemap = d3
     .treemap()
     .size([innerWidth, innerHeight])
-    .padding(8)
+    .padding(5)
     .paddingInner(7)(root);
 
   console.log(`root`, root, `leaves`, root.leaves());
@@ -283,7 +283,7 @@ function formValidator(e) {
   e.preventDefault();
 
   // Values used in Macro creations
-  const ticker = document.querySelector(".coin-ticker");
+  const ticker = document.querySelector(".coin-ticker"); // Only used in api call
   const originalCapital = document.querySelector(".fiat-amount");
   const date = document.querySelector(".due-date");
   const price = document.querySelector(".buy-price");

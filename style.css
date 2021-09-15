@@ -761,7 +761,7 @@ label.description {
 
 /* Portfolio summary */
 .port-summary-container {
-  flex: 2;
+  height: 18%;
   box-sizing: border-box;
   width: 85%;
   display: flex;
@@ -775,6 +775,7 @@ label.description {
     rgb(255, 255, 255),
     rgba(207, 204, 204, 0.705)
   );
+  margin: 15px 0;
 }
 .port-summary-container label {
   font-size: 1.1rem;
@@ -783,14 +784,14 @@ label.description {
 
 /* Asset balances */
 .asset-balances-container {
-  flex: 5;
+  height: 45%;
   width: 100%;
   display: flex;
   align-items: center;
 }
 
 .wrapper {
-  flex: 3;
+  flex: 4;
   display: flex;
   flex-direction: column;
   height: 90%;
@@ -811,7 +812,8 @@ label.description {
   margin-left: 1rem;
 }
 .asset-balances-table {
-  width: 100%;
+  margin: 0 auto;
+  width: 95%;
 }
 .asset-balances-table th {
   height: 2.5rem;
@@ -826,7 +828,7 @@ label.description {
 }
 
 .port-movements-container {
-  flex: 3;
+  height: 35%;
   width: 100%;
   display: flex;
   flex-direction: column;

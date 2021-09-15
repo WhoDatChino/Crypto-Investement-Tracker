@@ -44,6 +44,10 @@ function showInvestment(macro) {
           .soldPositions.find((obj) => obj.id === data.id);
 
         changeHTML = `
+              <p>Date of sale:</p>
+              <p class="investment-data">${formatReadableDate(
+                sellData.date
+              )}</p>
               <p>Value at sale:</p>
               <p class="investment-data"> ${formatCurrency(
                 sellData.assetAmount * sellData.sellPrice
@@ -57,10 +61,17 @@ function showInvestment(macro) {
         changeHTML =
           change > 0
             ? `
+                <p>Current value of investment:</p>
+                <p class="investment-data">${formatCurrency(
+                  data.currentValue
+                )}</p>
                 <p>Change:</p>
                 <p class="investment-data">
                 <span class="green">+${change.toFixed(2)}%</span></p>`
-            : `<p>Change:</p>
+            : `
+            <p>Current value of investment:</p>
+            <p class="investment-data">${formatCurrency(data.currentValue)}</p>
+            <p>Change:</p>
             <p class="investment-data"><span class="red">${change.toFixed(
               2
             )}%</span></p>`;
@@ -94,10 +105,6 @@ function showInvestment(macro) {
                             <p>Original investment:</p>
                             <p class="investment-data">${formatCurrency(
                               data.originalCapital
-                            )}</p>
-                            <p>Current value of investment:</p>
-                            <p class="investment-data">${formatCurrency(
-                              data.currentValue
                             )}</p>
                             ${changeHTML}
                             <p>Current price of coin:</p>
