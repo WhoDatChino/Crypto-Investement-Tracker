@@ -1,3 +1,5 @@
+import "core-js/stable"; // For polyfilling es6 syntax
+import "regenerator-runtime/runtime";
 const state = {
   assetClasses: [
     // {

@@ -2,6 +2,8 @@
 
 import state from "../model.js";
 import { formatCurrency, formatShortCurrency } from "../helpers.js";
+import "core-js/stable"; // For polyfilling es6 syntax
+import "regenerator-runtime/runtime";
 
 // Cant set state to a variable cz will be set to null as its executed before the data is fetched from the api
 // const state.curMarket = state.curMarket;

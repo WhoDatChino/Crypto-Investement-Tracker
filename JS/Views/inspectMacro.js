@@ -18,6 +18,8 @@ import { notificationMessage } from "./notificationMessage.js";
 import { displayErrorMessage } from "./errorMsg.js";
 import { createLoader, removeLoader } from "./loader.js";
 import { reRenderTree } from "./treemap.js";
+import "core-js/stable"; // For polyfilling es6 syntax
+import "regenerator-runtime/runtime";
 
 function showInvestment(macro) {
   // Parent to which eveything is appended

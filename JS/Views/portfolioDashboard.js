@@ -8,6 +8,8 @@ import { MacroInvestment, ResetMacro } from "../investmentsLogic.js";
 import { formatState } from "./treemap.js";
 import { renderAssetInspection } from "./inspectAsset.js";
 import { renderMacro } from "./inspectMacro.js";
+import "core-js/stable"; // For polyfilling es6 syntax
+import "regenerator-runtime/runtime";
 
 // Export 1 function that loads the markup and creates all the event listeners for that page
 

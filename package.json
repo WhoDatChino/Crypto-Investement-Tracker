@@ -1,0 +1,27 @@
+{
+  "name": "crypto-tracker",
+  "version": "1.0.0",
+  "description": "I have found that I have several crypto investments that are based on different platforms for different reasons. Each platform has their own analytics based on my investments but they obviously do not allow you to congregate investments you may have on other platforms.",
+  "main": "index.html",
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WhoDatChino/Crypto-Investement-Tracker.git"
+  },
+  "author": "Keano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WhoDatChino/Crypto-Investement-Tracker/issues"
+  },
+  "homepage": "https://github.com/WhoDatChino/Crypto-Investement-Tracker#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5"
+  },
+  "dependencies": {
+    "core-js": "^3.17.3",
+    "regenerator-runtime": "^0.13.9"
+  }
+}

@@ -1,7 +1,8 @@
 import { MODAL_CLOSE_SECONDS } from "./config.js";
 import state from "./model.js";
 import { displayErrorMessage } from "./Views/errorMsg.js";
-
+import "core-js/stable"; // For polyfilling es6 syntax
+import "regenerator-runtime/runtime";
 export const formatCurrency = function (number, decimals = 2) {
   const num = new Intl.NumberFormat("en-US", {
     style: "currency",

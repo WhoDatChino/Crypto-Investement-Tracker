@@ -13,6 +13,8 @@ import { createOverlay, removeModal } from "./overlay.js";
 import { createLoader, removeLoader } from "./loader.js";
 import { notificationMessage } from "./notificationMessage.js";
 import { displayErrorMessage } from "./errorMsg.js";
+import "core-js/stable"; // For polyfilling es6 syntax
+import "regenerator-runtime/runtime";
 
 // /////// FUNCTIONS
 

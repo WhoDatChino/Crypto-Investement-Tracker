@@ -7,6 +7,14 @@ import state from "./model.js";
 import { removeLoader } from "./Views/loader.js";
 import { getLocalStorage } from "./helpers.js";
 import { ResetAssetClass } from "./investmentsLogic.js";
+import "core-js/stable"; // For polyfilling es6 syntax
+import "regenerator-runtime/runtime"; // For polyfilling async/await -> needs to be installed in terminal 1st
+
+const { async } = require("q");
+
+// if (module.hot) {
+//   module.hot.accept();
+// }
 
 console.log(state);
 

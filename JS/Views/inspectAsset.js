@@ -13,6 +13,8 @@ import { renderPortfolioDashboardMarkup } from "./portfolioDashboard.js";
 import { createLoader, removeLoader } from "./loader.js";
 import { FROM_DATE_HISTORIC_DATA, TO_DATE_HISTORIC_DATA } from "../config.js";
 import { geckoHistoricData } from "../apiCalls.js";
+import "core-js/stable"; // For polyfilling es6 syntax
+import "regenerator-runtime/runtime";
 
 // /////// FUNCTIONS
 
@@ -213,16 +215,14 @@ export const updateInspectAsset = function (assetClass) {
 };
 
 // Fills table w/ macros contained in the assetClass
-function populateInvestmentsTable(asset) {
-  const macros = asset.macros;
-
+function populateInvestmentsTable(assetClass) {
   const table = document.querySelector(".investment-table tbody");
 
-  macros.sort(
+  assetClass.macros.sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
-  macros.forEach((macro) => {
+  assetClass.macros.forEach((macro) => {
     const row = document.createElement("tr");
     row.setAttribute("id", macro.id);
 
@@ -238,7 +238,9 @@ function populateInvestmentsTable(asset) {
 
   // Event Listeners
   table.addEventListener("click", function (e) {
-    const macro = macros.find((obj) => obj.id === +e.target.closest("tr").id);
+    const macro = assetClass.macros.find(
+      (obj) => obj.id === +e.target.closest("tr").id
+    );
     renderMacro(macro);
   });
 }
