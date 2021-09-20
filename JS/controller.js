@@ -9,7 +9,7 @@ import { ResetAssetClass } from "./investmentsLogic.js";
 import { displayErrorMessage } from "./Views/errorMsg.js";
 import ButtonQueue from "./model.js";
 import "core-js/stable"; // For polyfilling es6 syntax
-import "regenerator-runtime/runtime"; // For polyfilling async/await -> needs to be installed in terminal 1st
+import "regenerator-runtime/runtime.js";
 import { geckoMarket } from "./apiCalls.js";
 
 const { async } = require("q");
@@ -44,8 +44,7 @@ async function fetchMarket() {
       : true;
 
     calcMarketStats();
-    console.log(`UPDATED STATE`, state);
-    removeLoader();
+    // console.log(`UPDATED STATE`, state);
   } catch (err) {
     removeLoader();
     displayErrorMessage();
@@ -56,23 +55,19 @@ function init() {
   getLocalStorage();
   fetchMarket();
   createTreemap();
+  removeLoader();
 }
 
 function changePage(buttonIndex) {
   switch (buttonIndex) {
     case 0:
       renderTreemapMarkup(viewsContainer);
-      console.log(`SSSSS`, state);
       break;
     case 1:
       renderPortfolioDashboardMarkup(viewsContainer);
-      console.log(`SSSSS`, state);
-
       break;
     case 2:
       renderMarketOverviewMarkup(viewsContainer);
-      console.log(`SSSSS`, state);
-
       break;
   }
 }

@@ -1,3 +1,4 @@
+import "regenerator-runtime/runtime.js";
 import { state } from "./model.js";
 import {
   COINAPI_KEY,
@@ -5,8 +6,6 @@ import {
   FROM_DATE_HISTORIC_DATA,
   TO_DATE_HISTORIC_DATA,
 } from "./config.js";
-import "core-js/stable"; // For polyfilling es6 syntax
-import "regenerator-runtime/runtime";
 
 // CoinAPI calls - gets exchange rate when creating new investment or selling one
 export const coinApi = async function (dateStr, coinTicker) {

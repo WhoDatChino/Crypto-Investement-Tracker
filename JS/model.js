@@ -1,7 +1,3 @@
-import "core-js/stable"; // For polyfilling es6 syntax
-import "regenerator-runtime/runtime";
-import { geckoMarket } from "./apiCalls.js";
-
 export const state = {
   assetClasses: [],
   marketStats: {},

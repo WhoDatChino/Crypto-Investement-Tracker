@@ -7,8 +7,7 @@ import {
 import { MacroInvestment, ResetMacro } from "../investmentsLogic.js";
 import { formatState } from "./treemap.js";
 import { renderAssetInspection } from "./inspectAsset.js";
-import "core-js/stable"; // For polyfilling es6 syntax
-import "regenerator-runtime/runtime";
+import * as d3 from "d3";
 
 // Export 1 function that loads the markup and creates all the event listeners for that page
 
@@ -138,7 +137,7 @@ function generatePortSummary() {
   const changeEl = document.querySelector(".value-change");
   const totalSoldEl = document.querySelector(".sold-pos");
 
-  console.log(`balance`, balances);
+  // console.log(`balance`, balances);
 
   portValueEl.innerText = `${formatCurrency(balances.portValue)}`;
   originalValueEl.innerText = `${formatCurrency(balances.totalInvested)}`;

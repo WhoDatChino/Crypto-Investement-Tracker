@@ -12,8 +12,7 @@ import ButtonQueue from "../model.js";
 import { renderPortfolioDashboardMarkup } from "./portfolioDashboard.js";
 import { createLoader, removeLoader } from "./loader.js";
 import { geckoHistoric } from "../apiCalls.js";
-import "core-js/stable"; // For polyfilling es6 syntax
-import "regenerator-runtime/runtime";
+import * as d3 from "d3";
 
 // /////// FUNCTIONS
 

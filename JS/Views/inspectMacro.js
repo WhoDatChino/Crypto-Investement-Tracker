@@ -18,8 +18,6 @@ import { displayErrorMessage } from "./errorMsg.js";
 import { createLoader, removeLoader } from "./loader.js";
 import { coinApi } from "../apiCalls.js";
 import { reRenderTree } from "./treemap.js";
-import "core-js/stable"; // For polyfilling es6 syntax
-import "regenerator-runtime/runtime";
 
 // Parent to which eveything is appended
 const parent = document.querySelector(".views-container");

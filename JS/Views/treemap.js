@@ -13,8 +13,8 @@ import { createOverlay, removeModal } from "./overlay.js";
 import { createLoader, removeLoader } from "./loader.js";
 import { notificationMessage } from "./notificationMessage.js";
 import { displayErrorMessage } from "./errorMsg.js";
-import "core-js/stable"; // For polyfilling es6 syntax
-import "regenerator-runtime/runtime";
+import * as d3 from "d3";
+
 import { coinApi } from "../apiCalls.js";
 
 // /////// FUNCTIONS
@@ -80,7 +80,7 @@ export const createTreemap = function () {
     .padding(5)
     .paddingInner(7)(root);
 
-  console.log(`root`, root, `leaves`, root.leaves());
+  // console.log(`root`, root, `leaves`, root.leaves());
 
   const leaf = g
     .selectAll("g")
