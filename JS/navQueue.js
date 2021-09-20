@@ -4,7 +4,7 @@ import { renderTreemapMarkup, createTreemap } from "./Views/treemap.js";
 import { loadCurMarket } from "./model.js";
 
 import state from "./model.js";
-import { removeLoader } from "./Views/loader.js";
+import { createLoader, removeLoader } from "./Views/loader.js";
 import { getLocalStorage } from "./helpers.js";
 import { ResetAssetClass } from "./investmentsLogic.js";
 import "core-js/stable"; // For polyfilling es6 syntax
@@ -15,8 +15,6 @@ const { async } = require("q");
 // if (module.hot) {
 //   module.hot.accept();
 // }
-
-console.log(state);
 
 // ////// VARIABLES
 const homeBTN = document.querySelector(".portfolio-treemapBTN");
@@ -40,7 +38,6 @@ export default class ButtonQueue {
   _init(btn) {
     btn.classList.add("active");
     this.elements.push(btn);
-    console.log(`THE BUTTON`, btn);
   }
 
   enqueue(btn) {
@@ -56,9 +53,9 @@ export default class ButtonQueue {
   }
 }
 // Create pageQueue variable
+createLoader();
 state.curPage = 0;
 const pageQueue = new ButtonQueue(navBTNS[0]);
-console.log(pageQueue);
 // Initialize page to first page
 getLocalStorage();
 init(); // setAssetPrices();
@@ -73,7 +70,7 @@ async function init() {
         (obj) => new ResetAssetClass(obj)
       ))
     : true;
-  console.log(`UPDATED STATE`, state.assetClasses);
+  console.log(`UPDATED STATE`, state);
 }
 
 // //////// FUNCTIONS
@@ -99,7 +96,6 @@ window.addEventListener("hashchange", function (e) {
   if (pages.indexOf(window.location.hash.slice(1)) < 0) {
     return;
   }
-  console.log(`Called at begin`);
   state.curPage = pages.indexOf(window.location.hash.slice(1));
   changePage(state.curPage);
   pageQueue.enqueue(navBTNS[state.curPage]);
@@ -109,12 +105,17 @@ function changePage(buttonIndex) {
   switch (buttonIndex) {
     case 0:
       renderTreemapMarkup(container);
+      console.log(`SSSSS`, state);
       break;
     case 1:
       renderPortfolioDashboardMarkup(container);
+      console.log(`SSSSS`, state);
+
       break;
     case 2:
       renderMarketOverviewMarkup(container);
+      console.log(`SSSSS`, state);
+
       break;
   }
 }

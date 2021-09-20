@@ -11,8 +11,7 @@ import { renderMacro } from "./inspectMacro.js";
 import ButtonQueue from "../navQueue.js";
 import { renderPortfolioDashboardMarkup } from "./portfolioDashboard.js";
 import { createLoader, removeLoader } from "./loader.js";
-import { FROM_DATE_HISTORIC_DATA, TO_DATE_HISTORIC_DATA } from "../config.js";
-import { geckoHistoricData } from "../apiCalls.js";
+import { geckoHistoric } from "../apiCalls.js";
 import "core-js/stable"; // For polyfilling es6 syntax
 import "regenerator-runtime/runtime";
 
@@ -168,6 +167,7 @@ function generateMarkup(assetClass) {
 }
 
 // Pass in assetClass obj - called when asset sold/deleted
+
 export const updateInspectAsset = function (assetClass) {
   const data = markupData(assetClass);
 
@@ -210,6 +210,7 @@ export const updateInspectAsset = function (assetClass) {
               <p>Click to view/edit investment</p>
               </div>
               `;
+  console.log(`hubububbubub`);
 
   populateInvestmentsTable(assetClass);
 };
@@ -218,10 +219,12 @@ export const updateInspectAsset = function (assetClass) {
 function populateInvestmentsTable(assetClass) {
   const table = document.querySelector(".investment-table tbody");
 
+  // Sort by date - most recent 1st
   assetClass.macros.sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
+  // Create & append elements
   assetClass.macros.forEach((macro) => {
     const row = document.createElement("tr");
     row.setAttribute("id", macro.id);
@@ -397,7 +400,7 @@ async function createPriceGraph() {
     createLoader(document.querySelector(".price-graph-container"));
     // 1. get api data
     // - if fails, show a reload button & remove loader
-    const data = await geckoHistoricData();
+    const data = await geckoHistoric();
     // 2. Use that data to render line graph
     renderLineGraph(data);
     // 3. Eventlisteners to change the graph period

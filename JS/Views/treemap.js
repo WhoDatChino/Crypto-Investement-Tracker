@@ -111,7 +111,11 @@ export const createTreemap = function () {
     })
     .on("mouseout", hideSummaryText)
     .on("click", function (ev, d) {
-      renderMacro(d.data);
+      renderMacro(
+        state.assetClasses
+          .filter((cls) => cls.asset === d.data.asset)[0]
+          .macros.find((obj) => obj.id === d.data.id)
+      );
     });
 
   // Text

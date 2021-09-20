@@ -14,7 +14,7 @@ export const coinApi = async function (dateStr, coinTicker) {
     const req = await fetch(
       `https://rest.coinapi.io/v1/exchangerate/${coinTicker.toUpperCase()}/USD?time=${new Date(
         dateStr
-      )}&apikey=${COINAPI_KEY}`
+      ).toISOString()}&apikey=${COINAPI_KEY}`
     );
 
     if (!req.ok) {
@@ -25,6 +25,7 @@ export const coinApi = async function (dateStr, coinTicker) {
 
     return data.rate;
   } catch (err) {
+    console.log(`THE ERROR`, err);
     throw err;
   }
 };
@@ -44,7 +45,7 @@ export const geckoMarket = async function () {
   }
 };
 
-export const geckoHistoricData = async function () {
+export const geckoHistoric = async function () {
   try {
     const req = await fetch(
       `https://api.coingecko.com/api/v3/coins/${state.curAsset}/market_chart/range?vs_currency=usd&from=${FROM_DATE_HISTORIC_DATA}&to=${TO_DATE_HISTORIC_DATA}`

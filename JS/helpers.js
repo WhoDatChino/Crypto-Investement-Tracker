@@ -1,8 +1,5 @@
-import { MODAL_CLOSE_SECONDS } from "./config.js";
 import state from "./model.js";
-import { displayErrorMessage } from "./Views/errorMsg.js";
-import "core-js/stable"; // For polyfilling es6 syntax
-import "regenerator-runtime/runtime";
+
 export const formatCurrency = function (number, decimals = 2) {
   const num = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -41,7 +38,7 @@ export const formatShortCurrency = function (num) {
   }
 };
 
-export const formatReadableDate = function (date, bool) {
+export const formatReadableDate = function (date, bool = true) {
   // Format is bool is true
   const monthsLong = [
     "January",
@@ -79,7 +76,7 @@ export const formatReadableDate = function (date, bool) {
   const month = dateInput.getMonth();
   const year = dateInput.getFullYear();
 
-  return `${day} ${length ? monthsLong[month] : monthsShort[month]} ${year}`;
+  return `${day} ${bool ? monthsShort[month] : monthsLong[month]} ${year}`;
 };
 
 // ///////// Form Validation
@@ -140,7 +137,7 @@ export const checkMoney = function (input) {
   return 0;
 };
 
-// /////// SET LOCAL STORAGE
+// /////// SET & GET LOCAL STORAGE
 
 export const setLocalStorage = function () {
   try {
@@ -154,23 +151,3 @@ export const getLocalStorage = function () {
   const saved = localStorage.getItem("assetClasses");
   if (saved) state.assetClasses = JSON.parse(saved);
 };
-
-// /////// ASYNC API CALL
-
-// export const getJSON = async function(url){
-
-//   try{
-//     const req = await fetch(url)
-
-//     if(!req.ok){
-//       throw req.status
-//     }
-
-//     const data = await req.json()
-
-//     return data
-
-//   } catch (err){
-//     throw err
-//   }
-// }

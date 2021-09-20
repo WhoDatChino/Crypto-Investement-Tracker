@@ -1,4 +1,4 @@
-import { MODAL_CLOSE_SECONDS } from "../config.js";
+import { NOTIFICATION_CLOSE_SECONDS } from "../config.js";
 
 export const notificationMessage = function (message) {
   const popup = document.createElement("div");
@@ -13,5 +13,5 @@ export const notificationMessage = function (message) {
 
   setTimeout(() => {
     popup.remove();
-  }, MODAL_CLOSE_SECONDS * 1000);
+  }, NOTIFICATION_CLOSE_SECONDS * 1000);
 };

@@ -17,114 +17,48 @@ import { renderPortfolioDashboardMarkup } from "./portfolioDashboard.js";
 import { notificationMessage } from "./notificationMessage.js";
 import { displayErrorMessage } from "./errorMsg.js";
 import { createLoader, removeLoader } from "./loader.js";
-import { reRenderTree } from "./treemap.js";
+import { coinApi } from "../apiCalls.js";
 import "core-js/stable"; // For polyfilling es6 syntax
 import "regenerator-runtime/runtime";
+import { reRenderTree } from "./treemap.js";
 
-function showInvestment(macro) {
-  // Parent to which eveything is appended
-  const parent = document.querySelector(".views-container");
+// Parent to which eveything is appended
+const parent = document.querySelector(".views-container");
 
-  // Coin in curMarket that matches one fed into function
-  const marketCoin = state.curMarket.find((coin) => coin.name === macro.asset);
+function findMacro(data) {
+  return state.assetClasses
+    .find((asset) => asset.asset === data.asset)
+    .macros.find((invest) => invest.id === data.id);
+}
+// const stateMacro = findMacro(macro);
 
-  // Invest inspect popup
-  investInspect(macro);
+function generateMarkup(dataIn) {
+  createOverlay();
 
-  // ///// Lexical functions
+  const investInspect = document.createElement("div");
+  investInspect.classList.add("investment-inspection-container");
 
-  function investInspect(macro) {
-    // Create popup and shows overlay
-    function generatePopup(data) {
-      let changeHTML;
-
-      // Different html added based on wether or not the asset is sold
-      if (data.sold) {
-        // Get data of sale
-        const sellData = state.assetClasses
-          .find((assClass) => assClass.asset === data.asset)
-          .soldPositions.find((obj) => obj.id === data.id);
-
-        changeHTML = `
-              <p>Date of sale:</p>
-              <p class="investment-data">${formatReadableDate(
-                sellData.date
-              )}</p>
-              <p>Value at sale:</p>
-              <p class="investment-data"> ${formatCurrency(
-                sellData.assetAmount * sellData.sellPrice
-              )}</p>
-              `;
-      } else {
-        const change =
-          ((data.currentValue - data.originalCapital) / data.originalCapital) *
-          100;
-
-        changeHTML =
-          change > 0
-            ? `
-                <p>Current value of investment:</p>
-                <p class="investment-data">${formatCurrency(
-                  data.currentValue
-                )}</p>
-                <p>Change:</p>
-                <p class="investment-data">
-                <span class="green">+${change.toFixed(2)}%</span></p>`
-            : `
-            <p>Current value of investment:</p>
-            <p class="investment-data">${formatCurrency(data.currentValue)}</p>
-            <p>Change:</p>
-            <p class="investment-data"><span class="red">${change.toFixed(
-              2
-            )}%</span></p>`;
-      }
-
-      createOverlay();
-
-      const investInspect = document.createElement("div");
-      investInspect.classList.add("investment-inspection-container");
-
-      investInspect.innerHTML = `
+  investInspect.innerHTML = `
                     
                         <button class="close-modalBTN">
                             <ion-icon name="close-outline"></ion-icon>
                         </button>
                         <div class="form-header">
-                            <h1>${data.asset}</h1>
+                            <h1>${dataIn.asset}</h1>
                         </div>
                         <div class="investment-inspection-info">
-        
-                            <p>Date of investment:</p>
-                            <p class="investment-data">${formatReadableDate(
-                              data.date
-                            )}</p>
-                            <p>Platform:</p>
-                            <p class="investment-data">${data.platform}</p>
-                            <p>Coin Amount:</p>
-                            <p class="investment-data">${formatCoinAmount(
-                              data.assetAmount
-                            )}</p>
-                            <p>Original investment:</p>
-                            <p class="investment-data">${formatCurrency(
-                              data.originalCapital
-                            )}</p>
-                            ${changeHTML}
-                            <p>Current price of coin:</p>
-                            <p class="investment-data">${formatCurrency(
-                              marketCoin.current_price,
-                              6
-                            )}</p>
+                            ${updatePopup(dataIn)}
                         </div>
         
                         <div class="investment-interactions">
                             <div class="button-and-label">
                                 <input type="checkbox" name="check1" class="check" id="checkbox" ${
-                                  data.sold ? "checked" : ""
+                                  dataIn.sold ? "checked" : ""
                                 }>
                                 <label for="checkbox" class="checkmark"></label>
         
                                 <label class="description" for="checkbox">Mark ${
-                                  data.sold ? "unsold" : "sold"
+                                  dataIn.sold ? "unsold" : "sold"
                                 }</label>
                             </div>
                             <div class="button-and-label">
@@ -137,83 +71,110 @@ function showInvestment(macro) {
                         </div>
                     `;
 
-      parent.append(investInspect);
+  parent.append(investInspect);
 
-      document
-        .querySelector(".close-modalBTN")
-        .addEventListener("click", removeModal);
-      document.querySelector(".overlay").addEventListener("click", removeModal);
-    }
-    generatePopup(macro);
+  document
+    .querySelector(".close-modalBTN")
+    .addEventListener("click", removeModal);
+  document.querySelector(".overlay").addEventListener("click", removeModal);
+}
 
-    // Updates investInspect popup when MacroInvestChanges
-    function updatePopup(data) {
-      let changeHTML;
+function unsoldMarkup(dataIn) {
+  const change =
+    ((dataIn.currentValue - dataIn.originalCapital) / dataIn.originalCapital) *
+    100;
 
-      // Different html added based on wether or not the asset is sold
-      if (data.sold) {
-        // Get data of sale
-        const sellData = state.assetClasses
-          .find((assClass) => assClass.asset === data.asset)
-          .soldPositions.find((obj) => obj.id === data.id);
+  let html;
 
-        changeHTML = `
+  html =
+    change > 0
+      ? `     <p>Current value of investment:</p>
+      <p class="investment-data">${formatCurrency(dataIn.currentValue)}</p>
+              <p>Change:</p>
+              <p class="investment-data">
+              <span class="green">+${change.toFixed(2)}%</span></p>`
+      : `<p>Current value of investment:</p>
+      <p class="investment-data">${formatCurrency(dataIn.currentValue)}</p>
+        <p>Change:</p>
+          <p class="investment-data"><span class="red">${change.toFixed(
+            2
+          )}%</span></p>`;
+
+  return html;
+}
+
+function soldMarkup(dataIn) {
+  const sellData = state.assetClasses
+    .find((assClass) => assClass.asset === dataIn.asset)
+    .soldPositions.find((obj) => obj.id === dataIn.id);
+
+  return `  <p>Date of sale:</p>
+  <p class="investment-data">${formatReadableDate(sellData.date)}</p>
             <p>Value at sale:</p>
             <p class="investment-data"> ${formatCurrency(
               sellData.assetAmount * sellData.sellPrice
             )}</p>
             `;
-      } else {
-        const change =
-          ((data.currentValue - data.originalCapital) / data.originalCapital) *
-          100;
+}
 
-        changeHTML =
-          change > 0
-            ? `
-                <p>Change:</p>
-                <p class="investment-data">
-                <span class="green">+${change.toFixed(2)}%</span></p>`
-            : `<p>Change:</p>
-            <p class="investment-data"><span class="red">${change.toFixed(
-              2
-            )}%</span></p>`;
-      }
+function updatePopup(dataIn) {
+  const marketCoin = state.curMarket.find((coin) => coin.name === dataIn.asset);
 
-      document.querySelector(".investment-inspection-info").innerHTML = `
-        <p>Date of investment:</p>
-        <p class="investment-data">${formatReadableDate(data.date)}</p>
-        <p>Platform:</p>
-        <p class="investment-data">${data.platform}</p>
-        <p>Coin Amount:</p>
-        <p class="investment-data">${formatCoinAmount(data.assetAmount)}</p>
-        <p>Original investment:</p>
-        <p class="investment-data">${formatCurrency(data.originalCapital)}</p>
-        <p>Current value of investment:</p>
-        <p class="investment-data">${formatCurrency(data.currentValue)}</p>
-        ${changeHTML}
-        <p>Current price of coin:</p>
-        <p class="investment-data">${formatCurrency(
-          marketCoin.current_price,
-          6
-        )}</p>
-        `;
+  return `
+    <p>Date of investment:</p>
+    <p class="investment-data">${formatReadableDate(dataIn.date)}</p>
+    <p>Platform:</p>
+    <p class="investment-data">${dataIn.platform}</p>
+    <p>Coin Amount:</p>
+    <p class="investment-data">${formatCoinAmount(dataIn.assetAmount)}</p>
+    <p>Original investment:</p>
+    <p class="investment-data">${formatCurrency(dataIn.originalCapital)}</p>
+    ${dataIn.sold ? soldMarkup(dataIn) : unsoldMarkup(dataIn)}
+    <p>Current price of coin:</p>
+    <p class="investment-data">${formatCurrency(
+      marketCoin.current_price,
+      6
+    )}</p>
+    `;
+}
+
+function sellOrUnsell(dataIn) {
+  const stateMacro = findMacro(dataIn);
+
+  // Bring up sale popup
+  if (document.querySelector("#checkbox").checked) {
+    // transisition inspection modal away
+    document
+      .querySelector(".investment-inspection-container")
+      .classList.add("move");
+    // Display sell form & logic
+    sellInvestForm(stateMacro);
+  } else {
+    // Unsell invest
+    stateMacro.markUnsold();
+    document.querySelector(".investment-inspection-info").innerHTML =
+      updatePopup(stateMacro);
+
+    setLocalStorage();
+
+    switch (state.curPage) {
+      case 0:
+        reRenderTree();
+        break;
+      case 1:
+        updateInspectAsset(stateMacro.findParentClass());
+        break;
     }
+  }
+}
 
-    // Find the MacroInvestment associated with leaf clicked
-    function findMacro(data) {
-      return state.assetClasses
-        .find((asset) => asset.asset === data.asset)
-        .macros.find((invest) => invest.id === data.id);
-    }
-    const stateMacro = findMacro(macro);
+// Operations for the selling of an investment
+function sellInvestForm(stateMacro) {
+  function generateMarkup() {
+    const form = document.createElement("div");
+    form.className = "sell-form-container";
 
-    // Creates sellInvestment form & logic
-    function sellInvestForm() {
-      const form = document.createElement("div");
-      form.className = "sell-form-container";
-
-      form.innerHTML = `
+    form.innerHTML = `
           <div class="sell-popup" onclick="event.stopPropagation()">
         
               <div class="form-header">
@@ -243,185 +204,122 @@ function showInvestment(macro) {
         
           `;
 
-      parent.append(form);
+    parent.append(form);
 
-      // ////Sell form functions
-      function closeSaleForm() {
-        const investInspect = document.querySelector(
-          ".investment-inspection-container"
-        );
-        investInspect.classList.remove("move");
-        form.remove();
-      }
+    return document.querySelector(".sell-form-container");
+  }
 
-      function formSubmitter(e) {
-        e.preventDefault();
-        const dateInput = form.querySelector(".due-date");
-        const sellPriceInput = form.querySelector(".sell-price");
+  const sellForm = generateMarkup();
 
-        // Checks inputs to see if they are valid to sell asset
-        function validateInputs() {
-          let valid = 0;
-          valid += checkRequired([dateInput]);
-          valid += checkDate(dateInput);
-          valid += checkSellDate(dateInput, stateMacro.date);
+  function closeSaleForm() {
+    document
+      .querySelector(".investment-inspection-container")
+      .classList.remove("move");
+    sellForm.remove();
+  }
 
-          if (valid === 0) sellMacro();
-        }
+  function formSubmitter(e) {
+    e.preventDefault();
 
-        // retrieves price of coin at sale from user or api
-        async function getSellPrice() {
-          if (sellPriceInput.value !== 0 && sellPriceInput.value !== "")
-            return +sellPriceInput.value;
+    const dateInput = sellForm.querySelector(".due-date");
+    const sellPriceInput = sellForm.querySelector(".sell-price");
 
-          try {
-            const dateString = new Date(dateInput.value).toISOString();
-            const coin = marketCoin.symbol.toUpperCase();
-            const apiKey = `923F38CF-FBE2-49B9-A382-C9B12A0B96A7`;
+    // Checks inputs to see if they are valid to sell asset
+    function validateInputs() {
+      let valid = 0;
+      valid += checkRequired([dateInput]);
+      valid += checkDate(dateInput);
+      valid += checkSellDate(dateInput, stateMacro.date);
 
-            createLoader();
-
-            const req = await fetch(
-              `https://rest.coinapi.io/v1/exchangerate/${coin}/USD?time=${dateString}&apikey=${apiKey}`
-            );
-
-            if (!req.ok) {
-              throw req.status;
-            }
-
-            const data = await req.json();
-
-            removeLoader();
-            return data.rate;
-          } catch (err) {
-            throw err;
-          }
-        }
-
-        // Performs action of actually selling the MacroInvestment
-        async function sellMacro() {
-          try {
-            // 1. get the date input
-            // 2. Get the sellPrice input
-            //  - if there is no input, make a call to api using date info and current coin
-            //  - display loader
-            // 3. With date and price info, call .markSold({date,sellPrice}) on macro
-            const props = {
-              date: dateInput.value,
-              sellPrice: await getSellPrice(),
-            };
-
-            stateMacro.markSold(props);
-            // 5. Close sale form and show investInspect
-            updatePopup(findMacro(macro));
-
-            closeSaleForm();
-
-            // Show and hide notification message
-            notificationMessage(`Sale recorded successfully!`);
-            if (state.curPage === 0) reRenderTree();
-            // If on port dashboard page, update the page
-            if (state.curPage === 1)
-              updateInspectAsset(stateMacro.findParentClass());
-
-            setLocalStorage();
-          } catch (err) {
-            removeLoader();
-            displayErrorMessage(err);
-          }
-        }
-
-        validateInputs();
-      }
-
-      // ////Sell form eventListeners
-      // Form submission
-      form.addEventListener("submit", formSubmitter);
-
-      // Close form
-      form.querySelector(".cancel-btn").addEventListener("click", function (e) {
-        closeSaleForm();
-        document.querySelector("#checkbox").checked = false;
-      });
+      if (valid === 0) sellMacro();
     }
 
-    // Called when checkbox clicked
-    function sellOrUnsell() {
-      // Bring up sale popup
-      if (this.checked) {
-        // transisition inspection modal away
-        document
-          .querySelector(".investment-inspection-container")
-          .classList.add("move");
-        // Display sell form & logic
-        sellInvestForm();
-      } else {
-        // Unsell invest
-        stateMacro.markUnsold();
-        updatePopup(stateMacro);
+    validateInputs();
 
-        if (state.curPage === 0) reRenderTree();
+    // retrieves price of coin at sale from user or api
+    async function getSellPrice() {
+      if (sellPriceInput.value !== 0 && sellPriceInput.value !== "")
+        return +sellPriceInput.value;
+
+      try {
+        createLoader();
+        const coin = state.curMarket
+          .find((coin) => coin.name === stateMacro.asset)
+          .symbol.toUpperCase();
+
+        const data = await coinApi(dateInput.value, coin);
+
+        return data;
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    // Performs action of actually selling the MacroInvestment
+    async function sellMacro() {
+      try {
+        const props = {
+          date: dateInput.value,
+          sellPrice: await getSellPrice(),
+        };
+        stateMacro.markSold(props);
+        removeLoader();
+
+        // 5. Close sale form and show investInspect
+        document.querySelector(".investment-inspection-info").innerHTML =
+          updatePopup(stateMacro);
+        closeSaleForm();
+
+        // Show and hide notification message
+        notificationMessage(`Sale recorded successfully!`);
+
+        // Update things behind the popup
+        switch (state.curPage) {
+          case 0:
+            reRenderTree();
+            break;
+          case 1:
+            updateInspectAsset(stateMacro.findParentClass());
+            break;
+        }
 
         setLocalStorage();
-
-        if (state.curPage === 1)
-          updateInspectAsset(stateMacro.findParentClass());
+      } catch (err) {
+        console.log(`NEW EEROOR`, err);
+        removeLoader();
+        displayErrorMessage(err);
       }
     }
-
-    // //// EventListeners for investInspect
-
-    // Close investInspect
-
-    // Mark sold (checkbox)
-    document.querySelector("#checkbox").addEventListener("click", sellOrUnsell);
-    // Delete Investment
-    document.querySelector(".delete").addEventListener("click", function (e) {
-      const deleteModal = deletionConfirmation();
-
-      // Cancel deletion
-      document
-        .querySelector(".cancel-btn")
-        .addEventListener("click", function (e) {
-          deleteModal.remove();
-        });
-
-      // Complete deletion - 3 situations
-      document
-        .querySelector(".delete-btn")
-        .addEventListener("click", function (e) {
-          const assClass = stateMacro.findParentClass();
-
-          // Render port dashboard if the assetClass contains no more Macros
-          if (state.curPage === 1 && assClass.macros.length === 1) {
-            assClass.deleteMacro(stateMacro);
-            renderPortfolioDashboardMarkup(
-              document.querySelector(".views-container")
-            );
-            notificationMessage(`Investment deleted`);
-            setLocalStorage();
-          } else if (state.curPage === 1) {
-            // Deletion when user on inspectAsset and there are still more Macros
-            assClass.deleteMacro(stateMacro);
-            deleteModal.remove();
-            removeModal();
-            updateInspectAsset(assClass);
-            notificationMessage(`Investment deleted`);
-            setLocalStorage();
-          } else {
-            // Deletion when user on treemap
-            assClass.deleteMacro(stateMacro);
-            deleteModal.remove();
-            removeModal();
-            notificationMessage(`Investment deleted`);
-            reRenderTree();
-            setLocalStorage();
-          }
-        });
-    });
   }
+
+  // ///// EventListeners for sellInvestForm
+
+  // Close form
+  sellForm.querySelector(".cancel-btn").addEventListener("click", function (e) {
+    closeSaleForm();
+    document.querySelector("#checkbox").checked = false;
+  });
+
+  // Form submission
+  sellForm.addEventListener("submit", formSubmitter);
 }
 
-export const renderMacro = function (data) {
-  showInvestment(data);
+export const deleteMacro = function (stateMacro) {
+  stateMacro.findParentClass().deleteMacro(stateMacro);
+  notificationMessage(`Investment deleted`);
+  setLocalStorage();
+};
+
+export const renderMacro = function (MacroInvestment) {
+  console.log(`datataata`, MacroInvestment);
+  generateMarkup(MacroInvestment);
+
+  // Marking sold/unsol
+  document.querySelector("#checkbox").addEventListener("click", function (e) {
+    sellOrUnsell(MacroInvestment);
+  });
+
+  document.querySelector(".delete").addEventListener("click", function (e) {
+    deletionConfirmation(MacroInvestment);
+  });
 };
