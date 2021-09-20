@@ -1,6 +1,6 @@
 "use strict";
 
-import state from "../model.js";
+import { state } from "../model.js";
 import {
   formatCurrency,
   formatReadableDate,
@@ -8,7 +8,7 @@ import {
   formatCoinAmount,
 } from "../helpers.js";
 import { renderMacro } from "./inspectMacro.js";
-import ButtonQueue from "../navQueue.js";
+import ButtonQueue from "../model.js";
 import { renderPortfolioDashboardMarkup } from "./portfolioDashboard.js";
 import { createLoader, removeLoader } from "./loader.js";
 import { geckoHistoric } from "../apiCalls.js";

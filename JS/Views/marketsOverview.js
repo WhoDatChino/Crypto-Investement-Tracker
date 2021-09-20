@@ -1,7 +1,8 @@
 "use strict";
 
-import state from "../model.js";
+import { state } from "../model.js";
 import { formatCurrency, formatShortCurrency } from "../helpers.js";
+import ButtonQueue from "../model.js";
 import "core-js/stable"; // For polyfilling es6 syntax
 import "regenerator-runtime/runtime";
 
@@ -134,7 +135,7 @@ function generateMarkup() {
                           <button class='asc' data-sort='cap'>
                               
                           </button>
-                          <button class='dsc active' data-sort='cap'>
+                          <button class='dsc' data-sort='cap'>
                               
                           </button>
                       </div>
@@ -244,9 +245,9 @@ function sortData(dir, sortBy) {
 }
 
 // Determines which button was clicked on the page and calls the appropriate functions
-function buttonFinder(e) {
+function buttonFinder(e, queue) {
   if (e.target.classList.contains("asc") || e.target.classList.contains("dsc"))
-    sortTableContents(e);
+    sortTableContents(e, queue);
 
   if (e.target.classList.contains("expand-tableBTN")) {
     showHideSearch(e);
@@ -255,12 +256,8 @@ function buttonFinder(e) {
   return;
 }
 
-// //////////////////////////////////////////////////////////////////////////
-// NOTE: CURmARKET IS SORTED AND CHANGES THE ORDER OF THE OPTIONS WHEN ADDING A NEW INVESTMENT
-// //////////////////////////////////////////////////////////////////////////
-
 // Sorting table functionality
-function sortTableContents(e) {
+function sortTableContents(e, sortButtonQ) {
   // 1. Make sure only the buttons are pressed
 
   const button = e.target;
@@ -271,16 +268,9 @@ function sortTableContents(e) {
   const sortBy = e.target.dataset.sort;
   const direction = e.target.className;
 
-  const tableButtons = document
-    .querySelector(".crypto-table")
-    .querySelectorAll("button");
-
-  // 3. remove the colour of the previous button
-  tableButtons.forEach((btn) => btn.classList.remove("active"));
-  // 2. Change the colour of the button that is pressed
-  button.classList.add("active");
-  // 4. execute sort function based on variable
-  // 5. output sorted data to dom
+  sortButtonQ.enqueue(button);
+  // // 4. execute sort function based on variable
+  // // 5. output sorted data to dom
   populateMarketTable(sortData(direction, sortBy));
 }
 
@@ -293,7 +283,6 @@ function showSearch(e) {
   // const button = e.target;
   const sectionHide = document.querySelector(".market-stats");
   const parentSection = document.querySelector(".market-info");
-  const coinElements = document.querySelectorAll(".coin");
 
   // Hide the stats
   sectionHide.style.display = "none";
@@ -303,6 +292,12 @@ function showSearch(e) {
   <ion-icon name="contract-outline"></ion-icon>
   `;
 
+  const searchBox = createSearchBox(parentSection);
+
+  searchBox.addEventListener("input", filterCoins);
+}
+
+function createSearchBox(parentEl) {
   // Creating the searchBox element
   const searchBox = document.createElement("div");
   searchBox.classList.add("search-container");
@@ -311,9 +306,9 @@ function showSearch(e) {
   aria-label="Search through available crypto currencies">
   `;
 
-  parentSection.prepend(searchBox);
+  parentEl.prepend(searchBox);
 
-  searchBox.addEventListener("input", filterCoins);
+  return searchBox;
 }
 
 // Filter coins in the search view
@@ -353,6 +348,11 @@ export const renderMarketOverviewMarkup = function (parentEl) {
   parentEl.innerHTML = generateMarkup();
   const marketInfoSection = document.querySelector(".market-info");
   populateMarketTable(state.curMarket);
+  const sortButtonQ = new ButtonQueue(
+    document.querySelector(".sortBTN-container .dsc[data-sort='cap']")
+  );
 
-  marketInfoSection.addEventListener("click", buttonFinder);
+  marketInfoSection.addEventListener("click", function (e) {
+    buttonFinder(e, sortButtonQ);
+  });
 };

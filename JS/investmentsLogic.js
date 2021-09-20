@@ -1,4 +1,4 @@
-import state from "./model.js";
+import { state } from "./model.js";
 
 // /////////
 //  MACRO INVESTMENT

@@ -1,4 +1,4 @@
-import state from "./model.js";
+import { state } from "./model.js";
 
 export const formatCurrency = function (number, decimals = 2) {
   const num = new Intl.NumberFormat("en-US", {

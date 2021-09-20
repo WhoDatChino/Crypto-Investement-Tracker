@@ -1,10 +1,10 @@
+import { state } from "./model.js";
 import {
   COINAPI_KEY,
   NUMBER_MARKET_COINS,
   FROM_DATE_HISTORIC_DATA,
   TO_DATE_HISTORIC_DATA,
 } from "./config.js";
-import state from "./model.js";
 import "core-js/stable"; // For polyfilling es6 syntax
 import "regenerator-runtime/runtime";
 

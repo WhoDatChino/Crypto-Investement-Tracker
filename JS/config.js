@@ -1,5 +1,3 @@
-import { state } from "./model.js";
-
 // How long notification window shows for
 export const NOTIFICATION_CLOSE_SECONDS = 1.5;
 

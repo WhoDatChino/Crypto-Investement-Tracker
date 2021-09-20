@@ -1,158 +1,18 @@
 import "core-js/stable"; // For polyfilling es6 syntax
 import "regenerator-runtime/runtime";
-const state = {
-  assetClasses: [
-    // {
-    //   asset: "Bitcoin",
-    //   ticker: "btc",
-    //   currentPrice: 44812.6,
-    //   geckoId: "bitcoin",
-    //   assetAmount: 0.01409,
-    //   totalInvested: 500,
-    //   currentValue: 631.4271,
-    //   soldPositions: [
-    //     {
-    //       date: " 22 Jan 2021",
-    //       initialValue: 30,
-    //       assetAmount: 0.00156,
-    //       sellValue: 50,
-    //     },
-    //     {
-    //       date: " 19 Dec 2020",
-    //       initialValue: 90,
-    //       assetAmount: 0.00375,
-    //       sellValue: 90,
-    //     },
-    //   ],
-    //   macros: [
-    //     {
-    //       asset: "Bitcoin",
-    //       id: Math.floor(Math.random() * 1000000),
-    //       originalCapital: 500,
-    //       assetAmount: 0.01409,
-    //       currentValue: 631.4271,
-    //       date: "19 June 2021",
-    //       sold: false,
-    //       platform: "gemini",
-    //     },
-    //     {
-    //       asset: "Bitcoin",
-    //       id: Math.floor(Math.random() * 1000000),
-    //       originalCapital: 30,
-    //       assetAmount: 0.00156,
-    //       currentValue: 60.372,
-    //       date: "6 Dec 2020",
-    //       sold: true,
-    //       platform: "coinbase",
-    //     },
-    //     {
-    //       asset: "Bitcoin",
-    //       id: Math.floor(Math.random() * 1000000),
-    //       originalCapital: 60,
-    //       assetAmount: 0.00375,
-    //       currentValue: 145.125,
-    //       date: "16 Nov 2020",
-    //       sold: true,
-    //       platform: "coinbase",
-    //     },
-    //   ],
-    // },
-    // {
-    //   asset: "Ethereum",
-    //   ticker: "eth",
-    //   currentPrice: 3439.72,
-    //   geckoId: "ethereum",
-    //   assetAmount: 0.5,
-    //   totalInvested: 1000,
-    //   currentValue: 1258.5,
-    //   soldPositions: [
-    //     {
-    //       date: " 11 Mar 2021",
-    //       initialValue: 326.54,
-    //       assetAmount: 0.18192,
-    //       sellValue: 339.614,
-    //     },
-    //   ],
-    //   macros: [
-    //     {
-    //       asset: "Ethereum",
-    //       id: Math.floor(Math.random() * 1000000),
-    //       originalCapital: 200,
-    //       assetAmount: 0.16129,
-    //       currentValue: 405.96693,
-    //       date: "24 Jan 2021",
-    //       sold: false,
-    //       platform: "coinbase",
-    //     },
-    //     {
-    //       asset: "Ethereum",
-    //       id: Math.floor(Math.random() * 1000000),
-    //       originalCapital: 800,
-    //       assetAmount: 0.33871,
-    //       currentValue: 852.53307,
-    //       date: "24 Apr 2021",
-    //       sold: false,
-    //       platform: "gemini",
-    //     },
-    //     {
-    //       asset: "Ethereum",
-    //       id: Math.floor(Math.random() * 1000000),
-    //       originalCapital: 300,
-    //       assetAmount: 0.21246,
-    //       currentValue: 534.77337,
-    //       date: "1 Mar 2021",
-    //       sold: true,
-    //       platform: "coinbase",
-    //     },
-    //   ],
-    // },
-    // {
-    //   asset: "Dogecoin",
-    //   ticker: "doge",
-    //   currentPrice: 0.1,
-    //   assetAmount: 1136.36364,
-    //   geckoId: "dogecoin",
-    //   totalInvested: 250,
-    //   currentValue: 113.63636,
-    //   soldPositions: [],
-    //   macros: [
-    //     {
-    //       asset: "Dogecoin",
-    //       id: Math.floor(Math.random() * 1000000),
-    //       originalCapital: 250,
-    //       assetAmount: 1136.36364,
-    //       currentValue: 113.63636, // assetAmount * currentPrice
-    //       date: "9 Jul 2021",
-    //       sold: false,
-    //       platform: "gemini",
-    //     },
-    //   ],
-    // },
-  ],
+import { geckoMarket } from "./apiCalls.js";
+
+export const state = {
+  assetClasses: [],
   marketStats: {},
-  platforms: ["gemini", "coinbase"],
   curPage: 0,
 };
 
 // redis for js
 // Want the api to call more times if it fails
 
-export const loadCurMarket = async function () {
-  try {
-    const res = await fetch(
-      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false`
-    );
-
-    const data = await res.json();
-    if (!res.ok) throw res.status;
-    state.curMarket = data;
-    calcMarketStats(state.curMarket);
-  } catch (err) {
-    alert(err);
-  }
-};
-
-function calcMarketStats(data) {
+export const calcMarketStats = function () {
+  const data = state.curMarket;
   // Market avg movement
   const marketPerf =
     data.reduce((acc, curVal) => acc + curVal.price_change_percentage_24h, 0) /
@@ -190,6 +50,28 @@ function calcMarketStats(data) {
   state.marketStats.bigLoser = lowestNum;
   state.marketStats.highVol = highVol;
   state.marketStats.lowVol = lowVol;
-}
+};
 
-export default state;
+export default class ButtonQueue {
+  constructor(button) {
+    this.elements = [];
+    this._init(button);
+  }
+
+  _init(btn) {
+    btn.classList.add("active");
+    this.elements.push(btn);
+  }
+
+  enqueue(btn) {
+    if (btn === this.elements[0]) return;
+    btn.classList.add("active");
+    this.elements.push(btn);
+    this.dequeue();
+  }
+
+  dequeue() {
+    this.elements[0].classList.remove("active");
+    return this.elements.shift();
+  }
+}

@@ -1,4 +1,4 @@
-import state from "../model.js";
+import { state } from "../model.js";
 import { deleteMacro } from "./inspectMacro.js";
 import { updateInspectAsset } from "./inspectAsset.js";
 import { removeModal } from "./overlay.js";

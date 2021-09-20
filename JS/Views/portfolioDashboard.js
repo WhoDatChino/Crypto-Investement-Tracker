@@ -1,4 +1,4 @@
-import state from "../model.js";
+import { state } from "../model.js";
 import {
   formatCurrency,
   formatReadableDate,
@@ -7,7 +7,6 @@ import {
 import { MacroInvestment, ResetMacro } from "../investmentsLogic.js";
 import { formatState } from "./treemap.js";
 import { renderAssetInspection } from "./inspectAsset.js";
-import { renderMacro } from "./inspectMacro.js";
 import "core-js/stable"; // For polyfilling es6 syntax
 import "regenerator-runtime/runtime";
 
@@ -186,7 +185,6 @@ function inspectAsset(ev) {
   );
 
   state.curAsset = assetClass.geckoId;
-  console.log(`STSTSTSTS`, state);
 
   renderAssetInspection(assetClass);
 }
@@ -197,6 +195,7 @@ function populateMovementsTable() {
 
   const tableItems = [];
 
+  // Congregate sold and unsold positions into 1 table to create html elements
   // Sold positions
   state.assetClasses.forEach((asset) => {
     if (asset.soldPositions.length !== 0) {

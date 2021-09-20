@@ -1,6 +1,6 @@
 "use strict";
 
-import state from "../model.js";
+import { state } from "../model.js";
 import { AssetClass, MacroInvestment } from "../investmentsLogic.js";
 import { renderMacro } from "./inspectMacro.js";
 import {
@@ -15,6 +15,7 @@ import { notificationMessage } from "./notificationMessage.js";
 import { displayErrorMessage } from "./errorMsg.js";
 import "core-js/stable"; // For polyfilling es6 syntax
 import "regenerator-runtime/runtime";
+import { coinApi } from "../apiCalls.js";
 
 // /////// FUNCTIONS
 
@@ -24,8 +25,7 @@ function generateMarkup() {
                 <div class="treemap-container">
                     <h1>Portfolio Performance </h1>
 
-                    <svg class="treemap" id="treemap" 
-                     >
+                    <svg class="treemap" id="treemap">
                     </svg>
                 </div>
                 <button class="new-investBTN">
@@ -36,8 +36,6 @@ function generateMarkup() {
             </div>
 
             <p class='summary-text'></p>
-
-
       `;
 }
 
@@ -145,6 +143,7 @@ export const reRenderTree = function () {
   createTreemap();
 };
 
+// Hover effect on leaves
 function moveSummaryText(ev, d) {
   const div = document.querySelector(".summary-text");
 
@@ -319,26 +318,8 @@ function formValidator(e) {
     if (price.value !== 0 && price.value !== "") return +price.value;
 
     try {
-      // Perform fetch to get price data on certain date
-      const dateString = new Date(date.value).toISOString();
-      const coin = ticker.value.toUpperCase();
-      const apiKey = `923F38CF-FBE2-49B9-A382-C9B12A0B96A7`;
-
-      createLoader();
-
-      const req = await fetch(
-        `https://rest.coinapi.io/v1/exchangerate/${coin}/USD?time=${dateString}&apikey=${apiKey}`
-      );
-
-      if (!req.ok) {
-        throw req.status;
-      }
-
-      const data = await req.json();
-
-      removeLoader();
-
-      return data.rate;
+      const data = await coinApi(date.value, ticker.value);
+      return data;
     } catch (err) {
       throw err;
     }
@@ -363,6 +344,7 @@ function formValidator(e) {
   // Creates new investment object
   async function createInvestment() {
     try {
+      createLoader();
       const props = {
         asset: assetName,
         originalCapital: +originalCapital.value,
@@ -379,6 +361,8 @@ function formValidator(e) {
       state.assetClasses.findIndex((aClass) => aClass.asset === props.asset) < 0
         ? newClassMacro(props)
         : newMacro(props);
+
+      removeLoader();
 
       notificationMessage(`Investment added!`);
       clearForm([ticker, originalCapital, date, price, platform]);

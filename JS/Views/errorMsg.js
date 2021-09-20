@@ -7,7 +7,7 @@ const errorMap = {
   550: `No data. Can't fufill request. If error persists, please manually input coin price.`,
   // Custom errors
   900: `Local storage is disabled on your device. Investments can't be saved.`,
-  999: `Network error. If error persists, please manually input coin price.`,
+  999: `Network error. Please retry/reload.`,
 };
 
 // Shows popup error message based on the error returned by CoinApi response

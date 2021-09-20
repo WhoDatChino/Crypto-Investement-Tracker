@@ -1,6 +1,6 @@
 "use strict";
 
-import state from "../model.js";
+import { state } from "../model.js";
 import {
   formatCurrency,
   formatReadableDate,
@@ -13,24 +13,16 @@ import {
 import { createOverlay, removeModal } from "./overlay.js";
 import { deletionConfirmation } from "./deletionConfirmation.js";
 import { updateInspectAsset } from "./inspectAsset.js";
-import { renderPortfolioDashboardMarkup } from "./portfolioDashboard.js";
 import { notificationMessage } from "./notificationMessage.js";
 import { displayErrorMessage } from "./errorMsg.js";
 import { createLoader, removeLoader } from "./loader.js";
 import { coinApi } from "../apiCalls.js";
+import { reRenderTree } from "./treemap.js";
 import "core-js/stable"; // For polyfilling es6 syntax
 import "regenerator-runtime/runtime";
-import { reRenderTree } from "./treemap.js";
 
 // Parent to which eveything is appended
 const parent = document.querySelector(".views-container");
-
-function findMacro(data) {
-  return state.assetClasses
-    .find((asset) => asset.asset === data.asset)
-    .macros.find((invest) => invest.id === data.id);
-}
-// const stateMacro = findMacro(macro);
 
 function generateMarkup(dataIn) {
   createOverlay();
@@ -139,8 +131,6 @@ function updatePopup(dataIn) {
 }
 
 function sellOrUnsell(dataIn) {
-  const stateMacro = findMacro(dataIn);
-
   // Bring up sale popup
   if (document.querySelector("#checkbox").checked) {
     // transisition inspection modal away
@@ -148,12 +138,12 @@ function sellOrUnsell(dataIn) {
       .querySelector(".investment-inspection-container")
       .classList.add("move");
     // Display sell form & logic
-    sellInvestForm(stateMacro);
+    sellInvestForm(dataIn);
   } else {
     // Unsell invest
-    stateMacro.markUnsold();
+    dataIn.markUnsold();
     document.querySelector(".investment-inspection-info").innerHTML =
-      updatePopup(stateMacro);
+      updatePopup(dataIn);
 
     setLocalStorage();
 
@@ -162,7 +152,7 @@ function sellOrUnsell(dataIn) {
         reRenderTree();
         break;
       case 1:
-        updateInspectAsset(stateMacro.findParentClass());
+        updateInspectAsset(dataIn.findParentClass());
         break;
     }
   }
@@ -311,7 +301,6 @@ export const deleteMacro = function (stateMacro) {
 };
 
 export const renderMacro = function (MacroInvestment) {
-  console.log(`datataata`, MacroInvestment);
   generateMarkup(MacroInvestment);
 
   // Marking sold/unsol
