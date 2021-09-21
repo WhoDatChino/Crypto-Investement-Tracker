@@ -315,7 +315,7 @@ function formValidator(e) {
   // Performs API call to get price data for coin on specific date or uses user provided value. Returns the value as a number in each case
   async function getPriceData() {
     // If price value given by user, no need to make api call
-    if (price.value !== 0 && price.value !== "") return +price.value;
+    if (price.value != 0 && price.value !== "") return +price.value;
 
     try {
       const data = await coinApi(date.value, ticker.value);
