@@ -209,7 +209,7 @@ export const updateInspectAsset = function (assetClass) {
               <p>Click to view/edit investment</p>
               </div>
               `;
-  console.log(`hubububbubub`);
+  // console.log(`hubububbubub`);
 
   populateInvestmentsTable(assetClass);
 };

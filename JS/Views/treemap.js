@@ -319,7 +319,7 @@ function formValidator(e) {
 
     try {
       const data = await coinApi(date.value, ticker.value);
-      return data;
+      return +data;
     } catch (err) {
       throw err;
     }

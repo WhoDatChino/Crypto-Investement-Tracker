@@ -236,6 +236,7 @@ function sellInvestForm(stateMacro) {
           .symbol.toUpperCase();
 
         const data = await coinApi(dateInput.value, coin);
+        removeLoader();
 
         return data;
       } catch (err) {
@@ -251,7 +252,6 @@ function sellInvestForm(stateMacro) {
           sellPrice: await getSellPrice(),
         };
         stateMacro.markSold(props);
-        removeLoader();
 
         // 5. Close sale form and show investInspect
         document.querySelector(".investment-inspection-info").innerHTML =
