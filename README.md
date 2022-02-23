@@ -11,3 +11,5 @@ There is a market view which gives some useful stats about the crypto market in 
 Finally, the app also has a section that has stats about the portfolio in general, essentially providing the broadest overview possible on a users portfolio as well as insights into the portfolio.
 
 Data visualisation is a big part of this app that differentiates it from other crypto portfolio trackers. The visualsations are meant to be simple to understand and be able to provide the user with instant knowledge on how their investments are performing.
+
+Live version: https://crypto-investment-tracker.netlify.app
